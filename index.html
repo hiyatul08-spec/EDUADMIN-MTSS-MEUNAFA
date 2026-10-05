@@ -7,6 +7,13 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .nav-active {
+      background-color: #10b981 !important;
+      color: #ffffff !important;
+      font-weight: 600;
+    }
+  </style>
 </head>
 <body class="bg-slate-100 font-sans text-slate-800 antialiased flex h-screen overflow-hidden">
 
@@ -21,23 +28,23 @@
         </div>
       </div>
       
-      <nav id="sidebar-menu" class="space-y-1 text-sm">
-        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 bg-emerald-500 text-white px-3 py-2.5 rounded-lg font-medium text-left"><i class="fa-solid fa-gauge w-5"></i> Dashboard</button>
-        <button onclick="switchTab('siswa')" id="nav-siswa" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-user-graduate w-5"></i> Data Siswa</button>
-        <button onclick="switchTab('guru')" id="nav-guru" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-chalkboard-user w-5"></i> Data Guru</button>
-        <button onclick="switchTab('mapel')" id="nav-mapel" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-book w-5"></i> Mata Pelajaran</button>
-        <button onclick="switchTab('kelas')" id="nav-kelas" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-door-open w-5"></i> Kelas</button>
-        <button onclick="switchTab('nilai')" id="nav-nilai" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-graduation-cap w-5"></i> Nilai Siswa</button>
-        <button onclick="switchTab('jadwal')" id="nav-jadwal" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-calendar-days w-5"></i> Jadwal Pelajaran</button>
-        <button onclick="switchTab('modul')" id="nav-modul" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-bookmark w-5"></i> Perangkat / Modul Ajar</button>
-        <button onclick="switchTab('media')" id="nav-media" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-photo-film w-5"></i> Media Pembelajaran</button>
-        <button onclick="switchTab('asesmen')" id="nav-asesmen" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-file-pen w-5"></i> Asesmen & Kuis</button>
-        <button onclick="switchTab('rubrik')" id="nav-rubrik" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-chart-line w-5"></i> Rubrik Penilaian</button>
-        <button onclick="switchTab('lkpd')" id="nav-lkpd" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-file-lines w-5"></i> LKPD Interaktif</button>
-        <button onclick="switchTab('absensi')" id="nav-absensi" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-clock w-5"></i> Absensi Harian</button>
-        <button onclick="switchTab('keuangan')" id="nav-keuangan" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-wallet w-5"></i> Administrasi & Keuangan</button>
-        <button onclick="switchTab('surat')" id="nav-surat" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-envelope w-5"></i> Surat & Persuratan</button>
-        <button onclick="switchTab('pengaturan')" id="nav-pengaturan" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left"><i class="fa-solid fa-gear w-5"></i> Pengaturan</button>
+      <nav class="space-y-1 text-sm">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn nav-active w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-gauge w-5"></i> Dashboard</button>
+        <button onclick="switchTab('siswa')" id="nav-siswa" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-user-graduate w-5"></i> Data Siswa</button>
+        <button onclick="switchTab('guru')" id="nav-guru" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-chalkboard-user w-5"></i> Data Guru</button>
+        <button onclick="switchTab('mapel')" id="nav-mapel" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-book w-5"></i> Mata Pelajaran</button>
+        <button onclick="switchTab('kelas')" id="nav-kelas" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-door-open w-5"></i> Kelas</button>
+        <button onclick="switchTab('nilai')" id="nav-nilai" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-graduation-cap w-5"></i> Nilai Siswa</button>
+        <button onclick="switchTab('jadwal')" id="nav-jadwal" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-calendar-days w-5"></i> Jadwal Pelajaran</button>
+        <button onclick="switchTab('modul')" id="nav-modul" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-bookmark w-5"></i> Perangkat / Modul Ajar</button>
+        <button onclick="switchTab('media')" id="nav-media" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-photo-film w-5"></i> Media Pembelajaran</button>
+        <button onclick="switchTab('asesmen')" id="nav-asesmen" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-file-pen w-5"></i> Asesmen & Kuis</button>
+        <button onclick="switchTab('rubrik')" id="nav-rubrik" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-chart-line w-5"></i> Rubrik Penilaian</button>
+        <button onclick="switchTab('lkpd')" id="nav-lkpd" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-file-lines w-5"></i> LKPD Interaktif</button>
+        <button onclick="switchTab('absensi')" id="nav-absensi" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-clock w-5"></i> Absensi Harian</button>
+        <button onclick="switchTab('keuangan')" id="nav-keuangan" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-wallet w-5"></i> Administrasi & Keuangan</button>
+        <button onclick="switchTab('surat')" id="nav-surat" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-envelope w-5"></i> Surat & Persuratan</button>
+        <button onclick="switchTab('pengaturan')" id="nav-pengaturan" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-gear w-5"></i> Pengaturan</button>
       </nav>
     </div>
 
@@ -129,14 +136,11 @@
       <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <table class="w-full text-left text-sm">
           <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
-            <tr>
-              <th class="p-4">NISN</th><th class="p-4">Nama Siswa</th><th class="p-4">Jenis Kelamin</th><th class="p-4">Kelas</th><th class="p-4">Aksi</th>
-            </tr>
+            <tr><th class="p-4">NISN</th><th class="p-4">Nama Siswa</th><th class="p-4">Jenis Kelamin</th><th class="p-4">Kelas</th><th class="p-4">Aksi</th></tr>
           </thead>
           <tbody class="divide-y divide-slate-200">
             <tr><td class="p-4">0081234561</td><td class="p-4 font-semibold">Ahmad Fauzi</td><td class="p-4">Laki-laki</td><td class="p-4">VII A</td><td class="p-4 text-emerald-600 cursor-pointer">Edit</td></tr>
             <tr><td class="p-4">0081234562</td><td class="p-4 font-semibold">Siti Nurhaliza</td><td class="p-4">Perempuan</td><td class="p-4">VII A</td><td class="p-4 text-emerald-600 cursor-pointer">Edit</td></tr>
-            <tr><td class="p-4">0081234563</td><td class="p-4 font-semibold">Muhammad Rizky</td><td class="p-4">Laki-laki</td><td class="p-4">VIII B</td><td class="p-4 text-emerald-600 cursor-pointer">Edit</td></tr>
           </tbody>
         </table>
       </div>
@@ -151,13 +155,10 @@
       <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <table class="w-full text-left text-sm">
           <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
-            <tr>
-              <th class="p-4">NIP</th><th class="p-4">Nama Guru</th><th class="p-4">Mata Pelajaran</th><th class="p-4">Status</th><th class="p-4">Aksi</th>
-            </tr>
+            <tr><th class="p-4">NIP</th><th class="p-4">Nama Guru</th><th class="p-4">Mata Pelajaran</th><th class="p-4">Status</th><th class="p-4">Aksi</th></tr>
           </thead>
           <tbody class="divide-y divide-slate-200">
             <tr><td class="p-4">19850101...</td><td class="p-4 font-semibold">Darmawan Sudarso, S.Pd.I</td><td class="p-4">PAI / Akidah Akhlak</td><td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs">Aktif</span></td><td class="p-4 text-emerald-600 cursor-pointer">Edit</td></tr>
-            <tr><td class="p-4">19900215...</td><td class="p-4 font-semibold">Rina Melati, S.Pd</td><td class="p-4">Bahasa Indonesia</td><td class="p-4"><span class="bg-emerald-100 text-emerald-700 px-2 py-1 rounded text-xs">Aktif</span></td><td class="p-4 text-emerald-600 cursor-pointer">Edit</td></tr>
           </tbody>
         </table>
       </div>
@@ -167,91 +168,76 @@
     <div id="page-generic" class="page-content p-8 space-y-6 hidden">
       <div class="bg-white p-8 rounded-xl border border-slate-200 text-center space-y-4">
         <div class="w-16 h-16 bg-emerald-100 text-emerald-500 rounded-full flex items-center justify-center mx-auto text-2xl">
-          <i id="generic-icon" class="fa-solid fa-folder-open"></i>
+          <i class="fa-solid fa-folder-open"></i>
         </div>
         <h3 id="generic-title" class="text-2xl font-bold text-slate-800">Modul</h3>
-        <p class="text-slate-500 max-w-md mx-auto text-sm">Halaman manajemen untuk modul ini siap dikembangkan dan dihubungkan ke basis data.</p>
-        <button class="bg-emerald-500 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-emerald-600">Kelola Data</button>
+        <p class="text-slate-500 max-w-md mx-auto text-sm">Halaman untuk modul ini siap dihubungkan ke fitur data.</p>
       </div>
     </div>
 
   </main>
 
   <script>
-    // Inisialisasi Grafik
-    let genderChartInstance = null;
-    let ageChartInstance = null;
+    const titleMap = {
+      'dashboard': 'Dashboard',
+      'siswa': 'Data Siswa',
+      'guru': 'Data Guru',
+      'mapel': 'Mata Pelajaran',
+      'kelas': 'Data Kelas',
+      'nilai': 'Nilai Siswa',
+      'jadwal': 'Jadwal Pelajaran',
+      'modul': 'Perangkat / Modul Ajar',
+      'media': 'Media Pembelajaran',
+      'asesmen': 'Asesmen & Kuis',
+      'rubrik': 'Rubrik Penilaian',
+      'lkpd': 'LKPD Interaktif',
+      'absensi': 'Absensi Harian',
+      'keuangan': 'Administrasi & Keuangan',
+      'surat': 'Surat & Persuratan',
+      'pengaturan': 'Pengaturan Sistem'
+    };
 
-    function initCharts() {
-      if(genderChartInstance) genderChartInstance.destroy();
-      if(ageChartInstance) ageChartInstance.destroy();
-
-      genderChartInstance = new Chart(document.getElementById('genderChart'), {
-        type: 'doughnut',
-        data: { labels: ['Laki-laki', 'Perempuan'], datasets: [{ data: [5, 1], backgroundColor: ['#3b82f6', '#ff4d4d'] }] },
-        options: { responsive: true, maintainAspectRatio: false }
-      });
-
-      ageChartInstance = new Chart(document.getElementById('ageChart'), {
-        type: 'bar',
-        data: { labels: ['< 30', '30-40', '> 40'], datasets: [{ data: [1, 2, 1], backgroundColor: '#10b981' }] },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-      });
-    }
-
-    // Fungsi Perpindahan Tab / Menu Navigasi
     function switchTab(tabName) {
-      // Sembunyikan semua halaman
+      // 1. Sembunyikan semua konten
       document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
 
-      // Reset style tombol navigasi
-      document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.className = 'nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left text-slate-300';
-      });
+      // 2. Reset tombol navigasi
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-active'));
 
-      // Highlight tombol aktif
+      // 3. Aktifkan tombol yang diklik
       const activeNav = document.getElementById('nav-' + tabName);
-      if (activeNav) {
-        activeNav.className = 'nav-btn w-full flex items-center gap-3 bg-emerald-500 text-white px-3 py-2.5 rounded-lg font-medium text-left';
-      }
+      if (activeNav) activeNav.classList.add('nav-active');
 
-      // Tampilkan halaman yang sesuai
-      const titleMap = {
-        'dashboard': 'Dashboard',
-        'siswa': 'Data Siswa',
-        'guru': 'Data Guru',
-        'mapel': 'Mata Pelajaran',
-        'kelas': 'Data Kelas',
-        'nilai': 'Nilai Siswa',
-        'jadwal': 'Jadwal Pelajaran',
-        'modul': 'Perangkat / Modul Ajar',
-        'media': 'Media Pembelajaran',
-        'asesmen': 'Asesmen & Kuis',
-        'rubrik': 'Rubrik Penilaian',
-        'lkpd': 'LKPD Interaktif',
-        'absensi': 'Absensi Harian',
-        'keuangan': 'Administrasi & Keuangan',
-        'surat': 'Surat & Persuratan',
-        'pengaturan': 'Pengaturan Sistem'
-      };
-
+      // 4. Ubah judul header
       document.getElementById('header-title').innerText = titleMap[tabName] || 'EduAdmin';
 
+      // 5. Tampilkan halaman yang dituju
       if (tabName === 'dashboard') {
         document.getElementById('page-dashboard').classList.remove('hidden');
-        initCharts();
       } else if (tabName === 'siswa') {
         document.getElementById('page-siswa').classList.remove('hidden');
       } else if (tabName === 'guru') {
         document.getElementById('page-guru').classList.remove('hidden');
       } else {
         document.getElementById('page-generic').classList.remove('hidden');
-        document.getElementById('generic-title').innerText = titleMap[tabName];
+        document.getElementById('generic-title').innerText = titleMap[tabName] || 'Modul';
       }
     }
 
-    // Jalankan grafik pertama kali
-    window.onload = initCharts;
+    // Inisialisasi Grafik saat pertama kali dibuka
+    window.addEventListener('DOMContentLoaded', () => {
+      new Chart(document.getElementById('genderChart'), {
+        type: 'doughnut',
+        data: { labels: ['Laki-laki', 'Perempuan'], datasets: [{ data: [5, 1], backgroundColor: ['#3b82f6', '#ff4d4d'] }] },
+        options: { responsive: true, maintainAspectRatio: false }
+      });
+
+      new Chart(document.getElementById('ageChart'), {
+        type: 'bar',
+        data: { labels: ['< 30', '30-40', '> 40'], datasets: [{ data: [1, 2, 1], backgroundColor: '#10b981' }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+    });
   </script>
 </body>
 </html>
