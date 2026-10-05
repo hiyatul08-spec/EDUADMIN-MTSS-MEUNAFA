@@ -341,7 +341,7 @@
 
   <!-- MODAL - MODAL -->
 
-  <!-- Modal Siswa -->
+  <!-- Modal Siswa (DIUBAH MENJADI DROPDOWN KELAS) -->
   <div id="modal-siswa" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
     <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
       <h3 class="text-lg font-bold">Tambah Data Siswa</h3>
@@ -349,7 +349,12 @@
         <div><label class="text-xs font-semibold block mb-1">NISN</label><input type="number" id="siswa-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
         <div><label class="text-xs font-semibold block mb-1">Nama Lengkap</label><input type="text" id="siswa-f2" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
         <div><label class="text-xs font-semibold block mb-1">Jenis Kelamin</label><select id="siswa-f3" class="w-full border rounded-lg p-2 text-sm outline-none"><option>Laki-laki</option><option>Perempuan</option></select></div>
-        <div><label class="text-xs font-semibold block mb-1">Kelas</label><input type="text" id="siswa-f4" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div>
+          <label class="text-xs font-semibold block mb-1">Kelas</label>
+          <select id="siswa-f4" required class="select-kelas-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
+            <option value="">-- Pilih Kelas --</option>
+          </select>
+        </div>
         <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-siswa', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
       </form>
     </div>
@@ -419,7 +424,12 @@
       <form onsubmit="addData(event, 'jadwal')" class="space-y-3">
         <div><label class="text-xs font-semibold block mb-1">Hari</label><select id="jadwal-f1" class="w-full border rounded-lg p-2 text-sm outline-none"><option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option></select></div>
         <div><label class="text-xs font-semibold block mb-1">Jam</label><input type="text" id="jadwal-f2" placeholder="08.00 - 09.30" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Kelas</label><input type="text" id="jadwal-f3" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div>
+          <label class="text-xs font-semibold block mb-1">Kelas</label>
+          <select id="jadwal-f3" required class="select-kelas-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
+            <option value="">-- Pilih Kelas --</option>
+          </select>
+        </div>
         <div><label class="text-xs font-semibold block mb-1">Mata Pelajaran</label><input type="text" id="jadwal-f4" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
         <div><label class="text-xs font-semibold block mb-1">Guru Pengajar</label><input type="text" id="jadwal-f5" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
         <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-jadwal', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
@@ -434,125 +444,36 @@
       <form onsubmit="addData(event, 'modul')" class="space-y-3">
         <div><label class="text-xs font-semibold block mb-1">Judul Modul</label><input type="text" id="modul-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
         <div><label class="text-xs font-semibold block mb-1">Mata Pelajaran</label><input type="text" id="modul-f2" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Kelas</label><input type="text" id="modul-f3" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Penyusun</label><input type="text" id="modul-f4" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div>
+          <label class="text-xs font-semibold block mb-1">Kelas</label>
+          <select id="modul-f3" required class="select-kelas-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
+            <option value="">-- Pilih Kelas --</option>
+          </select>
+        </div>
         <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-modul', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Media -->
-  <div id="modal-media" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
-    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
-      <h3 class="text-lg font-bold">Tambah Media Pembelajaran</h3>
-      <form onsubmit="addData(event, 'media')" class="space-y-3">
-        <div><label class="text-xs font-semibold block mb-1">Judul Media</label><input type="text" id="media-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Mata Pelajaran</label><input type="text" id="media-f2" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Tipe Media</label><select id="media-f3" class="w-full border rounded-lg p-2 text-sm outline-none"><option>Video (YouTube)</option><option>Presentasi (PPT/PDF)</option><option>Gambar/Infografis</option><option>Audio</option></select></div>
-        <div><label class="text-xs font-semibold block mb-1">Link / Tautan Media</label><input type="text" id="media-f4" placeholder="https://..." required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-media', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Asesmen -->
-  <div id="modal-asesmen" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
-    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
-      <h3 class="text-lg font-bold">Buat Asesmen / Kuis</h3>
-      <form onsubmit="addData(event, 'asesmen')" class="space-y-3">
-        <div><label class="text-xs font-semibold block mb-1">Nama Asesmen</label><input type="text" id="asesmen-f1" placeholder="Contoh: Kuis Harian BAB 1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Mata Pelajaran</label><input type="text" id="asesmen-f2" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Kelas</label><input type="text" id="asesmen-f3" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Jumlah Soal</label><input type="number" id="asesmen-f4" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-asesmen', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Rubrik -->
-  <div id="modal-rubrik" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
-    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
-      <h3 class="text-lg font-bold">Tambah Rubrik Penilaian</h3>
-      <form onsubmit="addData(event, 'rubrik')" class="space-y-3">
-        <div><label class="text-xs font-semibold block mb-1">Nama Rubrik</label><input type="text" id="rubrik-f1" placeholder="Contoh: Rubrik Unjuk Kerja" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Kategori</label><select id="rubrik-f2" class="w-full border rounded-lg p-2 text-sm outline-none"><option>Sikap</option><option>Pengetahuan</option><option>Keterampilan / Praktik</option><option>Proyek</option></select></div>
-        <div><label class="text-xs font-semibold block mb-1">Skor Maksimal</label><input type="number" id="rubrik-f3" value="100" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-rubrik', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal LKPD -->
-  <div id="modal-lkpd" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
-    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
-      <h3 class="text-lg font-bold">Tambah LKPD Interaktif</h3>
-      <form onsubmit="addData(event, 'lkpd')" class="space-y-3">
-        <div><label class="text-xs font-semibold block mb-1">Judul LKPD</label><input type="text" id="lkpd-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Mata Pelajaran</label><input type="text" id="lkpd-f2" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Kelas</label><input type="text" id="lkpd-f3" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-lkpd', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Absensi -->
-  <div id="modal-absensi" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
-    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
-      <h3 class="text-lg font-bold">Catat Absensi Siswa</h3>
-      <form onsubmit="addData(event, 'absensi')" class="space-y-3">
-        <div><label class="text-xs font-semibold block mb-1">Tanggal</label><input type="date" id="absensi-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Nama Siswa</label><input type="text" id="absensi-f2" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Kelas</label><input type="text" id="absensi-f3" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Keterangan</label><select id="absensi-f4" class="w-full border rounded-lg p-2 text-sm outline-none"><option>Hadir</option><option>Izin</option><option>Sakit</option><option>Alfa</option></select></div>
-        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-absensi', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Keuangan -->
-  <div id="modal-keuangan" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
-    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
-      <h3 class="text-lg font-bold">Catat Keuangan</h3>
-      <form onsubmit="addData(event, 'keuangan')" class="space-y-3">
-        <div><label class="text-xs font-semibold block mb-1">Tanggal</label><input type="date" id="keuangan-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Jenis Transaksi</label><select id="keuangan-f2" class="w-full border rounded-lg p-2 text-sm outline-none"><option>Pemasukan</option><option>Pengeluaran</option></select></div>
-        <div><label class="text-xs font-semibold block mb-1">Keterangan</label><input type="text" id="keuangan-f3" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Jumlah (Rp)</label><input type="number" id="keuangan-f4" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-keuangan', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal Surat -->
-  <div id="modal-surat" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
-    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
-      <h3 class="text-lg font-bold">Catat Surat Persuratan</h3>
-      <form onsubmit="addData(event, 'surat')" class="space-y-3">
-        <div><label class="text-xs font-semibold block mb-1">No. Surat</label><input type="text" id="surat-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Tipe Surat</label><select id="surat-f2" class="w-full border rounded-lg p-2 text-sm outline-none"><option>Surat Masuk</option><option>Surat Keluar</option><option>Surat Keterangan</option></select></div>
-        <div><label class="text-xs font-semibold block mb-1">Perihal</label><input type="text" id="surat-f3" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Tanggal</label><input type="date" id="surat-f4" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-surat', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Script Logika Aplikasi -->
+  <!-- JAVASCRIPT SYSTEM -->
   <script>
-    // System LocalStorage Store
-    let appData = JSON.parse(localStorage.getItem('eduadmin_db')) || {
+    // System Data Store (LocalStorage Backup)
+    let appData = JSON.parse(localStorage.getItem('eduadmin_data')) || {
       siswa: [
         { id: 1, f1: '0012345678', f2: 'Ahmad Raihan', f3: 'Laki-laki', f4: 'VII A' },
-        { id: 2, f1: '0012345679', f2: 'Siti Nurhaliza', f3: 'Perempuan', f4: 'VII A' }
+        { id: 2, f1: '0012345679', f2: 'Siti Nurhaliza', f3: 'Perempuan', f4: 'VII A' },
+        { id: 3, f1: '0012345680', f2: 'Anisa', f3: 'Perempuan', f4: 'VIII' }
       ],
       guru: [
         { id: 1, f1: '198501012010011001', f2: 'Budi Santoso, S.Pd', f3: 'Matematika' }
       ],
       mapel: [
-        { id: 1, f1: 'MTK', f2: 'Matematika', f3: 'A', f4: '75' }
+        { id: 1, f1: 'MAT-01', f2: 'Matematika', f3: 'A', f4: '75' }
       ],
       kelas: [
-        { id: 1, f1: 'VII A', f2: 'Budi Santoso, S.Pd', f3: 'VII' }
+        { id: 1, f1: 'VII A', f2: 'Budi Santoso, S.Pd', f3: 'VII' },
+        { id: 2, f1: 'VIII', f2: 'Siti Aminah, M.Pd', f3: 'VIII' },
+        { id: 3, f1: 'IX A', f2: 'Ahmad, S.Ag', f3: 'IX' }
       ],
       nilai: [],
       jadwal: [],
@@ -566,145 +487,151 @@
       surat: []
     };
 
-    function saveDB() {
-      localStorage.setItem('eduadmin_db', JSON.stringify(appData));
-      renderAll();
+    function saveData() {
+      localStorage.setItem('eduadmin_data', JSON.stringify(appData));
+      updateCounts();
+      updateKelasDropdowns();
     }
 
-    // Switch Tab Navigasi
+    // Tab Switcher
     function switchTab(tabId) {
-      document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
-      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
-
-      const targetPage = document.getElementById('page-' + tabId);
-      if (targetPage) {
-        targetPage.classList.remove('hidden');
-      }
-
-      const activeNav = document.getElementById('nav-' + tabId);
-      if (activeNav) {
-        activeNav.classList.add('nav-active');
-      }
-
-      // Update Top Header
-      const titles = {
-        dashboard: 'Dashboard Utama',
-        siswa: 'Data Siswa',
-        guru: 'Data Guru',
-        mapel: 'Mata Pelajaran',
-        kelas: 'Data Kelas',
-        nilai: 'Nilai Siswa',
-        jadwal: 'Jadwal Pelajaran',
-        modul: 'Perangkat / Modul Ajar',
-        media: 'Media Pembelajaran',
-        asesmen: 'Asesmen & Kuis',
-        rubrik: 'Rubrik Penilaian',
-        lkpd: 'LKPD Interaktif',
-        absensi: 'Absensi Harian',
-        keuangan: 'Administrasi & Keuangan',
-        surat: 'Surat & Persuratan',
-        pengaturan: 'Pengaturan System'
-      };
-      document.getElementById('header-title').innerText = titles[tabId] || 'EduAdmin';
-    }
-
-    // Modal Control
-    function toggleModal(modalId, show) {
-      const target = document.getElementById(modalId);
-      if (target) {
-        if (show) target.classList.remove('hidden');
-        else target.classList.add('hidden');
-      }
-    }
-
-    // Add Data Function (CRUD Create)
-    function addData(event, key) {
-      event.preventDefault();
-      const newItem = { id: Date.now() };
+      document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('nav-active'));
       
-      let index = 1;
-      while (document.getElementById(`${key}-f${index}`)) {
-        newItem[`f${index}`] = document.getElementById(`${key}-f${index}`).value;
-        index++;
-      }
+      const selectedPage = document.getElementById(`page-${tabId}`);
+      if(selectedPage) selectedPage.classList.remove('hidden');
+      
+      const selectedNav = document.getElementById(`nav-${tabId}`);
+      if(selectedNav) selectedNav.classList.add('nav-active');
 
-      if (!appData[key]) appData[key] = [];
-      appData[key].push(newItem);
-      saveDB();
-
-      // Reset form & close modal
-      event.target.reset();
-      toggleModal(`modal-${key}`, false);
+      const titleMap = {
+        'dashboard': 'Dashboard',
+        'siswa': 'Data Siswa',
+        'guru': 'Data Guru',
+        'mapel': 'Mata Pelajaran',
+        'kelas': 'Data Kelas',
+        'nilai': 'Nilai Siswa',
+        'jadwal': 'Jadwal Pelajaran',
+        'modul': 'Perangkat / Modul Ajar',
+        'media': 'Media Pembelajaran',
+        'asesmen': 'Asesmen & Kuis',
+        'rubrik': 'Rubrik Penilaian',
+        'lkpd': 'LKPD Interaktif',
+        'absensi': 'Absensi Harian',
+        'keuangan': 'Administrasi & Keuangan',
+        'surat': 'Surat & Persuratan',
+        'pengaturan': 'Pengaturan System'
+      };
+      
+      document.getElementById('header-title').innerText = titleMap[tabId] || 'Dashboard';
     }
 
-    // Delete Data
-    function deleteData(key, id) {
-      if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
-        appData[key] = appData[key].filter(item => item.id !== id);
-        saveDB();
+    // Modal Manager
+    function toggleModal(modalId, show) {
+      const modal = document.getElementById(modalId);
+      if (show) {
+        updateKelasDropdowns(); // Perbarui opsi kelas saat modal dibuka
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
       }
     }
 
-    // Render Data to Table & Update Dashboard Counts
-    function renderAll() {
-      // Dashboard Stats
-      document.getElementById('count-siswa').innerText = (appData.siswa?.length || 0) + ' Siswa';
-      document.getElementById('count-guru').innerText = (appData.guru?.length || 0) + ' Guru';
-      document.getElementById('count-kelas').innerText = (appData.kelas?.length || 0) + ' Kelas';
-      document.getElementById('count-mapel').innerText = (appData.mapel?.length || 0) + ' Mapel';
+    // Update Dropdown Kelas secara Dinamis
+    function updateKelasDropdowns() {
+      const dropdowns = document.querySelectorAll('.select-kelas-dropdown');
+      dropdowns.forEach(select => {
+        const currentValue = select.value;
+        select.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+        
+        appData.kelas.forEach(k => {
+          const opt = document.createElement('option');
+          opt.value = k.f1; // Mengambil Nama Kelas (f1)
+          opt.textContent = k.f1;
+          select.appendChild(opt);
+        });
 
-      // Loop keys and populate tables
-      const keys = ['siswa', 'guru', 'mapel', 'kelas', 'nilai', 'jadwal', 'modul', 'media', 'asesmen', 'rubrik', 'lkpd', 'absensi', 'keuangan', 'surat'];
+        if (currentValue) {
+          select.value = currentValue;
+        }
+      });
+    }
 
-      keys.forEach(key => {
+    // Render Table Data
+    function renderTables() {
+      Object.keys(appData).forEach(key => {
         const tbody = document.getElementById(`table-${key}`);
         if (!tbody) return;
-
+        
         tbody.innerHTML = '';
-        const list = appData[key] || [];
-
-        if (list.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="10" class="p-4 text-center text-slate-400">Belum ada data tersedia.</td></tr>`;
-          return;
-        }
-
-        list.forEach(item => {
+        appData[key].forEach(item => {
           const tr = document.createElement('tr');
-          tr.className = "hover:bg-slate-50 transition";
-
-          let inner = '';
-          // Specific column handling
-          if (key === 'nilai') {
-            const na = ((Number(item.f3) + Number(item.f4) + Number(item.f5)) / 3).toFixed(1);
-            inner = `<td class="p-4">${item.f1}</td><td class="p-4">${item.f2}</td><td class="p-4">${item.f3}</td><td class="p-4">${item.f4}</td><td class="p-4">${item.f5}</td><td class="p-4 font-bold text-emerald-600">${na}</td>`;
-          } else {
-            let idx = 1;
-            while (item[`f${idx}`] !== undefined) {
-              inner += `<td class="p-4">${item[`f${idx}`]}</td>`;
-              idx++;
+          tr.className = 'hover:bg-slate-50 transition';
+          
+          let content = '';
+          Object.keys(item).forEach(k => {
+            if (k !== 'id') {
+              content += `<td class="p-4">${item[k]}</td>`;
             }
-          }
-
-          inner += `<td class="p-4"><button onclick="deleteData('${key}', ${item.id})" class="text-red-500 hover:text-red-700 font-medium text-xs flex items-center gap-1"><i class="fa-solid fa-trash"></i> Hapus</button></td>`;
-          tr.innerHTML = inner;
+          });
+          
+          content += `<td class="p-4"><button onclick="deleteData('${key}', ${item.id})" class="text-red-500 hover:text-red-700 text-xs font-semibold"><i class="fa-solid fa-trash"></i> Hapus</button></td>`;
+          tr.innerHTML = content;
           tbody.appendChild(tr);
         });
       });
     }
 
-    // Initialize Charts on Load
-    window.addEventListener('DOMContentLoaded', () => {
-      renderAll();
+    // Add Data
+    function addData(e, type) {
+      e.preventDefault();
+      const newItem = { id: Date.now() };
+      let i = 1;
+      
+      while (document.getElementById(`${type}-f${i}`)) {
+        newItem[`f${i}`] = document.getElementById(`${type}-f${i}`).value;
+        document.getElementById(`${type}-f${i}`).value = '';
+        i++;
+      }
+
+      appData[type].push(newItem);
+      saveData();
+      renderTables();
+      toggleModal(`modal-${type}`, false);
+    }
+
+    // Delete Data
+    function deleteData(type, id) {
+      if (confirm('Yakin ingin menghapus data ini?')) {
+        appData[type] = appData[type].filter(item => item.id !== id);
+        saveData();
+        renderTables();
+      }
+    }
+
+    // Count Update
+    function updateCounts() {
+      if(document.getElementById('count-siswa')) document.getElementById('count-siswa').innerText = `${appData.siswa.length} Siswa`;
+      if(document.getElementById('count-guru')) document.getElementById('count-guru').innerText = `${appData.guru.length} Guru`;
+      if(document.getElementById('count-kelas')) document.getElementById('count-kelas').innerText = `${appData.kelas.length} Kelas`;
+      if(document.getElementById('count-mapel')) document.getElementById('count-mapel').innerText = `${appData.mapel.length} Mapel`;
+    }
+
+    // Chart Initializer
+    window.onload = function() {
+      renderTables();
+      updateCounts();
+      updateKelasDropdowns();
 
       // Gender Chart
-      const ctxGender = document.getElementById('genderChart')?.getContext('2d');
+      const ctxGender = document.getElementById('genderChart');
       if (ctxGender) {
         new Chart(ctxGender, {
           type: 'doughnut',
           data: {
-            labels: ['Laki-Laki', 'Perempuan'],
+            labels: ['Laki-laki', 'Perempuan'],
             datasets: [{
-              data: [1, 1],
+              data: [12, 15],
               backgroundColor: ['#10b981', '#3b82f6']
             }]
           },
@@ -713,22 +640,22 @@
       }
 
       // Age Chart
-      const ctxAge = document.getElementById('ageChart')?.getContext('2d');
+      const ctxAge = document.getElementById('ageChart');
       if (ctxAge) {
         new Chart(ctxAge, {
           type: 'bar',
           data: {
-            labels: ['< 30 Thn', '30 - 40 Thn', '41 - 50 Thn', '> 50 Thn'],
+            labels: ['< 30 Thn', '30-40 Thn', '40-50 Thn', '> 50 Thn'],
             datasets: [{
               label: 'Jumlah Guru',
-              data: [1, 2, 0, 0],
-              backgroundColor: '#0284c7'
+              data: [3, 8, 5, 2],
+              backgroundColor: '#f59e0b'
             }]
           },
           options: { responsive: true, maintainAspectRatio: false }
         });
       }
-    });
+    };
   </script>
 </body>
 </html>
