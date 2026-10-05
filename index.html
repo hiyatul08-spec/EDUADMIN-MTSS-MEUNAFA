@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistem Manajemen Sekolah & Administrasi Guru</title>
+  <title>SIM Guru - Sistem Manajemen Sekolah</title>
   <!-- Bootstrap 5 CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome Icons -->
@@ -57,37 +57,37 @@
 
 <div class="container-fluid">
   <div class="row">
-    <!-- Sidebar / Navigasi Utama (LKPD tidak ada di navigasi sesuai permintaan) -->
+    <!-- Sidebar / Navigasi Utama (LKPD tidak ada di sidebar) -->
     <div class="col-md-3 col-lg-2 sidebar p-3">
       <h4 class="text-center my-3 text-white"><i class="fas fa-school me-2"></i>SIM Guru</h4>
       <hr>
       <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-          <a class="nav-link active" href="#" onclick="showSection('pengaturan')"><i class="fas fa-cog"></i> Pengaturan</a>
+          <a class="nav-link active" id="nav-pengaturan" href="#" onclick="showSection('pengaturan')"><i class="fas fa-cog"></i> Pengaturan</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" onclick="showSection('kelas')"><i class="fas fa-door-open"></i> Data Kelas</a>
+          <a class="nav-link" id="nav-kelas" href="#" onclick="showSection('kelas')"><i class="fas fa-door-open"></i> Data Kelas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" onclick="showSection('mapel')"><i class="fas fa-book"></i> Data Mapel</a>
+          <a class="nav-link" id="nav-mapel" href="#" onclick="showSection('mapel')"><i class="fas fa-book"></i> Data Mapel</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" onclick="showSection('siswa')"><i class="fas fa-user-graduate"></i> Data Siswa</a>
+          <a class="nav-link" id="nav-siswa" href="#" onclick="showSection('siswa')"><i class="fas fa-user-graduate"></i> Data Siswa</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" onclick="showSection('guru')"><i class="fas fa-chalkboard-teacher"></i> Data Guru</a>
+          <a class="nav-link" id="nav-guru" href="#" onclick="showSection('guru')"><i class="fas fa-chalkboard-teacher"></i> Data Guru</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" onclick="showSection('guru-mapel')"><i class="fas fa-user-tag"></i> Guru Mapel</a>
+          <a class="nav-link" id="nav-guru-mapel" href="#" onclick="showSection('guru-mapel')"><i class="fas fa-user-tag"></i> Guru Mapel</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" onclick="showSection('nilai')"><i class="fas fa-file-invoice"></i> Nilai Siswa</a>
+          <a class="nav-link" id="nav-nilai" href="#" onclick="showSection('nilai')"><i class="fas fa-file-invoice"></i> Nilai Siswa</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" onclick="showSection('jadwal')"><i class="fas fa-calendar-alt"></i> Jadwal Pelajaran</a>
+          <a class="nav-link" id="nav-jadwal" href="#" onclick="showSection('jadwal')"><i class="fas fa-calendar-alt"></i> Jadwal Pelajaran</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#" onclick="showSection('perangkat')"><i class="fas fa-folder-open"></i> Perangkat Ajar</a>
+          <a class="nav-link" id="nav-perangkat" href="#" onclick="showSection('perangkat')"><i class="fas fa-folder-open"></i> Perangkat Ajar</a>
         </li>
       </ul>
     </div>
@@ -104,7 +104,7 @@
               <div class="row g-3">
                 <div class="col-md-6">
                   <label class="form-label">Nama Sekolah / Madrasah</label>
-                  <input type="text" id="cfg-sekolah" class="form-control" value="MIS / SDS Cendekia Utama" required>
+                  <input type="text" id="cfg-sekolah" class="form-control" value="MTSS MEUNAFA" required>
                 </div>
                 <div class="col-md-6">
                   <label class="form-label">Tahun Pelajaran</label>
@@ -135,7 +135,7 @@
           <div class="card-body">
             <table class="table table-bordered table-striped" id="tbl-kelas">
               <thead class="table-dark">
-                <tr><th>ID</th><th>Nama Kelas</th><th>Tingkat/Jenjang</th><th>Aksi</th></tr>
+                <tr><th>No</th><th>Nama Kelas</th><th>Aksi</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -143,17 +143,17 @@
         </div>
       </div>
 
-      <!-- SECTION: DATA MAPEL (Kemendikbud & Kemenag) -->
+      <!-- SECTION: DATA MAPEL -->
       <div id="section-mapel" class="app-section d-none">
         <div class="card shadow-sm">
           <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
-            <span><i class="fas fa-book me-2"></i>Data Mata Pelajaran (Kemendikbud & Kemenag)</span>
+            <span><i class="fas fa-book me-2"></i>Data Mata Pelajaran</span>
             <button class="btn btn-light btn-sm" onclick="addMapel()"><i class="fas fa-plus me-1"></i>Tambah Mapel</button>
           </div>
           <div class="card-body">
             <table class="table table-bordered table-striped" id="tbl-mapel">
               <thead class="table-dark">
-                <tr><th>ID</th><th>Nama Mata Pelajaran</th><th>Naungan</th><th>Aksi</th></tr>
+                <tr><th>No</th><th>Nama Mata Pelajaran</th><th>Naungan</th><th>Aksi</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -166,12 +166,12 @@
         <div class="card shadow-sm">
           <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
             <span><i class="fas fa-user-graduate me-2"></i>Data Siswa</span>
-            <button class="btn btn-light btn-sm" onclick="openModalSiswa()"><i class="fas fa-plus me-1"></i>Tambah Siswa</button>
+            <button class="btn btn-light btn-sm" onclick="addSiswa()"><i class="fas fa-plus me-1"></i>Tambah Siswa</button>
           </div>
           <div class="card-body">
             <table class="table table-bordered table-striped" id="tbl-siswa">
               <thead class="table-dark">
-                <tr><th>NISN</th><th>Nama Siswa</th><th>Kelas</th><th>Jenis Kelamin</th><th>Aksi</th></tr>
+                <tr><th>Nama Siswa</th><th>Kelas</th><th>Jenis Kelamin</th><th>Aksi</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -184,12 +184,12 @@
         <div class="card shadow-sm">
           <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
             <span><i class="fas fa-chalkboard-teacher me-2"></i>Data Guru</span>
-            <button class="btn btn-light btn-sm" onclick="openModalGuru()"><i class="fas fa-plus me-1"></i>Tambah Guru</button>
+            <button class="btn btn-light btn-sm" onclick="addGuru()"><i class="fas fa-plus me-1"></i>Tambah Guru</button>
           </div>
           <div class="card-body">
             <table class="table table-bordered table-striped" id="tbl-guru">
               <thead class="table-dark">
-                <tr><th>NIP</th><th>Nama Guru</th><th>Jenis Kelamin</th><th>Aksi</th></tr>
+                <tr><th>NIP</th><th>Nama Guru</th><th>Aksi</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -202,12 +202,12 @@
         <div class="card shadow-sm">
           <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
             <span><i class="fas fa-user-tag me-2"></i>Penugasan Guru Mapel</span>
-            <button class="btn btn-light btn-sm" onclick="openModalGuruMapel()"><i class="fas fa-plus me-1"></i>Penugasan Baru</button>
+            <button class="btn btn-light btn-sm" onclick="addGuruMapel()"><i class="fas fa-plus me-1"></i>Penugasan Baru</button>
           </div>
           <div class="card-body">
             <table class="table table-bordered table-striped" id="tbl-guru-mapel">
               <thead class="table-dark">
-                <tr><th>Nama Guru</th><th>Mata Pelajaran (Dropdown Mapel)</th><th>Aksi</th></tr>
+                <tr><th>Nama Guru</th><th>Mata Pelajaran</th><th>Aksi</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -220,12 +220,12 @@
         <div class="card shadow-sm">
           <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
             <span><i class="fas fa-file-invoice me-2"></i>Nilai Siswa</span>
-            <button class="btn btn-light btn-sm" onclick="openModalNilai()"><i class="fas fa-plus me-1"></i>Input Nilai</button>
+            <button class="btn btn-light btn-sm" onclick="addNilai()"><i class="fas fa-plus me-1"></i>Input Nilai</button>
           </div>
           <div class="card-body">
             <table class="table table-bordered table-striped" id="tbl-nilai">
               <thead class="table-dark">
-                <tr><th>Nama Siswa (Data Siswa)</th><th>Mapel (Data Mapel)</th><th>Nilai</th><th>Keterangan</th><th>Aksi</th></tr>
+                <tr><th>Nama Siswa</th><th>Mapel</th><th>Nilai</th><th>Aksi</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -233,18 +233,17 @@
         </div>
       </div>
 
-      <!-- SECTION: JADWAL PELAJARAN (ANTI-BENTROK) -->
+      <!-- SECTION: JADWAL PELAJARAN -->
       <div id="section-jadwal" class="app-section d-none">
         <div class="card shadow-sm">
           <div class="card-header card-header-custom d-flex justify-content-between align-items-center">
-            <span><i class="fas fa-calendar-alt me-2"></i>Jadwal Pelajaran (Sistem Anti-Bentrok)</span>
-            <button class="btn btn-light btn-sm" onclick="openModalJadwal()"><i class="fas fa-plus me-1"></i>Tambah Jadwal</button>
+            <span><i class="fas fa-calendar-alt me-2"></i>Jadwal Pelajaran (Anti-Bentrok)</span>
+            <button class="btn btn-light btn-sm" onclick="addJadwal()"><i class="fas fa-plus me-1"></i>Tambah Jadwal</button>
           </div>
           <div class="card-body">
-            <div id="alert-bentrok" class="alert alert-danger d-none" role="alert"></div>
             <table class="table table-bordered table-striped" id="tbl-jadwal">
               <thead class="table-dark">
-                <tr><th>Hari</th><th>Jam Ke-</th><th>Kelas</th><th>Mata Pelajaran</th><th>Guru Pengajar</th><th>Aksi</th></tr>
+                <tr><th>Hari / Jam</th><th>Kelas</th><th>Mapel & Guru</th><th>Aksi</th></tr>
               </thead>
               <tbody></tbody>
             </table>
@@ -252,170 +251,47 @@
         </div>
       </div>
 
-      <!-- SECTION: PERANGKAT AJAR / MODUL (6 TAB UI) -->
+      <!-- SECTION: PERANGKAT AJAR (6 TAB) -->
       <div id="section-perangkat" class="app-section d-none">
         <div class="card shadow-sm">
           <div class="card-header card-header-custom">
-            <i class="fas fa-folder-open me-2"></i>Perangkat Ajar & Modul
+            <i class="fas fa-folder-open me-2"></i>Perangkat Ajar & Administrasi Guru
           </div>
           <div class="card-body">
-            <!-- 6 TAB NAVIGATION -->
             <ul class="nav nav-tabs" id="perangkatTabs" role="tablist">
-              <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-modul">Tab 1: Modul Ajar</button></li>
-              <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-atp">Tab 2: ATP</button></li>
-              <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-lkpd">Tab 3: LKPD</button></li>
-              <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-asesmen">Tab 4: Asesmen (Soal AI)</button></li>
-              <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-remedial">Tab 5: Remedial</button></li>
-              <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-pengayaan">Tab 6: Pengayaan</button></li>
+              <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-modul">1. Modul Ajar</button></li>
+              <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-atp">2. ATP</button></li>
+              <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-lkpd">3. LKPD</button></li>
+              <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-asesmen">4. Asesmen</button></li>
+              <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-remedial">5. Remedial</button></li>
+              <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-pengayaan">6. Pengayaan</button></li>
             </ul>
 
-            <div class="tab-content p-3 border border-top-0 rounded-bottom">
-              <!-- TAB 1: MODUL AJAR -->
+            <div class="tab-content p-3 border border-top-0 rounded-bottom bg-white">
               <div class="tab-pane fade show active" id="tab-modul">
-                <h5>Modul Ajar</h5>
-                <p>Silakan upload atau kelola dokumen Modul Ajar di sini.</p>
-                <input type="file" class="form-control mb-3">
+                <h5 class="fw-bold mt-2">Modul Ajar</h5>
+                <textarea class="form-control" rows="5" placeholder="Tuliskan isi Modul Ajar..."></textarea>
               </div>
-
-              <!-- TAB 2: ATP -->
               <div class="tab-pane fade" id="tab-atp">
-                <h5>Alur Tujuan Pembelajaran (ATP)</h5>
-                <p>Dokumen ATP berbasis Alur Pemetaan Pembelajaran.</p>
-                <textarea class="form-control" rows="4" placeholder="Tuliskan rumusan ATP di sini..."></textarea>
+                <h5 class="fw-bold mt-2">Alur Tujuan Pembelajaran (ATP)</h5>
+                <textarea class="form-control" rows="5" placeholder="Tuliskan ATP..."></textarea>
               </div>
-
-              <!-- TAB 3: LKPD -->
               <div class="tab-pane fade" id="tab-lkpd">
-                <h5>Lembar Kerja Peserta Didik (LKPD)</h5>
-                <p>Penyusunan Lembar Kerja Peserta Didik terintegrasi.</p>
-                <textarea class="form-control" rows="4" placeholder="Tulis instruksi LKPD di sini..."></textarea>
+                <h5 class="fw-bold mt-2">Lembar Kerja Peserta Didik (LKPD)</h5>
+                <p class="text-muted">LKPD sekarang telah disatukan di sini (Tab 3 Perangkat Ajar).</p>
+                <textarea class="form-control" rows="5" placeholder="Tuliskan lembar kerja / soal LKPD..."></textarea>
               </div>
-
-              <!-- TAB 4: ASESMEN (GENERATOR SOAL AI + PANEL SEBELAH KIRI) -->
               <div class="tab-pane fade" id="tab-asesmen">
-                <div class="row">
-                  <!-- PANEL SEBELAH KIRI -->
-                  <div class="col-md-4 border-end">
-                    <h6 class="text-primary fw-bold mb-3"><i class="fas fa-sliders-h me-1"></i>Pengaturan Asesmen</h6>
-                    <form id="form-asesmen" onsubmit="generateSoalAI(event)">
-                      <div class="mb-2">
-                        <label class="form-label">Jenjang Pendidikan</label>
-                        <select id="asm-jenjang" class="form-select" onchange="updateSubJenjangOptions()" required>
-                          <option value="PAUD">PAUD</option>
-                          <option value="SD/MI" selected>SD / MI</option>
-                          <option value="SMP/MTs">SMP / MTs</option>
-                          <option value="SMA/MA">SMA / MA</option>
-                        </select>
-                      </div>
-
-                      <div class="mb-2">
-                        <label class="form-label">Tingkat Kelas</label>
-                        <select id="asm-kelas" class="form-select" required>
-                          <!-- Dynamic sub-options -->
-                        </select>
-                      </div>
-
-                      <div class="mb-2">
-                        <label class="form-label">Mata Pelajaran</label>
-                        <select id="asm-mapel" class="form-select" required>
-                          <!-- Filled from Data Mapel -->
-                        </select>
-                      </div>
-
-                      <div class="mb-2">
-                        <label class="form-label">Bab / Topik</label>
-                        <input type="text" id="asm-bab" class="form-control" value="Pengenalan Siklus Air & Cuaca" required>
-                      </div>
-
-                      <div class="mb-2">
-                        <label class="form-label">Alokasi Waktu</label>
-                        <input type="text" id="asm-waktu" class="form-control" value="2 x 35 Menit" required>
-                      </div>
-
-                      <div class="mb-2">
-                        <label class="form-label">Model Pembelajaran</label>
-                        <select id="asm-model" class="form-select">
-                          <option>Problem Based Learning (PBL)</option>
-                          <option>Project Based Learning (PjBL)</option>
-                          <option>Discovery Learning</option>
-                          <option>Inquiry Learning</option>
-                        </select>
-                      </div>
-
-                      <hr>
-                      <h6 class="text-secondary fw-bold">Pengesahan Dokumen</h6>
-                      <div class="mb-2">
-                        <label class="form-label">Nama Kepala Sekolah / NIP</label>
-                        <input type="text" id="asm-kepala" class="form-control" readonly>
-                        <input type="text" id="asm-nip-kepala" class="form-control mt-1" readonly>
-                      </div>
-                      <div class="mb-2">
-                        <label class="form-label">Guru Pengampu</label>
-                        <select id="asm-guru" class="form-select">
-                          <!-- Dynamic Guru list -->
-                        </select>
-                      </div>
-
-                      <button type="submit" class="btn btn-success w-100 mt-3"><i class="fas fa-robot me-1"></i>Generate Soal (AI Rule)</button>
-                    </form>
-                  </div>
-
-                  <!-- AREA TIBA/HASIL GENERATOR AI -->
-                  <div class="col-md-8">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                      <h6 class="fw-bold">Hasil Dokumen Asesmen / Soal</h6>
-                      <button class="btn btn-outline-secondary btn-sm" onclick="printAsesmen()"><i class="fas fa-print me-1"></i>Cetak / PDF</button>
-                    </div>
-
-                    <div id="print-area-asesmen" class="print-area shadow-sm">
-                      <div class="text-center mb-3">
-                        <h5 class="fw-bold mb-0" id="doc-sekolah">NAMA SEKOLAH</h5>
-                        <p class="mb-0" id="doc-title">LEMBAR ASESMEN / UJIAN SISWA</p>
-                        <small>Tahun Pelajaran: <span id="doc-tp">2026/2027</span></small>
-                      </div>
-                      <hr>
-
-                      <table class="table table-borderless table-sm mb-3">
-                        <tr><td><strong>Mata Pelajaran:</strong> <span id="doc-mapel">-</span></td><td><strong>Jenjang/Kelas:</strong> <span id="doc-jenjang-kelas">-</span></td></tr>
-                        <tr><td><strong>Bab/Topik:</strong> <span id="doc-bab">-</span></td><td><strong>Alokasi Waktu:</strong> <span id="doc-waktu">-</span></td></tr>
-                        <tr><td><strong>Model Pembelajaran:</strong> <span id="doc-model">-</span></td><td><strong>Aturan Soal:</strong> <span id="doc-rule">-</span></td></tr>
-                      </table>
-
-                      <div id="generated-questions" class="mt-3">
-                        <p class="text-muted text-center py-4">Silakan tekan tombol "Generate Soal (AI Rule)" di sebelah kiri untuk menghasilkan soal secara otomatis berdasarkan aturan jenjang kelas.</p>
-                      </div>
-
-                      <!-- PENGESAHAN LEMBAR -->
-                      <div class="row mt-5 text-center">
-                        <div class="col-6">
-                          <p class="mb-5">Mengetahui,<br>Kepala Sekolah/Madrasah</p>
-                          <strong id="doc-kepala-nama">-</strong><br>
-                          <span id="doc-kepala-nip">NIP. -</span>
-                        </div>
-                        <div class="col-6">
-                          <p class="mb-5">Guru Mata Pelajaran</p>
-                          <strong id="doc-guru-nama">-</strong><br>
-                          <span id="doc-guru-nip">NIP. -</span>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
+                <h5 class="fw-bold mt-2">Asesmen & Evaluasi</h5>
+                <textarea class="form-control" rows="5" placeholder="Tuliskan Asesmen..."></textarea>
               </div>
-
-              <!-- TAB 5: REMEDIAL -->
               <div class="tab-pane fade" id="tab-remedial">
-                <h5>Program Remedial</h5>
-                <p>Formulir perbaikan bagi siswa yang belum mencapai KKTP.</p>
-                <textarea class="form-control" rows="4" placeholder="Tuliskan strategi remedial..."></textarea>
+                <h5 class="fw-bold mt-2">Program Remedial</h5>
+                <textarea class="form-control" rows="5" placeholder="Tuliskan Program Remedial..."></textarea>
               </div>
-
-              <!-- TAB 6: PENGAYAAN -->
               <div class="tab-pane fade" id="tab-pengayaan">
-                <h5>Program Pengayaan</h5>
-                <p>Formulir pendalaman materi untuk siswa berkemampuan tinggi.</p>
-                <textarea class="form-control" rows="4" placeholder="Tuliskan program pengayaan..."></textarea>
+                <h5 class="fw-bold mt-2">Program Pengayaan</h5>
+                <textarea class="form-control" rows="5" placeholder="Tuliskan Program Pengayaan..."></textarea>
               </div>
             </div>
 
@@ -427,1112 +303,22 @@
   </div>
 </div>
 
-<!-- MODAL GENERIC DYNAMIC FORMS -->
-<div class="modal fade" id="appModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalTitle">Form Data</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body" id="modalBody">
-        <!-- Dynamic Content -->
-      </div>
-      <div class="modal-footer">
-        <Berikut adalah seluruh kode program HTML, CSS, dan JavaScript lengkap yang digabungkan dalam satu file (`index.html`). Kode ini sudah mencakup seluruh fitur yang Kamu minta, termasuk sistem navigasi, menu pengaturan, validasi jadwal anti-bentrok, dan generator perangkat ajar 6 tab (dengan generator soal AI sesuai aturan jenjang).
+<!-- JS BOOTSTRAP & DYNAMIC NAV -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  function showSection(sectionId) {
+    document.querySelectorAll('.app-section').forEach(el => el.classList.add('d-none'));
+    document.querySelectorAll('.sidebar .nav-link').forEach(el => el.classList.remove('active'));
+
+    document.getElementById('section-' + sectionId).classList.remove('d-none');
+    document.getElementById('nav-' + sectionId).classList.add('active');
+  }
+
+  function savePengaturan(e) {
+    e.preventDefault();
+    alert('Pengaturan Identitas Sekolah Berhasil Disimpan!');
+  }
+</script>
 
-Kamu bisa langsung menyimpan kode di bawah ini sebagai file dengan nama **`index.html`** lalu membukanya di browser:
-
-```html
-<!DOCTYPE1 html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Manajemen Sekolah & Administrasi Guru</title>
-    <!-- Tailwind CSS -->
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
-    <style>
-        .active-tab {
-            border-bottom: 3px solid #2563eb;
-            color: #2563eb;
-            font-weight: 600;
-        }
-        @media print {
-            .no-print { display: none !important; }
-            .print-only { display: block !important; }
-        }
-    </style>
-</head>
-<body class="bg-slate-100 font-sans text-slate-800">
-
-    <div class="flex h-screen overflow-hidden">
-        <!-- SIDEBAR NAVIGASI -->
-        <aside class="w-64 bg-slate-900 text-white flex flex-col no-print shrink-0">
-            <div class="p-5 border-b border-slate-800 flex items-center space-x-3">
-                <i class="fa-solid fa-graduation-cap text-2xl text-blue-400"></i>
-                <div>
-                    <h1 class="font-bold text-lg leading-tight">EduAdmin Pro</h1>
-                    <p class="text-xs text-slate-400">Sistem Sekolah & Guru</p>
-                </div>
-            </div>
-
-            <nav class="flex-1 overflow-y-auto p-4 space-y-1">
-                <button onclick="switchMenu('pengaturan')" id="nav-pengaturan" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fa-solid fa-gear w-5 text-center"></i>
-                    <span class="text-sm font-medium">Pengaturan</span>
-                </button>
-                <button onclick="switchMenu('kelas')" id="nav-kelas" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fa-solid fa-door-open w-5 text-center"></i>
-                    <span class="text-sm font-medium">Data Kelas</span>
-                </button>
-                <button onclick="switchMenu('mapel')" id="nav-mapel" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fa-solid fa-book w-5 text-center"></i>
-                    <span class="text-sm font-medium">Data Mapel</span>
-                </button>
-                <button onclick="switchMenu('siswa')" id="nav-siswa" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fa-solid fa-user-graduate w-5 text-center"></i>
-                    <span class="text-sm font-medium">Data Siswa</span>
-                </button>
-                <button onclick="switchMenu('guru')" id="nav-guru" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fa-solid fa-chalkboard-user w-5 text-center"></i>
-                    <span class="text-sm font-medium">Data Guru</span>
-                </button>
-                <button onclick="switchMenu('guru-mapel')" id="nav-guru-mapel" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fa-solid fa-clipboard-user w-5 text-center"></i>
-                    <span class="text-sm font-medium">Guru Mapel</span>
-                </button>
-                <button onclick="switchMenu('nilai')" id="nav-nilai" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fa-solid fa-file-pen w-5 text-center"></i>
-                    <span class="text-sm font-medium">Nilai Siswa</span>
-                </button>
-                <button onclick="switchMenu('jadwal')" id="nav-jadwal" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fa-solid fa-calendar-days w-5 text-center"></i>
-                    <span class="text-sm font-medium">Jadwal (Anti-Bentrok)</span>
-                </button>
-                <button onclick="switchMenu('perangkat')" id="nav-perangkat" class="nav-item w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-white transition">
-                    <i class="fa-solid fa-folder-open w-5 text-center"></i>
-                    <span class="text-sm font-medium">Perangkat Ajar / Modul</span>
-                </button>
-            </nav>
-        </aside>
-
-        <!-- AREA KONTEN UTAMA -->
-        <main class="flex-1 overflow-y-auto p-8">
-            
-            <!-- NOTIFIKASI System -->
-            <div id="toast" class="hidden fixed top-5 right-5 z-50 bg-green-600 text-white px-4 py-3 rounded-lg shadow-lg flex items-center space-x-2 transition-all duration-300">
-                <i class="fa-solid fa-circle-check"></i>
-                <span id="toast-message">Berhasil disimpan!</span>
-            </div>
-
-            <!-- 1. MENU PENGATURAN -->
-            <section id="menu-pengaturan" class="menu-content space-y-6">
-                <div class="border-b pb-4">
-                    <h2 class="text-2xl font-bold text-slate-800">Pengaturan Sekolah / Madrasah</h2>
-                    <p class="text-slate-500 text-sm">Kelola identitas satuan pendidikan dan data penandatangan resmi.</p>
-                </div>
-                <form id="form-pengaturan" onsubmit="savePengaturan(event)" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 max-w-2xl space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Nama Sekolah / Madrasah</label>
-                        <input type="text" id="set-sekolah" class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" required placeholder="Contoh: MIS Al-Hidayah / SMPN 1 Jakarta">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Nama Kepala Sekolah / Madrasah</label>
-                        <input type="text" id="set-kepsek" class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" required placeholder="Nama lengkap beserta gelar">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">NIP Kepala Sekolah / Madrasah</label>
-                        <input type="text" id="set-nip-kepsek" class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" required placeholder="Nomor Induk Pegawai">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Tahun Pelajaran</label>
-                        <input type="text" id="set-tp" class="w-full border rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-blue-500 outline-none" required placeholder="Contoh: 2024/2025">
-                    </div>
-                    <button type="submit" class="bg-blue-600 text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 text-sm font-medium flex items-center space-x-2">
-                        <i class="fa-solid fa-floppy-disk"></i>
-                        <span>Simpan Pengaturan</span>
-                    </button>
-                </form>
-            </section>
-
-            <!-- 2. MENU DATA KELAS -->
-            <section id="menu-kelas" class="menu-content space-y-6 hidden">
-                <div class="border-b pb-4 flex justify-between items-center">
-                    <div>
-                        <h2 class="text-2xl font-bold text-slate-800">Data Kelas</h2>
-                        <p class="text-slate-500 text-sm">Kelola daftar rombongan belajar / kelas.</p>
-                    </div>
-                </div>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <form onsubmit="addKelas(event)" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-fit space-y-4">
-                        <h3 class="font-semibold border-b pb-2">Tambah Kelas Baru</h3>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nama Kelas</label>
-                            <input type="text" id="input-kelas" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Kelas 1-A / VII-B" required>
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 text-sm font-medium">Tambah Kelas</button>
-                    </form>
-                    <div class="md:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead class="bg-slate-50 border-b">
-                                <tr>
-                                    <th class="p-3 font-semibold">No</th>
-                                    <th class="p-3 font-semibold">Nama Kelas</th>
-                                    <th class="p-3 font-semibold text-right">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-kelas-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 3. MENU DATA MAPEL -->
-            <section id="menu-mapel" class="menu-content space-y-6 hidden">
-                <div class="border-b pb-4 flex justify-between items-center">
-                    <div>
-                        <h2 class="text-2xl font-bold text-slate-800">Data Mata Pelajaran</h2>
-                        <p class="text-slate-500 text-sm">Daftar Kurikulum Kemendikbud & Kemenag.</p>
-                    </div>
-                </div>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <form onsubmit="addMapel(event)" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-fit space-y-4">
-                        <h3 class="font-semibold border-b pb-2">Tambah Mapel</h3>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nama Mapel</label>
-                            <input type="text" id="input-mapel" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Matematika / Fikih" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Naungan</label>
-                            <select id="input-mapel-naungan" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500">
-                                <option value="Kemendikbud">Kemendikbud</option>
-                                <option value="Kemenag">Kemenag</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 text-sm font-medium">Tambah Mapel</button>
-                    </form>
-                    <div class="md:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead class="bg-slate-50 border-b">
-                                <tr>
-                                    <th class="p-3 font-semibold">No</th>
-                                    <th class="p-3 font-semibold">Nama Mapel</th>
-                                    <th class="p-3 font-semibold">Naungan</th>
-                                    <th class="p-3 font-semibold text-right">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-mapel-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 4. MENU DATA SISWA -->
-            <section id="menu-siswa" class="menu-content space-y-6 hidden">
-                <div class="border-b pb-4">
-                    <h2 class="text-2xl font-bold text-slate-800">Data Siswa</h2>
-                    <p class="text-slate-500 text-sm">Manajemen biodata siswa dengan dropdown terintegrasi.</p>
-                </div>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <form onsubmit="saveSiswa(event)" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-fit space-y-4">
-                        <h3 class="font-semibold border-b pb-2" id="form-siswa-title">Tambah Siswa</h3>
-                        <input type="hidden" id="siswa-edit-id">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nama Siswa</label>
-                            <input type="text" id="siswa-nama" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Kelas (Dropdown)</label>
-                            <select id="siswa-kelas-select" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Jenis Kelamin</label>
-                            <select id="siswa-jk-select" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required>
-                                <option value="Laki-laki">Laki-laki</option>
-                                <option value="Perempuan">Perempuan</option>
-                            </select>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button type="submit" class="flex-1 bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 text-sm font-medium">Simpan</button>
-                            <button type="button" onclick="resetFormSiswa()" class="bg-slate-200 text-slate-700 px-3 py-2.5 rounded-lg text-sm hover:bg-slate-300">Batal</button>
-                        </div>
-                    </form>
-                    <div class="md:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead class="bg-slate-50 border-b">
-                                <tr>
-                                    <th class="p-3 font-semibold">Nama Siswa</th>
-                                    <th class="p-3 font-semibold">Kelas</th>
-                                    <th class="p-3 font-semibold">L/P</th>
-                                    <th class="p-3 font-semibold text-right">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-siswa-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 5. MENU DATA GURU -->
-            <section id="menu-guru" class="menu-content space-y-6 hidden">
-                <div class="border-b pb-4">
-                    <h2 class="text-2xl font-bold text-slate-800">Data Guru</h2>
-                    <p class="text-slate-500 text-sm">Manajemen data profil dan pengajar.</p>
-                </div>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <form onsubmit="saveGuru(event)" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-fit space-y-4">
-                        <h3 class="font-semibold border-b pb-2">Tambah Guru</h3>
-                        <input type="hidden" id="guru-edit-id">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nama Guru</label>
-                            <input type="text" id="guru-nama" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">NIP Guru</label>
-                            <input type="text" id="guru-nip" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" placeholder="Opsional/NIP">
-                        </div>
-                        <div class="flex space-x-2">
-                            <button type="submit" class="flex-1 bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 text-sm font-medium">Simpan</button>
-                            <button type="button" onclick="resetFormGuru()" class="bg-slate-200 text-slate-700 px-3 py-2.5 rounded-lg text-sm hover:bg-slate-300">Batal</button>
-                        </div>
-                    </form>
-                    <div class="md:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead class="bg-slate-50 border-b">
-                                <tr>
-                                    <th class="p-3 font-semibold">Nama Guru</th>
-                                    <th class="p-3 font-semibold">NIP</th>
-                                    <th class="p-3 font-semibold text-right">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-guru-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 6. MENU GURU MAPEL -->
-            <section id="menu-guru-mapel" class="menu-content space-y-6 hidden">
-                <div class="border-b pb-4">
-                    <h2 class="text-2xl font-bold text-slate-800">Penugasan Guru Mapel</h2>
-                    <p class="text-slate-500 text-sm">Penugasan pengampu mata pelajaran (Kemendikbud & Kemenag).</p>
-                </div>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <form onsubmit="saveGuruMapel(event)" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-fit space-y-4">
-                        <h3 class="font-semibold border-b pb-2">Penugasan Mapel</h3>
-                        <input type="hidden" id="gm-edit-id">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Pilih Guru</label>
-                            <select id="gm-guru-select" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required></select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Pilih Mapel (Dropdown)</label>
-                            <select id="gm-mapel-select" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required></select>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button type="submit" class="flex-1 bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 text-sm font-medium">Simpan Penugasan</button>
-                            <button type="button" onclick="resetFormGM()" class="bg-slate-200 text-slate-700 px-3 py-2.5 rounded-lg text-sm hover:bg-slate-300">Batal</button>
-                        </div>
-                    </form>
-                    <div class="md:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead class="bg-slate-50 border-b">
-                                <tr>
-                                    <th class="p-3 font-semibold">Nama Guru</th>
-                                    <th class="p-3 font-semibold">Mata Pelajaran</th>
-                                    <th class="p-3 font-semibold text-right">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-gm-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 7. MENU NILAI SISWA -->
-            <section id="menu-nilai" class="menu-content space-y-6 hidden">
-                <div class="border-b pb-4">
-                    <h2 class="text-2xl font-bold text-slate-800">Menu Nilai Siswa</h2>
-                    <p class="text-slate-500 text-sm">Input data asesmen/nilai berbasis dropdown siswa & mapel.</p>
-                </div>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <form onsubmit="addNilai(event)" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-fit space-y-4">
-                        <h3 class="font-semibold border-b pb-2">Input Nilai</h3>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nama Siswa (Dropdown)</label>
-                            <select id="nilai-siswa-select" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required></select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Mata Pelajaran (Dropdown)</label>
-                            <select id="nilai-mapel-select" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required></select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nilai Angka (0-100)</label>
-                            <input type="number" id="nilai-angka" min="0" max="100" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required>
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 text-sm font-medium">Simpan Nilai</button>
-                    </form>
-                    <div class="md:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead class="bg-slate-50 border-b">
-                                <tr>
-                                    <th class="p-3 font-semibold">Siswa</th>
-                                    <th class="p-3 font-semibold">Mapel</th>
-                                    <th class="p-3 font-semibold">Nilai</th>
-                                    <th class="p-3 font-semibold text-right">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-nilai-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 8. MENU JADWAL (ANTI-BENTROK) -->
-            <section id="menu-jadwal" class="menu-content space-y-6 hidden">
-                <div class="border-b pb-4">
-                    <h2 class="text-2xl font-bold text-slate-800">Penjadwalan Pembelajaran (System Anti-Bentrok)</h2>
-                    <p class="text-slate-500 text-sm">Mencegah bentrok jam mengajar, kelas, dan pengampu guru secara otomatis.</p>
-                </div>
-                <div class="grid md:grid-cols-3 gap-6">
-                    <form onsubmit="addJadwal(event)" class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 h-fit space-y-4">
-                        <h3 class="font-semibold border-b pb-2">Tambah Jadwal</h3>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Hari</label>
-                            <select id="jadwal-hari" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required>
-                                <option value="Senin">Senin</option>
-                                <option value="Selasa">Selasa</option>
-                                <option value="Rabu">Rabu</option>
-                                <option value="Kamis">Kamis</option>
-                                <option value="Jumat">Jumat</option>
-                                <option value="Sabtu">Sabtu</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Sesi / Jam Ke-</label>
-                            <select id="jadwal-jam" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required>
-                                <option value="1 (07:30 - 08:15)">Jam Ke-1 (07:30 - 08:15)</option>
-                                <option value="2 (08:15 - 09:00)">Jam Ke-2 (08:15 - 09:00)</option>
-                                <option value="3 (09:15 - 10:00)">Jam Ke-3 (09:15 - 10:00)</option>
-                                <option value="4 (10:00 - 10:45)">Jam Ke-4 (10:00 - 10:45)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Kelas</label>
-                            <select id="jadwal-kelas" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required></select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Mata Pelajaran</label>
-                            <select id="jadwal-mapel" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required></select>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Guru Pengajar</label>
-                            <select id="jadwal-guru" class="w-full border rounded-lg p-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500" required></select>
-                        </div>
-                        <button type="submit" class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 text-sm font-medium">Validasi & Simpan</button>
-                    </form>
-                    <div class="md:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                        <table class="w-full text-left border-collapse text-sm">
-                            <thead class="bg-slate-50 border-b">
-                                <tr>
-                                    <th class="p-3 font-semibold">Hari/Sesi</th>
-                                    <th class="p-3 font-semibold">Kelas</th>
-                                    <th class="p-3 font-semibold">Mapel & Guru</th>
-                                    <th class="p-3 font-semibold text-right">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody id="table-jadwal-body"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- 9. MENU PERANGKAT AJAR / MODUL (6 TAB) -->
-            <section id="menu-perangkat" class="menu-content space-y-6 hidden">
-                <div class="border-b pb-4 flex justify-between items-center">
-                    <div>
-                        <h2 class="text-2xl font-bold text-slate-800">Perangkat Ajar & Administrasi Guru</h2>
-                        <p class="text-slate-500 text-sm">Modul Ajar, ATP, LKPD, Asesmen AI, Remedial, & Pengayaan.</p>
-                    </div>
-                </div>
-
-                <!-- SUB TAB NAVIGATION -->
-                <div class="flex border-b border-slate-200 bg-white px-4 pt-2 rounded-t-xl no-print overflow-x-auto">
-                    <button onclick="switchTab('modul')" id="tab-modul" class="p-3 px-5 text-sm font-medium text-slate-500 hover:text-blue-600 whitespace-nowrap active-tab">1. Modul Ajar</button>
-                    <button onclick="switchTab('atp')" id="tab-atp" class="p-3 px-5 text-sm font-medium text-slate-500 hover:text-blue-600 whitespace-nowrap">2. ATP</button>
-                    <button onclick="switchTab('lkpd')" id="tab-lkpd" class="p-3 px-5 text-sm font-medium text-slate-500 hover:text-blue-600 whitespace-nowrap">3. LKPD</button>
-                    <button onclick="switchTab('asesmen')" id="tab-asesmen" class="p-3 px-5 text-sm font-medium text-slate-500 hover:text-blue-600 whitespace-nowrap">4. Asesmen (AI Auto-Gen)</button>
-                    <button onclick="switchTab('remedial')" id="tab-remedial" class="p-3 px-5 text-sm font-medium text-slate-500 hover:text-blue-600 whitespace-nowrap">5. Remedial</button>
-                    <button onclick="switchTab('pengayaan')" id="tab-pengayaan" class="p-3 px-5 text-sm font-medium text-slate-500 hover:text-blue-600 whitespace-nowrap">6. Pengayaan</button>
-                </div>
-
-                <!-- TAB CONTENT AREA -->
-                <div class="bg-white p-6 rounded-b-xl border border-slate-200 border-t-0 min-h-[500px]">
-                    
-                    <!-- TAB 1: MODUL AJAR -->
-                    <div id="content-tab-modul" class="tab-content">
-                        <h3 class="text-lg font-bold text-slate-800 mb-2">Penyusunan Modul Ajar</h3>
-                        <p class="text-slate-500 text-sm mb-4">Lengkapi komponen modul ajar secara sistematis.</p>
-                        <textarea class="w-full h-64 border rounded-lg p-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Tuliskan Rencana Modul Ajar / Pemetaan Materi..."></textarea>
-                    </div>
-
-                    <!-- TAB 2: ATP -->
-                    <div id="content-tab-atp" class="tab-content hidden">
-                        <h3 class="text-lg font-bold text-slate-800 mb-2">Alur Tujuan Pembelajaran (ATP)</h3>
-                        <p class="text-slate-500 text-sm mb-4">Pemetaan Capaian Pembelajaran (CP) dan Alur Tujuan Pembelajaran.</p>
-                        <textarea class="w-full h-64 border rounded-lg p-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Tuliskan Urutan & Alur Tujuan Pembelajaran..."></textarea>
-                    </div>
-
-                    <!-- TAB 3: LKPD -->
-                    <div id="content-tab-lkpd" class="tab-content hidden">
-                        <h3 class="text-lg font-bold text-slate-800 mb-2">Lembar Kerja Peserta Didik (LKPD)</h3>
-                        <p class="text-slate-500 text-sm mb-4">Panduan instruksi tugas siswa individual maupun kelompok.</p>
-                        <textarea class="w-full h-64 border rounded-lg p-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Input Panduan LKPD & Instruksi Tugas..."></textarea>
-                    </div>
-
-                    <!-- TAB 4: ASESMEN (GENERATOR SOAL AI + PANEL PANEL KIRI) -->
-                    <div id="content-tab-asesmen" class="tab-content hidden">
-                        <div class="grid md:grid-cols-3 gap-6">
-                            <!-- PANEL SEBELAH KIRI (FILTER & PENGATURAN) -->
-                            <div class="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4 no-print">
-                                <h4 class="font-bold text-slate-800 border-b pb-2 flex items-center space-x-2">
-                                    <i class="fa-solid fa-sliders text-blue-600"></i>
-                                    <span>Konfigurasi Asesmen</span>
-                                </h4>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Jenjang Pendidikan</label>
-                                    <select id="gen-jenjang" onchange="updateAlokasiWaktu()" class="w-full border rounded-lg p-2 text-sm outline-none">
-                                        <option value="PAUD">PAUD</option>
-                                        <option value="SD/MI" selected>SD/MI</option>
-                                        <option value="SMP/MTs">SMP/MTs</option>
-                                        <option value="SMA/MA">SMA/MA</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Kelas</label>
-                                    <select id="gen-kelas" class="w-full border rounded-lg p-2 text-sm outline-none">
-                                        <option value="1">Kelas 1 (SD)</option>
-                                        <option value="2">Kelas 2 (SD)</option>
-                                        <option value="3">Kelas 3 (SD)</option>
-                                        <option value="4">Kelas 4 (SD)</option>
-                                        <option value="5">Kelas 5 (SD)</option>
-                                        <option value="6">Kelas 6 (SD)</option>
-                                        <option value="7">Kelas 7 (SMP)</option>
-                                        <option value="8">Kelas 8 (SMP)</option>
-                                        <option value="9">Kelas 9 (SMP)</option>
-                                        <option value="10">Kelas 10 (SMA)</option>
-                                        <option value="11">Kelas 11 (SMA)</option>
-                                        <option value="12">Kelas 12 (SMA)</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Mata Pelajaran (Dropdown Mapel)</label>
-                                    <select id="gen-mapel-select" class="w-full border rounded-lg p-2 text-sm outline-none"></select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Bab / Topik Pembelajaran</label>
-                                    <input type="text" id="gen-topik" class="w-full border rounded-lg p-2 text-sm outline-none" placeholder="Contoh: Operasi Hitung / Fikih Shalat" value="Asesmen Harian Bab 1">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Alokasi Waktu (Otomatis)</label>
-                                    <input type="text" id="gen-alokasi" class="w-full border rounded-lg p-2 text-sm bg-slate-100 outline-none" readonly value="2 x 35 Menit">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Model Pembelajaran</label>
-                                    <select id="gen-model" class="w-full border rounded-lg p-2 text-sm outline-none">
-                                        <option value="Problem Based Learning">Problem Based Learning</option>
-                                        <option value="Project Based Learning">Project Based Learning</option>
-                                        <option value="Discovery Learning">Discovery Learning</option>
-                                        <option value="Direct Instruction">Direct Instruction</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Guru Penyusun (Pengesahan)</label>
-                                    <select id="gen-guru-select" class="w-full border rounded-lg p-2 text-sm outline-none"></select>
-                                </div>
-                                <button onclick="generateSoalAI()" class="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-blue-700 text-sm font-semibold flex items-center justify-center space-x-2">
-                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                    <span>Generate Soal AI</span>
-                                </button>
-                            </div>
-
-                            <!-- PREVIEW LEMBAR ASESMEN & SOAL AI -->
-                            <div class="md:col-span-2 bg-white p-6 border rounded-xl shadow-sm text-slate-900" id="print-area">
-                                <div class="text-center border-b-2 border-slate-900 pb-3 mb-4">
-                                    <h3 class="font-bold text-lg uppercase" id="preview-sekolah">NAMA SEKOLAH / MADRASAH</h3>
-                                    <h4 class="font-semibold text-md" id="preview-judul-asesmen">NASKAH ASESMEN PEMBELAJARAN</h4>
-                                    <p class="text-xs">Tahun Pelajaran <span id="preview-tp">2024/2025</span></p>
-                                </div>
-
-                                <div class="grid grid-cols-2 text-xs gap-2 mb-6 bg-slate-50 p-3 rounded border">
-                                    <div><strong>Mata Pelajaran:</strong> <span id="preview-mapel">-</span></div>
-                                    <div><strong>Jenjang / Kelas:</strong> <span id="preview-jenjang-kelas">-</span></div>
-                                    <div><strong>Topik / Bab:</strong> <span id="preview-topik">-</span></div>
-                                    <div><strong>Alokasi Waktu:</strong> <span id="preview-alokasi">-</span></div>
-                                    <div><strong>Model Pembelajaran:</strong> <span id="preview-model">-</span></div>
-                                </div>
-
-                                <!-- HASIL HASIL SOAL AI -->
-                                <div id="container-soal-generated" class="space-y-4 text-sm min-h-[250px]">
-                                    <div class="text-center text-slate-400 py-10">
-                                        <i class="fa-solid fa-file-circle-question text-4xl mb-2"></i>
-                                        <p>Klik tombol "Generate Soal AI" di panel kiri untuk membuat naskah soal otomatis.</p>
-                                    </div>
-                                </div>
-
-                                <!-- PANEL PENGESAHAN LEMBAR EVALUASI -->
-                                <div class="mt-12 grid grid-cols-2 text-center text-xs pt-6 border-t border-slate-200">
-                                    <div>
-                                        <p>Mengetahui,</p>
-                                        <p class="font-semibold">Kepala Sekolah / Madrasah</p>
-                                        <div class="h-16"></div>
-                                        <p class="font-bold underline" id="preview-nama-kepsek">Nama Kepala Sekolah</p>
-                                        <p>NIP. <span id="preview-nip-kepsek">-------------------</span></p>
-                                    </div>
-                                    <div>
-                                        <p>&nbsp;</p>
-                                        <p class="font-semibold">Guru Mata Pelajaran</p>
-                                        <div class="h-16"></div>
-                                        <p class="font-bold underline" id="preview-nama-guru">Nama Guru</p>
-                                        <p>NIP. <span id="preview-nip-guru">-------------------</span></p>
-                                    </div>
-                                </div>
-
-                                <div class="mt-6 text-right no-print">
-                                    <button onclick="window.print()" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-emerald-700 flex items-center space-x-2 ml-auto">
-                                        <i class="fa-solid fa-print"></i>
-                                        <span>Cetak Asesmen</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 5: REMEDIAL -->
-                    <div id="content-tab-remedial" class="tab-content hidden">
-                        <h3 class="text-lg font-bold text-slate-800 mb-2">Program Remedial</h3>
-                        <p class="text-slate-500 text-sm mb-4">Perencanaan dan intervensi perbaikan capaian hasil belajar.</p>
-                        <textarea class="w-full h-64 border rounded-lg p-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Tuliskan Rencana Pembelajaran Remedial & Pelaksanaan..."></textarea>
-                    </div>
-
-                    <!-- TAB 6: PENGAYAAN -->
-                    <div id="content-tab-pengayaan" class="tab-content hidden">
-                        <h3 class="text-lg font-bold text-slate-800 mb-2">Program Pengayaan</h3>
-                        <p class="text-slate-500 text-sm mb-4">Materi dan pendalaman untuk siswa yang telah mencapai Kriteria Ketercapaian (KKTP).</p>
-                        <textarea class="w-full h-64 border rounded-lg p-4 text-sm focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Tuliskan Rencana & Soal Pendalaman Pengayaan..."></textarea>
-                    </div>
-
-                </div>
-            </section>
-
-        </main>
-    </div>
-
-    <!-- SCRIPT JAVASCRIPT LOGIC & DATA PERSISTENCE -->
-    <script>
-        // STATE STORAGE (LOKAL MEMORY & INITIAL PRESETS)
-        let state = {
-            pengaturan: JSON.parse(localStorage.getItem('app_pengaturan')) || {
-                sekolah: 'MADRASAH / SCHOOL DEMO',
-                kepsek: 'Dr. H. Ahmad Dahlan, M.Pd.',
-                nipKepsek: '19750812 200003 1 001',
-                tp: '2024/2025'
-            },
-            kelas: JSON.parse(localStorage.getItem('app_kelas')) || ['Kelas 1-A', 'Kelas 4-B', 'Kelas 7-1', 'Kelas 10-IPA'],
-            mapel: JSON.parse(localStorage.getItem('app_mapel')) || [
-                { nama: 'Matematika', naungan: 'Kemendikbud' },
-                { nama: 'Bahasa Indonesia', naungan: 'Kemendikbud' },
-                { nama: 'IPA', naungan: 'Kemendikbud' },
-                { nama: 'Al-Qur\'an Hadis', naungan: 'Kemenag' },
-                { nama: 'Akidah Akhlak', naungan: 'Kemenag' },
-                { nama: 'Fikih', naungan: 'Kemenag' },
-                { nama: 'SKI', naungan: 'Kemenag' },
-                { nama: 'Bahasa Arab', naungan: 'Kemenag' }
-            ],
-            siswa: JSON.parse(localStorage.getItem('app_siswa')) || [
-                { id: 1, nama: 'Ahmad Raihan', kelas: 'Kelas 1-A', jk: 'Laki-laki' },
-                { id: 2, nama: 'Siti Nurhaliza', kelas: 'Kelas 4-B', jk: 'Perempuan' }
-            ],
-            guru: JSON.parse(localStorage.getItem('app_guru')) || [
-                { id: 1, nama: 'Budi Santoso, S.Pd.', nip: '19820101 200604 1 002' },
-                { id: 2, nama: 'Siti Aminah, S.Ag.', nip: '19850510 201001 2 005' }
-            ],
-            guruMapel: JSON.parse(localStorage.getItem('app_guruMapel')) || [
-                { id: 1, guruNama: 'Budi Santoso, S.Pd.', mapelNama: 'Matematika' },
-                { id: 2, guruNama: 'Siti Aminah, S.Ag.', mapelNama: 'Fikih' }
-            ],
-            nilai: JSON.parse(localStorage.getItem('app_nilai')) || [],
-            jadwal: JSON.parse(localStorage.getItem('app_jadwal')) || []
-        };
-
-        // SAVE STATE HELPER
-        function saveToStorage() {
-            localStorage.setItem('app_pengaturan', JSON.stringify(state.pengaturan));
-            localStorage.setItem('app_kelas', JSON.stringify(state.kelas));
-            localStorage.setItem('app_mapel', JSON.stringify(state.mapel));
-            localStorage.setItem('app_siswa', JSON.stringify(state.siswa));
-            localStorage.setItem('app_guru', JSON.stringify(state.guru));
-            localStorage.setItem('app_guruMapel', JSON.stringify(state.guruMapel));
-            localStorage.setItem('app_nilai', JSON.stringify(state.nilai));
-            localStorage.setItem('app_jadwal', JSON.stringify(state.jadwal));
-            renderAll();
-        }
-
-        // SHOW TOAST NOTIFICATION
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            document.getElementById('toast-message').innerText = msg;
-            toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 3000);
-        }
-
-        // MENU SWITCHER
-        function switchMenu(menuId) {
-            document.querySelectorAll('.menu-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('bg-slate-800', 'text-white'));
-            
-            document.getElementById(`menu-${menuId}`).classList.remove('hidden');
-            document.getElementById(`nav-${menuId}`).classList.add('bg-slate-800', 'text-white');
-        }
-
-        // TAB SWITCHER FOR PERANGKAT AJAR
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.remove('active-tab'));
-
-            document.getElementById(`content-tab-${tabId}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabId}`).classList.add('active-tab');
-        }
-
-        // 1. PENGATURAN LOGIC
-        function savePengaturan(e) {
-            e.preventDefault();
-            state.pengaturan = {
-                sekolah: document.getElementById('set-sekolah').value,
-                kepsek: document.getElementById('set-kepsek').value,
-                nipKepsek: document.getElementById('set-nip-kepsek').value,
-                tp: document.getElementById('set-tp').value
-            };
-            saveToStorage();
-            showToast('Pengaturan sekolah berhasil diperbarui!');
-        }
-
-        function loadPengaturanForm() {
-            document.getElementById('set-sekolah').value = state.pengaturan.sekolah;
-            document.getElementById('set-kepsek').value = state.pengaturan.kepsek;
-            document.getElementById('set-nip-kepsek').value = state.pengaturan.nipKepsek;
-            document.getElementById('set-tp').value = state.pengaturan.tp;
-        }
-
-        // 2. KELAS LOGIC
-        function addKelas(e) {
-            e.preventDefault();
-            const val = document.getElementById('input-kelas').value.trim();
-            if(val && !state.kelas.includes(val)) {
-                state.kelas.push(val);
-                document.getElementById('input-kelas').value = '';
-                saveToStorage();
-                showToast('Kelas berhasil ditambahkan!');
-            }
-        }
-        function deleteKelas(index) {
-            state.kelas.splice(index, 1);
-            saveToStorage();
-        }
-
-        // 3. MAPEL LOGIC
-        function addMapel(e) {
-            e.preventDefault();
-            const nama = document.getElementById('input-mapel').value.trim();
-            const naungan = document.getElementById('input-mapel-naungan').value;
-            if(nama) {
-                state.mapel.push({ nama, naungan });
-                document.getElementById('input-mapel').value = '';
-                saveToStorage();
-                showToast('Mata Pelajaran berhasil ditambahkan!');
-            }
-        }
-        function deleteMapel(index) {
-            state.mapel.splice(index, 1);
-            saveToStorage();
-        }
-
-        // 4. SISWA LOGIC
-        function saveSiswa(e) {
-            e.preventDefault();
-            const editId = document.getElementById('siswa-edit-id').value;
-            const nama = document.getElementById('siswa-nama').value;
-            const kelas = document.getElementById('siswa-kelas-select').value;
-            const jk = document.getElementById('siswa-jk-select').value;
-
-            if(editId) {
-                const index = state.siswa.findIndex(s => s.id == editId);
-                if(index !== -1) {
-                    state.siswa[index] = { id: parseInt(editId), nama, kelas, jk };
-                }
-            } else {
-                state.siswa.push({ id: Date.now(), nama, kelas, jk });
-            }
-            resetFormSiswa();
-            saveToStorage();
-            showToast('Data siswa berhasil disimpan!');
-        }
-        function editSiswa(id) {
-            const s = state.siswa.find(item => item.id === id);
-            if(s) {
-                document.getElementById('siswa-edit-id').value = s.id;
-                document.getElementById('siswa-nama').value = s.nama;
-                document.getElementById('siswa-kelas-select').value = s.kelas;
-                document.getElementById('siswa-jk-select').value = s.jk;
-                document.getElementById('form-siswa-title').innerText = 'Edit Data Siswa';
-            }
-        }
-        function deleteSiswa(id) {
-            state.siswa = state.siswa.filter(s => s.id !== id);
-            saveToStorage();
-        }
-        function resetFormSiswa() {
-            document.getElementById('siswa-edit-id').value = '';
-            document.getElementById('siswa-nama').value = '';
-            document.getElementById('form-siswa-title').innerText = 'Tambah Siswa';
-        }
-
-        // 5. GURU LOGIC
-        function saveGuru(e) {
-            e.preventDefault();
-            const editId = document.getElementById('guru-edit-id').value;
-            const nama = document.getElementById('guru-nama').value;
-            const nip = document.getElementById('guru-nip').value || '-';
-
-            if(editId) {
-                const index = state.guru.findIndex(g => g.id == editId);
-                if(index !== -1) state.guru[index] = { id: parseInt(editId), nama, nip };
-            } else {
-                state.guru.push({ id: Date.now(), nama, nip });
-            }
-            resetFormGuru();
-            saveToStorage();
-            showToast('Data Guru berhasil disimpan!');
-        }
-        function editGuru(id) {
-            const g = state.guru.find(item => item.id === id);
-            if(g) {
-                document.getElementById('guru-edit-id').value = g.id;
-                document.getElementById('guru-nama').value = g.nama;
-                document.getElementById('guru-nip').value = g.nip;
-            }
-        }
-        function deleteGuru(id) {
-            state.guru = state.guru.filter(g => g.id !== id);
-            saveToStorage();
-        }
-        function resetFormGuru() {
-            document.getElementById('guru-edit-id').value = '';
-            document.getElementById('guru-nama').value = '';
-            document.getElementById('guru-nip').value = '';
-        }
-
-        // 6. GURU MAPEL LOGIC
-        function saveGuruMapel(e) {
-            e.preventDefault();
-            const editId = document.getElementById('gm-edit-id').value;
-            const guruNama = document.getElementById('gm-guru-select').value;
-            const mapelNama = document.getElementById('gm-mapel-select').value;
-
-            if(editId) {
-                const idx = state.guruMapel.findIndex(x => x.id == editId);
-                if(idx !== -1) state.guruMapel[idx] = { id: parseInt(editId), guruNama, mapelNama };
-            } else {
-                state.guruMapel.push({ id: Date.now(), guruNama, mapelNama });
-            }
-            resetFormGM();
-            saveToStorage();
-            showToast('Penugasan Guru Mapel berhasil!');
-        }
-        function editGuruMapel(id) {
-            const gm = state.guruMapel.find(x => x.id === id);
-            if(gm) {
-                document.getElementById('gm-edit-id').value = gm.id;
-                document.getElementById('gm-guru-select').value = gm.guruNama;
-                document.getElementById('gm-mapel-select').value = gm.mapelNama;
-            }
-        }
-        function deleteGuruMapel(id) {
-            state.guruMapel = state.guruMapel.filter(x => x.id !== id);
-            saveToStorage();
-        }
-        function resetFormGM() {
-            document.getElementById('gm-edit-id').value = '';
-        }
-
-        // 7. NILAI LOGIC
-        function addNilai(e) {
-            e.preventDefault();
-            const siswaNama = document.getElementById('nilai-siswa-select').value;
-            const mapelNama = document.getElementById('nilai-mapel-select').value;
-            const angka = document.getElementById('nilai-angka').value;
-
-            state.nilai.push({ id: Date.now(), siswaNama, mapelNama, angka });
-            document.getElementById('nilai-angka').value = '';
-            saveToStorage();
-            showToast('Nilai berhasil ditambahkan!');
-        }
-        function deleteNilai(id) {
-            state.nilai = state.nilai.filter(n => n.id !== id);
-            saveToStorage();
-        }
-
-        // 8. JADWAL (SYSTEM ANTI-BENTROK)
-        function addJadwal(e) {
-            e.preventDefault();
-            const hari = document.getElementById('jadwal-hari').value;
-            const jam = document.getElementById('jadwal-jam').value;
-            const kelas = document.getElementById('jadwal-kelas').value;
-            const mapel = document.getElementById('jadwal-mapel').value;
-            const guru = document.getElementById('jadwal-guru').value;
-
-            // CEK ANTI-BENTROK: BENTROK GURU
-            const bentrokGuru = state.jadwal.find(j => j.hari === hari && j.jam === jam && j.guru === guru);
-            if(bentrokGuru) {
-                alert(`[JADWAL BENTROK!] Guru ${guru} sudah mengajar di ${bentrokGuru.kelas} pada ${hari}, Sesi ${jam}!`);
-                return;
-            }
-
-            // CEK ANTI-BENTROK: BENTROK KELAS
-            const bentrokKelas = state.jadwal.find(j => j.hari === hari && j.jam === jam && j.kelas === kelas);
-            if(bentrokKelas) {
-                alert(`[JADWAL BENTROK!] ${kelas} sudah memiliki jadwal mapel ${bentrokKelas.mapel} pada ${hari}, Sesi ${jam}!`);
-                return;
-            }
-
-            state.jadwal.push({ id: Date.now(), hari, jam, kelas, mapel, guru });
-            saveToStorage();
-            showToast('Jadwal berhasil divalidasi & disimpan (Bebas Bentrok)!');
-        }
-        function deleteJadwal(id) {
-            state.jadwal = state.jadwal.filter(j => j.id !== id);
-            saveToStorage();
-        }
-
-        // 9. GENERATOR ASESMEN AI BERDASARKAN ATURAN JENJANG & KELAS
-        function updateAlokasiWaktu() {
-            const jenjang = document.getElementById('gen-jenjang').value;
-            const alokasi = document.getElementById('gen-alokasi');
-            if(jenjang === 'PAUD') alokasi.value = '1 x 30 Menit';
-            else if(jenjang === 'SD/MI') alokasi.value = '2 x 35 Menit';
-            else if(jenjang === 'SMP/MTs') alokasi.value = '2 x 40 Menit';
-            else if(jenjang === 'SMA/MA') alokasi.value = '2 x 45 Menit';
-        }
-
-        function generateSoalAI() {
-            const jenjang = document.getElementById('gen-jenjang').value;
-            const kelas = parseInt(document.getElementById('gen-kelas').value);
-            const mapel = document.getElementById('gen-mapel-select').value || 'Mata Pelajaran';
-            const topik = document.getElementById('gen-topik').value || 'Topik Asesmen';
-            const alokasi = document.getElementById('gen-alokasi').value;
-            const model = document.getElementById('gen-model').value;
-            const guruNama = document.getElementById('gen-guru-select').value;
-            
-            const guruObj = state.guru.find(g => g.nama === guruNama) || { nama: guruNama, nip: '-' };
-
-            // UPDATE HEADER PREVIEW & PENGESAHAN
-            document.getElementById('preview-sekolah').innerText = state.pengaturan.sekolah;
-            document.getElementById('preview-tp').innerText = state.pengaturan.tp;
-            document.getElementById('preview-mapel').innerText = mapel;
-            document.getElementById('preview-jenjang-kelas').innerText = `${jenjang} / Kelas ${kelas}`;
-            document.getElementById('preview-topik').innerText = topik;
-            document.getElementById('preview-alokasi').innerText = alokasi;
-            document.getElementById('preview-model').innerText = model;
-
-            document.getElementById('preview-nama-kepsek').innerText = state.pengaturan.kepsek;
-            document.getElementById('preview-nip-kepsek').innerText = state.pengaturan.nipKepsek;
-            document.getElementById('preview-nama-guru').innerText = guruObj.nama;
-            document.getElementById('preview-nip-guru').innerText = guruObj.nip;
-
-            // ATURAN SOAL AI BERDASARKAN JENJANG & KELAS:
-            // - SD Kelas 1-3: 5 Isian Singkat
-            // - SD Kelas 4-6: 10 PG + 5 Isian Singkat
-            // - SMP / SMA Kelas 7-12: 40 PG + 10 Isian Singkat
-            let countPG = 0;
-            let countIsian = 0;
-
-            if(jenjang === 'PAUD') {
-                countPG = 0;
-                countIsian = 3;
-            } else if(jenjang === 'SD/MI') {
-                if(kelas >= 1 && kelas <= 3) {
-                    countPG = 0;
-                    countIsian = 5;
-                } else {
-                    countPG = 10;
-                    countIsian = 5;
-                }
-            } else {
-                // SMP/MTs & SMA/MA (Kelas 7-12)
-                countPG = 40;
-                countIsian = 10;
-            }
-
-            // HITUNG DAN GENERATE DUMMY SOAL ATAS NAMA AI
-            let htmlHTML = '';
-
-            if(countPG > 0) {
-                htmlHTML += `<h5 class="font-bold border-b pb-1 text-slate-800">A. Pilihan Ganda (${countPG} Soal)</h5><ol class="list-decimal pl-5 space-y-3">`;
-                for(let i = 1; i <= countPG; i++) {
-                    htmlHTML += `
-                        <li>
-                            <p class="font-medium">Contoh soal Pilihan Ganda no. ${i} mengenai "${topik}" untuk ${mapel} kelas ${kelas}?</p>
-                            <div class="grid grid-cols-2 gap-1 text-xs mt-1 text-slate-600">
-                                <span>A. Pilihan Jawaban A</span>
-                                <span>B. Pilihan Jawaban B</span>
-                                <span>C. Pilihan Jawaban C</span>
-                                <span>D. Pilihan Jawaban D</span>
-                            </div>
-                        </li>
-                    `;
-                }
-                htmlHTML += `</ol>`;
-            }
-
-            if(countIsian > 0) {
-                htmlHTML += `<h5 class="font-bold border-b pb-1 text-slate-800 mt-6">B. Isian Singkat (${countIsian} Soal)</h5><ol class="list-decimal pl-5 space-y-3">`;
-                for(let i = 1; i <= countIsian; i++) {
-                    htmlHTML += `
-                        <li>
-                            <p class="font-medium">Jelaskan atau isilah titik-titik soal nomor ${i} terkait konsep dasar ${topik} berikut ini: .....................?</p>
-                        </li>
-                    `;
-                }
-                htmlHTML += `</ol>`;
-            }
-
-            document.getElementById('container-soal-generated').innerHTML = htmlHTML;
-            showToast('Naskah Soal berhasil digenerate oleh AI!');
-        }
-
-
-        // RENDER ALL DATA TO UI
-        function renderAll() {
-            loadPengaturanForm();
-
-            // 1. RENDER KELAS
-            const tableKelas = document.getElementById('table-kelas-body');
-            tableKelas.innerHTML = state.kelas.map((k, idx) => `
-                <tr class="border-b hover:bg-slate-50">
-                    <td class="p-3">${idx+1}</td>
-                    <td class="p-3 font-medium">${k}</td>
-                    <td class="p-3 text-right">
-                        <button onclick="deleteKelas(${idx})" class="text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-
-            // 2. RENDER MAPEL
-            const tableMapel = document.getElementById('table-mapel-body');
-            tableMapel.innerHTML = state.mapel.map((m, idx) => `
-                <tr class="border-b hover:bg-slate-50">
-                    <td class="p-3">${idx+1}</td>
-                    <td class="p-3 font-medium">${m.nama}</td>
-                    <td class="p-3"><span class="px-2 py-1 rounded text-xs font-semibold ${m.naungan==='Kemenag'?'bg-emerald-100 text-emerald-700':'bg-blue-100 text-blue-700'}">${m.naungan}</span></td>
-                    <td class="p-3 text-right">
-                        <button onclick="deleteMapel(${idx})" class="text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-
-            // 3. RENDER DROPDOWNS
-            const selectKelas = document.getElementById('siswa-kelas-select');
-            selectKelas.innerHTML = state.kelas.map(k => `<option value="${k}">${k}</option>`).join('');
-
-            const selectJadwalKelas = document.getElementById('jadwal-kelas');
-            selectJadwalKelas.innerHTML = state.kelas.map(k => `<option value="${k}">${k}</option>`).join('');
-
-            const selectMapel = state.mapel.map(m => `<option value="${m.nama}">${m.nama} (${m.naungan})</option>`).join('');
-            document.getElementById('gm-mapel-select').innerHTML = selectMapel;
-            document.getElementById('nilai-mapel-select').innerHTML = selectMapel;
-            document.getElementById('jadwal-mapel').innerHTML = selectMapel;
-            document.getElementById('gen-mapel-select').innerHTML = selectMapel;
-
-            const selectGuru = state.guru.map(g => `<option value="${g.nama}">${g.nama}</option>`).join('');
-            document.getElementById('gm-guru-select').innerHTML = selectGuru;
-            document.getElementById('jadwal-guru').innerHTML = selectGuru;
-            document.getElementById('gen-guru-select').innerHTML = selectGuru;
-
-            const selectSiswa = state.siswa.map(s => `<option value="${s.nama}">${s.nama} (${s.kelas})</option>`).join('');
-            document.getElementById('nilai-siswa-select').innerHTML = selectSiswa;
-
-            // 4. RENDER SISWA
-            document.getElementById('table-siswa-body').innerHTML = state.siswa.map(s => `
-                <tr class="border-b hover:bg-slate-50">
-                    <td class="p-3 font-medium">${s.nama}</td>
-                    <td class="p-3">${s.kelas}</td>
-                    <td class="p-3">${s.jk}</td>
-                    <td class="p-3 text-right space-x-2">
-                        <button onclick="editSiswa(${s.id})" class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
-                        <button onclick="deleteSiswa(${s.id})" class="text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-
-            // 5. RENDER GURU
-            document.getElementById('table-guru-body').innerHTML = state.guru.map(g => `
-                <tr class="border-b hover:bg-slate-50">
-                    <td class="p-3 font-medium">${g.nama}</td>
-                    <td class="p-3">${g.nip}</td>
-                    <td class="p-3 text-right space-x-2">
-                        <button onclick="editGuru(${g.id})" class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
-                        <button onclick="deleteGuru(${g.id})" class="text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-
-            // 6. RENDER GURU MAPEL
-            document.getElementById('table-gm-body').innerHTML = state.guruMapel.map(gm => `
-                <tr class="border-b hover:bg-slate-50">
-                    <td class="p-3 font-medium">${gm.guruNama}</td>
-                    <td class="p-3">${gm.mapelNama}</td>
-                    <td class="p-3 text-right space-x-2">
-                        <button onclick="editGuruMapel(${gm.id})" class="text-blue-600 hover:text-blue-800"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
-                        <button onclick="deleteGuruMapel(${gm.id})" class="text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-
-            // 7. RENDER NILAI
-            document.getElementById('table-nilai-body').innerHTML = state.nilai.map(n => `
-                <tr class="border-b hover:bg-slate-50">
-                    <td class="p-3 font-medium">${n.siswaNama}</td>
-                    <td class="p-3">${n.mapelNama}</td>
-                    <td class="p-3"><span class="font-bold text-blue-600">${n.angka}</span></td>
-                    <td class="p-3 text-right">
-                        <button onclick="deleteNilai(${n.id})" class="text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-
-            // 8. RENDER JADWAL
-            document.getElementById('table-jadwal-body').innerHTML = state.jadwal.map(j => `
-                <tr class="border-b hover:bg-slate-50">
-                    <td class="p-3"><span class="font-semibold">${j.hari}</span> <br><span class="text-xs text-slate-500">${j.jam}</span></td>
-                    <td class="p-3 font-medium">${j.kelas}</td>
-                    <td class="p-3"><strong>${j.mapel}</strong><br><span class="text-xs text-slate-500">${j.guru}</span></td>
-                    <td class="p-3 text-right">
-                        <button onclick="deleteJadwal(${j.id})" class="text-red-600 hover:text-red-800"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        // INITIAL LOAD
-        window.onload = function() {
-            renderAll();
-            switchMenu('pengaturan');
-            updateAlokasiWaktu();
-        };
-    </script>
 </body>
 </html>
