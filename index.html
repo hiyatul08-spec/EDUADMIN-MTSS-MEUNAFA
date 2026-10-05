@@ -349,8 +349,12 @@
       <form onsubmit="addData(event, 'guru')" class="space-y-3">
         <div><label class="text-xs font-semibold block mb-1">NIP</label><input type="text" id="guru-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
         <div><label class="text-xs font-semibold block mb-1">Nama Guru</label><input type="text" id="guru-f2" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Mata Pelajaran</label><input type="text" id="guru-f3" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-guru', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
+        <div>
+  <label class="text-xs font-semibold block mb-1">Mata Pelajaran</label>
+  <select id="guru-f3" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
+    <!-- Diisi otomatis dari Data Mapel -->
+  </select>
+</div>        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-guru', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
       </form>
     </div>
   </div>
