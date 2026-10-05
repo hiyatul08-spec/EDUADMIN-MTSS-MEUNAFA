@@ -3,12 +3,196 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduAdmin MTs Meunafa</title>
+  <title>EduAdmin - MTs Meunafa</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body class="bg-slate-100 text-slate-800 font-sans antialiased">
-  <div id="app"></div>
-  <script src="src/app.js"></script>
+<body class="bg-slate-100 font-sans text-slate-800 antialiased flex h-screen overflow-hidden">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between p-4 overflow-y-auto">
+    <div>
+      <div class="flex items-center gap-3 mb-6 px-2">
+        <div class="bg-emerald-500 text-white p-2 rounded-lg font-bold">EA</div>
+        <div>
+          <h1 class="font-bold text-white leading-none">EduAdmin</h1>
+          <span class="text-xs text-slate-400">MTs Meunafa</span>
+        </div>
+      </div>
+      
+      <nav class="space-y-1 text-sm">
+        <a href="#" class="flex items-center gap-3 bg-emerald-500 text-white px-3 py-2.5 rounded-lg font-medium"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-user-graduate"></i> Data Siswa</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-chalkboard-user"></i> Data Guru</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-book"></i> Mata Pelajaran</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-door-open"></i> Kelas</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-graduation-cap"></i> Nilai Siswa</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-calendar-days"></i> Jadwal Pelajaran</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-bookmark"></i> Perangkat / Modul Ajar</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-photo-film"></i> Media Pembelajaran</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-file-pen"></i> Asesmen & Kuis</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-chart-line"></i> Rubrik Penilaian</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-file-lines"></i> LKPD Interaktif</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-clock"></i> Absensi Harian</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-wallet"></i> Administrasi & Keuangan</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-envelope"></i> Surat & Persuratan</a>
+        <a href="#" class="flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg"><i class="fa-solid fa-gear"></i> Pengaturan</a>
+      </nav>
+    </div>
+
+    <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400">
+      <p class="font-semibold text-slate-300">Status Penyimpanan</p>
+      <p class="text-emerald-400 flex items-center gap-1 mt-1"><i class="fa-solid fa-circle-check"></i> Lokal (Offline Ready)</p>
+    </div>
+  </aside>
+
+  <!-- Content Area -->
+  <main class="flex-1 overflow-y-auto flex flex-col">
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 px-8 py-4 flex justify-between items-center">
+      <h2 class="text-xl font-bold text-slate-800">Dashboard</h2>
+      <div class="flex items-center gap-4">
+        <button class="text-slate-500 hover:text-slate-700"><i class="fa-regular fa-bell text-lg"></i></button>
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-sm">A</div>
+          <div class="text-xs">
+            <p class="font-semibold leading-none">Administrator</p>
+            <p class="text-slate-400">Administrator</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="p-8 space-y-6">
+      <div>
+        <h3 class="text-2xl font-bold text-slate-800">Selamat Datang di EduAdmin MTs Meunafa</h3>
+        <p class="text-xs text-slate-500 mt-1">Tahun Pelajaran 2026 / 2027 | Kepala Madrasah: Administrator</p>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4">
+          <div class="p-3 bg-emerald-50 text-emerald-500 rounded-lg"><i class="fa-solid fa-user-graduate text-xl"></i></div>
+          <div>
+            <p class="text-xs text-slate-500">Total Siswa</p>
+            <p class="text-xl font-bold">6 Siswa</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4">
+          <div class="p-3 bg-sky-50 text-sky-500 rounded-lg"><i class="fa-solid fa-chalkboard-user text-xl"></i></div>
+          <div>
+            <p class="text-xs text-slate-500">Total Guru</p>
+            <p class="text-xl font-bold">4 Guru</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4">
+          <div class="p-3 bg-amber-50 text-amber-500 rounded-lg"><i class="fa-solid fa-door-open text-xl"></i></div>
+          <div>
+            <p class="text-xs text-slate-500">Kelas Active</p>
+            <p class="text-xl font-bold">5 Kelas</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4">
+          <div class="p-3 bg-purple-50 text-purple-500 rounded-lg"><i class="fa-solid fa-bookmark text-xl"></i></div>
+          <div>
+            <p class="text-xs text-slate-500">Modul Ajar</p>
+            <p class="text-xl font-bold">2 Modul</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-xl border border-slate-200">
+          <h4 class="font-bold mb-4 text-sm">Rasio Gender Siswa</h4>
+          <div class="w-48 h-48 mx-auto">
+            <canvas id="genderChart"></canvas>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-xl border border-slate-200">
+          <h4 class="font-bold mb-4 text-sm">Statistik Usia Guru</h4>
+          <div class="h-48">
+            <canvas id="ageChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Access -->
+      <div>
+        <h4 class="font-bold mb-4 text-sm">Akses Cepat Pembelajaran</h4>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between hover:shadow-md transition cursor-pointer">
+            <div class="flex items-center gap-3">
+              <div class="p-2 bg-emerald-50 text-emerald-500 rounded-lg"><i class="fa-solid fa-bookmark"></i></div>
+              <span class="text-xs font-semibold">Perangkat / Modul Ajar</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between hover:shadow-md transition cursor-pointer">
+            <div class="flex items-center gap-3">
+              <div class="p-2 bg-sky-50 text-sky-500 rounded-lg"><i class="fa-solid fa-photo-film"></i></div>
+              <span class="text-xs font-semibold">Media Pembelajaran</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between hover:shadow-md transition cursor-pointer">
+            <div class="flex items-center gap-3">
+              <div class="p-2 bg-amber-50 text-amber-500 rounded-lg"><i class="fa-solid fa-file-lines"></i></div>
+              <span class="text-xs font-semibold">LKPD Interaktif</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center justify-between hover:shadow-md transition cursor-pointer">
+            <div class="flex items-center gap-3">
+              <div class="p-2 bg-pink-50 text-pink-500 rounded-lg"><i class="fa-solid fa-file-pen"></i></div>
+              <span class="text-xs font-semibold">Asesmen & Kuis</span>
+            </div>
+            <i class="fa-solid fa-chevron-right text-xs text-slate-400"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Donut Chart
+    new Chart(document.getElementById('genderChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Laki-laki', 'Perempuan'],
+        datasets: [{
+          data: [5, 1],
+          backgroundColor: ['#3b82f6', '#ff4d4d']
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    // Bar Chart
+    new Chart(document.getElementById('ageChart'), {
+      type: 'bar',
+      data: {
+        labels: ['< 30', '30-40', '> 40'],
+        datasets: [{
+          data: [1, 2, 1],
+          backgroundColor: '#10b981'
+        }]
+      },
+      options: { 
+        responsive: true, 
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } }
+      }
+    });
+  </script>
 </body>
 </html>
