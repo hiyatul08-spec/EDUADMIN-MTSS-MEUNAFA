@@ -140,13 +140,14 @@
 
     <!-- Mata Pelajaran -->
     <div id="page-mapel" class="page-content p-8 space-y-6 hidden">
-      <div class="flex justify-end items-center">
+      <div class="flex justify-between items-center">
+        <p class="text-xs text-slate-500">Mata Pelajaran Gabungan Kurikulum Kemendikbud & Kemenag MTs</p>
         <button onclick="toggleModal('modal-mapel', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Tambah Mapel</button>
       </div>
       <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
         <table class="w-full text-left text-sm">
           <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
-            <tr><th class="p-4">Kode Mapel</th><th class="p-4">Nama Mata Pelajaran</th><th class="p-4">Kelompok</th><th class="p-4">KKM</th><th class="p-4">Aksi</th></tr>
+            <tr><th class="p-4">Kode Mapel</th><th class="p-4">Nama Mata Pelajaran</th><th class="p-4">Kategori / Instansi</th><th class="p-4">KKM</th><th class="p-4">Aksi</th></tr>
           </thead>
           <tbody id="table-mapel" class="divide-y divide-slate-200"></tbody>
         </table>
@@ -341,7 +342,7 @@
 
   <!-- MODAL - MODAL -->
 
-  <!-- Modal Siswa (DIUBAH MENJADI DROPDOWN KELAS) -->
+  <!-- Modal Siswa -->
   <div id="modal-siswa" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
     <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
       <h3 class="text-lg font-bold">Tambah Data Siswa</h3>
@@ -380,7 +381,14 @@
       <form onsubmit="addData(event, 'mapel')" class="space-y-3">
         <div><label class="text-xs font-semibold block mb-1">Kode Mapel</label><input type="text" id="mapel-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
         <div><label class="text-xs font-semibold block mb-1">Nama Mapel</label><input type="text" id="mapel-f2" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Kelompok</label><input type="text" id="mapel-f3" placeholder="A / B" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div>
+          <label class="text-xs font-semibold block mb-1">Kategori / Instansi</label>
+          <select id="mapel-f3" class="w-full border rounded-lg p-2 text-sm outline-none">
+            <option>Kemenag (PAI)</option>
+            <option>Kemendikbud (Umum)</option>
+            <option>Muatan Lokal</option>
+          </select>
+        </div>
         <div><label class="text-xs font-semibold block mb-1">KKM</label><input type="number" id="mapel-f4" value="75" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
         <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-mapel', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
       </form>
@@ -457,19 +465,35 @@
 
   <!-- JAVASCRIPT SYSTEM -->
   <script>
+    // Initial Standard Curriculum Mapel
+    const defaultMapelList = [
+      { id: 101, f1: 'PAI-01', f2: 'Al-Qur\'an Hadis', f3: 'Kemenag (PAI)', f4: '75' },
+      { id: 102, f1: 'PAI-02', f2: 'Akidah Akhlak', f3: 'Kemenag (PAI)', f4: '75' },
+      { id: 103, f1: 'PAI-03', f2: 'Fikih', f3: 'Kemenag (PAI)', f4: '75' },
+      { id: 104, f1: 'PAI-04', f2: 'Sejarah Kebudayaan Islam (SKI)', f3: 'Kemenag (PAI)', f4: '75' },
+      { id: 105, f1: 'ARB-01', f2: 'Bahasa Arab', f3: 'Kemenag (PAI)', f4: '75' },
+      { id: 106, f1: 'KMD-01', f2: 'Pendidikan Pancasila', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 107, f1: 'KMD-02', f2: 'Bahasa Indonesia', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 108, f1: 'KMD-03', f2: 'Matematika', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 109, f1: 'KMD-04', f2: 'Ilmu Pengetahuan Alam (IPA)', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 110, f1: 'KMD-05', f2: 'Ilmu Pengetahuan Sosial (IPS)', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 111, f1: 'KMD-06', f2: 'Bahasa Inggris', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 112, f1: 'KMD-07', f2: 'PJOK', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 113, f1: 'KMD-08', f2: 'Informatika', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 114, f1: 'KMD-09', f2: 'Seni & Budaya / Prakarya', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 115, f1: 'MULOK-01', f2: 'Muatan Lokal / Bahasa Daerah', f3: 'Muatan Lokal', f4: '75' }
+    ];
+
     // System Data Store (LocalStorage Backup)
     let appData = JSON.parse(localStorage.getItem('eduadmin_data')) || {
       siswa: [
         { id: 1, f1: '0012345678', f2: 'Ahmad Raihan', f3: 'Laki-laki', f4: 'VII A' },
-        { id: 2, f1: '0012345679', f2: 'Siti Nurhaliza', f3: 'Perempuan', f4: 'VII A' },
-        { id: 3, f1: '0012345680', f2: 'Anisa', f3: 'Perempuan', f4: 'VIII' }
+        { id: 2, f1: '0012345679', f2: 'Siti Nurhaliza', f3: 'Perempuan', f4: 'VII A' }
       ],
       guru: [
         { id: 1, f1: '198501012010011001', f2: 'Budi Santoso, S.Pd', f3: 'Matematika' }
       ],
-      mapel: [
-        { id: 1, f1: 'MAT-01', f2: 'Matematika', f3: 'A', f4: '75' }
-      ],
+      mapel: defaultMapelList,
       kelas: [
         { id: 1, f1: 'VII A', f2: 'Budi Santoso, S.Pd', f3: 'VII' },
         { id: 2, f1: 'VIII', f2: 'Siti Aminah, M.Pd', f3: 'VIII' },
@@ -530,14 +554,14 @@
     function toggleModal(modalId, show) {
       const modal = document.getElementById(modalId);
       if (show) {
-        updateKelasDropdowns(); // Perbarui opsi kelas saat modal dibuka
+        updateKelasDropdowns();
         modal.classList.remove('hidden');
       } else {
         modal.classList.add('hidden');
       }
     }
 
-    // Update Dropdown Kelas secara Dinamis
+    // Update Dropdown Kelas
     function updateKelasDropdowns() {
       const dropdowns = document.querySelectorAll('.select-kelas-dropdown');
       dropdowns.forEach(select => {
@@ -546,7 +570,7 @@
         
         appData.kelas.forEach(k => {
           const opt = document.createElement('option');
-          opt.value = k.f1; // Mengambil Nama Kelas (f1)
+          opt.value = k.f1;
           opt.textContent = k.f1;
           select.appendChild(opt);
         });
@@ -617,7 +641,7 @@
       if(document.getElementById('count-mapel')) document.getElementById('count-mapel').innerText = `${appData.mapel.length} Mapel`;
     }
 
-    // Chart Initializer
+    // Initializer
     window.onload = function() {
       renderTables();
       updateCounts();
