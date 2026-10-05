@@ -553,6 +553,7 @@
       if (show) {
         updateKelasDropdowns();
         updateGuruDropdowns();
+        updateMapelDropdowns();
         modal.classList.remove('hidden');
       } else {
         modal.classList.add('hidden');
@@ -579,25 +580,24 @@
       });
     }
 
-    function updateGuruDropdowns() {
-      const dropdowns = document.querySelectorAll('.select-guru-dropdown');
-      dropdowns.forEach(select => {
-        const currentValue = select.value;
-        const defaultText = select.id === 'kelas-f2' ? '-- Pilih Wali Kelas --' : '-- Pilih Guru Pengajar --';
-        select.innerHTML = `<option value="">${defaultText}</option>`;
-        
-        appData.guru.forEach(g => {
-          const opt = document.createElement('option');
-          opt.value = g.f2; // Nama Guru
-          opt.textContent = `${g.f2} (${g.f3})`; // Nama Guru + Mapel
-          select.appendChild(opt);
-        });
-
-        if (currentValue) {
-          select.value = currentValue;
-        }
+   function updateMapelDropdowns() {
+  const select = document.getElementById('guru-f3');
+  if (select) {
+    const currentValue = select.value;
+    select.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
+    
+    if (appData.mapel && appData.mapel.length > 0) {
+      appData.mapel.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.f2;
+        opt.textContent = m.f2;
+        select.appendChild(opt);
       });
     }
+    
+    select.value = currentValue;
+  }
+}
 
     // Render Table Data
     function renderTables() {
