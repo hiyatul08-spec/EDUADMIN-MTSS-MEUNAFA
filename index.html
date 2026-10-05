@@ -403,9 +403,8 @@
     <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
       <h3 class="text-lg font-bold">Input Nilai Siswa</h3>
       <form onsubmit="addData(event, 'nilai')" class="space-y-3">
-        <div><label class="text-xs font-semibold block mb-1">Nama Siswa</label><input type="text" id="nilai-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div><label class="text-xs font-semibold block mb-1">Mata Pelajaran</label><input type="text" id="nilai-f2" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div class="grid grid-cols-3 gap-2">
+        <div><label class="text-xs font-semibold block mb-1">Nama Siswa</label><select id="nilai-f1" required class="select-siswa-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white"></select></div>
+<div><label class="text-xs font-semibold block mb-1">Mata Pelajaran</label><select id="nilai-f2" required class="select-mapel-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white"></select></div>        <div class="grid grid-cols-3 gap-2">
           <div><label class="text-xs font-semibold block mb-1">Tugas</label><input type="number" id="nilai-f3" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
           <div><label class="text-xs font-semibold block mb-1">UTS</label><input type="number" id="nilai-f4" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
           <div><label class="text-xs font-semibold block mb-1">UAS</label><input type="number" id="nilai-f5" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
@@ -555,6 +554,7 @@ function toggleModal(modalId, show) {
       updateKelasDropdowns();
       updateGuruDropdowns();
       updateMapelDropdowns();
+      updateSiswaDropdowns();
       modal.classList.remove('hidden');
     } else {
       modal.classList.add('hidden');
@@ -614,6 +614,24 @@ function updateMapelDropdowns() {
     if (currentValue) select.value = currentValue;
   }
 }
+
+function updateSiswaDropdowns() {
+  const select = document.getElementById('nilai-f1');
+  if (select) {
+    const currentValue = select.value;
+    select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+    if (appData.siswa && appData.siswa.length > 0) {
+      appData.siswa.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.f2;
+        opt.textContent = s.f2;
+        select.appendChild(opt);
+      });
+    }
+    if (currentValue) select.value = currentValue;
+  }
+}
+    
     // Render Table Data
     function renderTables() {
       Object.keys(appData).forEach(key => {
