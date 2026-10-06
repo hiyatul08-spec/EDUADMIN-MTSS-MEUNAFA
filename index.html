@@ -1114,24 +1114,28 @@ function switchTabModul(tabName) {
 
 // Function Form Submit & Update Dynamic Preview
     function generateModulAjar(e) {
-        if (e) e.preventDefault();
+        if (e && e.preventDefault) {
+            e.preventDefault();
+        }
 
         // 1. Ambil Data Form & Pengaturan System
-        const mapel = document.getElementById('modul-mapel')?.value || '-';
-        const fase = document.getElementById('modul-fase')?.value || '-';
-        const bab = document.getElementById('modul-bab')?.value || '-';
-        const waktu = document.getElementById('modul-waktu')?.value || '-';
-        const model = document.getElementById('modul-model')?.value || '-';
-        const guru = document.getElementById('modul-guru')?.value || document.getElementById('cfg-guru')?.value || '-';
-        const nipGuru = document.getElementById('cfg-nip-guru')?.value || '-';
-        const satuan = document.getElementById('modul-satuan')?.value || document.getElementById('cfg-satuan')?.value || '-';
-        const kepala = document.getElementById('cfg-kepala')?.value || '-';
-        const nipKepala = document.getElementById('cfg-nip-kepala')?.value || '-';
+        var mapel = (document.getElementById('modul-mapel') && document.getElementById('modul-mapel').value) || '-';
+        var fase = (document.getElementById('modul-fase') && document.getElementById('modul-fase').value) || '-';
+        var bab = (document.getElementById('modul-bab') && document.getElementById('modul-bab').value) || '-';
+        var waktu = (document.getElementById('modul-waktu') && document.getElementById('modul-waktu').value) || '-';
+        var model = (document.getElementById('modul-model') && document.getElementById('modul-model').value) || '-';
+        var guru = (document.getElementById('modul-guru') && document.getElementById('modul-guru').value) || (document.getElementById('cfg-guru') && document.getElementById('cfg-guru').value) || '-';
+        var nipGuru = (document.getElementById('cfg-nip-guru') && document.getElementById('cfg-nip-guru').value) || '-';
+        var satuan = (document.getElementById('modul-satuan') && document.getElementById('modul-satuan').value) || (document.getElementById('cfg-satuan') && document.getElementById('cfg-satuan').value) || '-';
+        var kepala = (document.getElementById('cfg-kepala') && document.getElementById('cfg-kepala').value) || '-';
+        var nipKepala = (document.getElementById('cfg-nip-kepala') && document.getElementById('cfg-nip-kepala').value) || '-';
 
         // 2. Inject ke Preview Modul Ajar
-        if (document.getElementById('prev-header-sub')) {
-            document.getElementById('prev-header-sub').innerText = `MATA PELAJARAN: ${mapel} | FASE / KELAS: ${fase}`;
+        var prevHeaderSub = document.getElementById('prev-header-sub');
+        if (prevHeaderSub) {
+            prevHeaderSub.innerText = 'MATA PELAJARAN: ' + mapel + ' | FASE / KELAS: ' + fase;
         }
+        
         if (document.getElementById('out-nama-guru')) document.getElementById('out-nama-guru').innerText = guru;
         if (document.getElementById('out-satuan-pendidikan')) document.getElementById('out-satuan-pendidikan').innerText = satuan;
         if (document.getElementById('out-mapel')) document.getElementById('out-mapel').innerText = mapel;
@@ -1140,7 +1144,8 @@ function switchTabModul(tabName) {
         if (document.getElementById('out-alokasi-waktu')) document.getElementById('out-alokasi-waktu').innerText = waktu;
 
         // Update semua teks topik/bab
-        document.querySelectorAll('.out-topik-text').forEach(el => {
+        var topikElements = document.querySelectorAll('.out-topik-text');
+        topikElements.forEach(function(el) {
             el.innerText = bab;
         });
 
@@ -1151,8 +1156,23 @@ function switchTabModul(tabName) {
         if (document.getElementById('out-guru-nip')) document.getElementById('out-guru-nip').innerText = nipGuru;
 
         // Pindah/Aktifkan Tab Modul
-        switchTabModul('modul');
+        if (typeof switchTabModul === 'function') {
+            switchTabModul('modul');
+        }
     }
+
+    // Event listener otomatis saat halaman terbuka atau input berubah
+    document.addEventListener('DOMContentLoaded', function() {
+        var inputs = ['modul-fase', 'modul-mapel', 'modul-bab', 'modul-waktu', 'modul-model', 'modul-guru', 'modul-satuan'];
+        inputs.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('change', function() { generateModulAjar(); });
+                el.addEventListener('input', function() { generateModulAjar(); });
+            }
+        });
+        generateModulAjar();
+    });
     
 // Event listener otomatis saat halaman terbuka atau input berubah
 document.addEventListener('DOMContentLoaded', function() {
