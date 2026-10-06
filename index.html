@@ -1056,30 +1056,56 @@ document.addEventListener('DOMContentLoaded', function() {
   
   switchTabModul('modul');
 
-// 1. Isi Dropdown Mata Pelajaran dari Data Sistem
+// 1. Isi Dropdown Mata Pelajaran dari Data Sistem / LocalStorage / Fallback
   const mapelSelect = document.getElementById('modul-mapel');
   if (mapelSelect) {
     let listMapel = [];
     
-    // Cek semua kemungkinan variabel array mapel di sistem
+    // 1. Cek dari Variabel Global
     if (typeof dataMapel !== 'undefined' && Array.isArray(dataMapel) && dataMapel.length > 0) {
       listMapel = dataMapel;
     } else if (typeof mataPelajaranData !== 'undefined' && Array.isArray(mataPelajaranData) && mataPelajaranData.length > 0) {
       listMapel = mataPelajaranData;
     } else if (typeof dataMataPelajaran !== 'undefined' && Array.isArray(dataMataPelajaran) && dataMataPelajaran.length > 0) {
       listMapel = dataMataPelajaran;
+    } 
+    // 2. Jika variabel kosong, ambil dari LocalStorage
+    else {
+      try {
+        const localData = localStorage.getItem('dataMapel') || localStorage.getItem('mataPelajaranData') || localStorage.getItem('dataMataPelajaran');
+        if (localData) listMapel = JSON.parse(localData);
+      } catch (e) { console.error(e); }
     }
 
-    if (listMapel.length > 0) {
+    // 3. Render ke Dropdown
+    if (listMapel && listMapel.length > 0) {
       mapelSelect.innerHTML = listMapel.map(m => {
         const namaMapel = (typeof m === 'object' && m !== null) 
           ? (m.namaMapel || m.nama || m.nama_mapel || m.mapel || '') 
           : m;
         return `<option value="${namaMapel}">${namaMapel}</option>`;
       }).join('');
+    } else {
+      // 4. Fallback jika data sistem belum terbaca
+      mapelSelect.innerHTML = `
+        <option value="Al-Qur'an Hadis">Al-Qur'an Hadis</option>
+        <option value="Akidah Akhlak">Akidah Akhlak</option>
+        <option value="Fikih">Fikih</option>
+        <option value="Sejarah Kebudayaan Islam (SKI)">Sejarah Kebudayaan Islam (SKI)</option>
+        <option value="Bahasa Arab">Bahasa Arab</option>
+        <option value="Pendidikan Pancasila">Pendidikan Pancasila</option>
+        <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+        <option value="Matematika">Matematika</option>
+        <option value="Ilmu Pengetahuan Alam (IPA)">Ilmu Pengetahuan Alam (IPA)</option>
+        <option value="Ilmu Pengetahuan Sosial (IPS)">Ilmu Pengetahuan Sosial (IPS)</option>
+        <option value="Bahasa Inggris">Bahasa Inggris</option>
+        <option value="PJOK">PJOK</option>
+        <option value="Informatika">Informatika</option>
+        <option value="Seni & Budaya / Prakarya">Seni & Budaya / Prakarya</option>
+        <option value="Muatan Lokal / Bahasa Daerah">Muatan Lokal / Bahasa Daerah</option>
+      `;
     }
   }  
-  
   // 2. Isi Dropdown Kelas / Fase dari Data Kelas
   const faseSelect = document.getElementById('modul-fase');
   if (faseSelect && typeof dataKelas !== 'undefined' && dataKelas.length > 0) {
