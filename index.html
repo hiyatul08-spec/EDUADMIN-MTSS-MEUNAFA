@@ -504,25 +504,46 @@
       </div>
     </div>
 
+    <!-- PAGE PENGATURAN SYSTEM -->
     <div id="page-pengaturan" class="page-content p-8 space-y-6 hidden">
-      <div class="bg-white p-6 rounded-xl border border-slate-200 max-w-xl space-y-4">
-        <div>
-          <label class="text-xs font-semibold block mb-1">Nama Madrasah / Sekolah</label>
-          <input type="text" id="cfg-nama" value="MTs Meunafa" class="w-full border rounded-lg p-2 text-sm outline-none">
+      <div class="max-w-4xl bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
+        <div class="border-b pb-4">
+          <h3 class="text-lg font-bold text-slate-800">Pengaturan Identitas Madrasah & TTD</h3>
+          <p class="text-xs text-slate-500 mt-1">Data ini digunakan otomatis untuk lembar pengesahan dan cetak dokumen.</p>
         </div>
-        <div>
-          <label class="text-xs font-semibold block mb-1">Tahun Pelajaran</label>
-          <input type="text" id="cfg-thn" value="2026 / 2027" class="w-full border rounded-lg p-2 text-sm outline-none">
-        </div>
-        <div>
-  <label class="text-xs font-semibold block mb-1">Kepala Madrasah</label>
-  <input type="text" id="cfg-kepala" value="Administrator" class="w-full border rounded-lg p-2 text-sm outline-none">
-</div>
-<div>
-  <label class="text-xs font-semibold block mb-1">NIP Kepala Madrasah</label>
-  <input type="text" id="cfg-nip-kepala" placeholder="Contoh: 19800101 200501 1 001" class="w-full border rounded-lg p-2 text-sm outline-none">
-</div>
-<button type="button" onclick="simpanPengaturanSystem()" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600">Simpan Pengaturan</button>    </div>
+
+        <form onsubmit="event.preventDefault(); generateModulAjar(); alert('Pengaturan berhasil disimpan!');" class="space-y-4 text-xs">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Satuan Pendidikan / Madrasah</label>
+              <input type="text" id="cfg-satuan" value="MTsS Meunafa" class="w-full border rounded-lg p-2.5 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500">
+            </div>
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Nama Kepala Madrasah</label>
+              <input type="text" id="cfg-kepala" value="H. Muhammad, M.Pd." class="w-full border rounded-lg p-2.5 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500">
+            </div>
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">NIP Kepala Madrasah</label>
+              <input type="text" id="cfg-nip-kepala" value="197801012005011001" class="w-full border rounded-lg p-2.5 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500">
+            </div>
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">Nama Guru Pengampu</label>
+              <input type="text" id="cfg-guru" value="Ahmad Dahlan, S.Pd." class="w-full border rounded-lg p-2.5 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500">
+            </div>
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">NIP Guru Pengampu</label>
+              <input type="text" id="cfg-nip-guru" value="198502022010011002" class="w-full border rounded-lg p-2.5 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500">
+            </div>
+          </div>
+
+          <div class="pt-4 border-t flex justify-end">
+            <button type="submit" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-5 py-2.5 rounded-lg shadow-sm transition">
+              <i class="fa-solid fa-floppy-disk mr-2"></i>Simpan Pengaturan
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
 
   </main>
 
