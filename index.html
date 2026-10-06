@@ -1057,6 +1057,7 @@ function generateModulAjar(e) {
 
 // Event listener otomatis saat halaman terbuka atau input berubah
 document.addEventListener('DOMContentLoaded', function() {
+  updateKelasDropdowns();
   const inputs = ['modul-fase', 'modul-mapel', 'modul-bab', 'modul-waktu', 'modul-model', 'modul-guru', 'modul-satuan'];
   inputs.forEach(id => {
     const el = document.getElementById(id);
