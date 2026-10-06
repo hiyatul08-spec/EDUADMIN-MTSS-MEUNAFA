@@ -1181,24 +1181,29 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  function loadPengaturanSystem() {
+ function loadPengaturanSystem() {
     const saved = localStorage.getItem('appSettings');
     if (saved) {
-      try {
-        const config = JSON.parse(saved);
-        if (document.getElementById('cfg-kepala') && config.kepalaSekolah) {
-          document.getElementById('cfg-kepala').value = config.kepalaSekolah;
-        }
-        if (document.getElementById('cfg-nip-kepala') && config.nipKepala) {
-          document.getElementById('cfg-nip-kepala').value = config.nipKepala;
-        }
-        if (document.getElementById('modul-nip-kepala') && config.nipKepala) {
+        try {
+            const config = JSON.parse(saved);
+            // Isi ke Pengaturan System
+            if (document.getElementById('cfg-kepala') && config.kepalaSekolah) {
+                document.getElementById('cfg-kepala').value = config.kepalaSekolah;
+            }
+            if (document.getElementById('cfg-nip-kepala') && config.nipKepala) {
+                document.getElementById('cfg-nip-kepala').value = config.nipKepala;
+            }
+
+            // Isi otomatis ke Perangkat Ajar
+            if (document.getElementById('modul-kepsak') && config.kepalaSekolah) {
+                document.getElementById('modul-kepsak').value = config.kepalaSekolah;
+            }
+            if (document.getElementById('modul-nip-kepala') && config.nipKepala) {
                 document.getElementById('modul-nip-kepala').value = config.nipKepala;
             }
-      } catch (e) { console.error(e); }
+        } catch (e) { console.error(e); }
     }
-  }
-
+}
   // Jalankan muat data saat halaman dibuka
   document.addEventListener('DOMContentLoaded', loadPengaturanSystem);
   loadPengaturanSystem();
