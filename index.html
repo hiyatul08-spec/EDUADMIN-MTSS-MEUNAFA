@@ -734,15 +734,18 @@
 
     // Tab Switcher
     function switchTab(tabId) {
-      document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('nav-active'));
-      
-      const selectedPage = document.getElementById(`page-${tabId}`);
-      if(selectedPage) selectedPage.classList.remove('hidden');
-      
-      const selectedNav = document.getElementById(`nav-${tabId}`);
-      if(selectedNav) selectedNav.classList.add('nav-active');
+  // Sembunyikan semua elemen halaman
+  const pages = document.querySelectorAll('.page-content, [id^="page-"]');
+  pages.forEach(el => el.classList.add('hidden'));
 
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('nav-active'));
+
+  // Tampilkan halaman yang dipilih
+  const selectedPage = document.getElementById(`page-${tabId}`);
+  if(selectedPage) selectedPage.classList.remove('hidden');
+
+  const selectedNav = document.getElementById(`nav-${tabId}`);
+  if(selectedNav) selectedNav.classList.add('nav-active');
       const titleMap = {
         'dashboard': 'Dashboard',
         'siswa': 'Data Siswa',
