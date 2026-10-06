@@ -877,6 +877,114 @@ function updateSiswaDropdowns() {
         });
       }
     };
-  </script>
+
+// Function untuk Switch Tab Preview Modul
+function switchTabModul(tabName) {
+  const tabs = ['modul', 'atp', 'lkpd', 'bahan', 'asesmen'];
+  
+  tabs.forEach(t => {
+    const btn = document.getElementById(`tab-${t}`);
+    if (btn) {
+      if (t === tabName) {
+        btn.className = "px-4 py-3 text-indigo-600 border-b-2 border-indigo-600 bg-white flex items-center gap-1.5 whitespace-nowrap font-bold";
+      } else {
+        btn.className = "px-4 py-3 hover:text-indigo-600 flex items-center gap-1.5 whitespace-nowrap";
+      }
+    }
+  });
+
+  const previewBox = document.getElementById('preview-content-modul');
+  const bab = document.getElementById('modul-bab').value || 'AMANAH';
+  const mapel = document.getElementById('modul-mapel').value || 'PENDIDIKAN PANCASILA';
+  const fase = document.getElementById('modul-fase').value || 'SMP / MTs - Kelas 7 (Fase D)';
+
+  if (tabName === 'modul') {
+    previewBox.innerHTML = `
+      <div class="text-center border-b-2 border-slate-800 pb-3">
+        <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>
+        <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${mapel.toUpperCase()} | ${fase.toUpperCase()}</p>
+        <p class="text-slate-600 italic">Bab / Topik Utama: ${bab.toUpperCase()} | Alokasi Waktu: 2 JP x 40 Menit</p>
+      </div>
+      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit">1. MODUL AJAR (RPP PLUS)</div>
+      <div class="border rounded-lg p-3 bg-slate-50/50 space-y-1">
+        <h4 class="font-bold text-slate-900 mb-2">I. INFORMASI UMUM</h4>
+        <p><strong>Topik:</strong> ${bab}</p>
+        <p><strong>Mata Pelajaran:</strong> ${mapel}</p>
+        <p><strong>Jenjang / Kelas:</strong> ${fase}</p>
+      </div>
+      <div class="space-y-2">
+        <h4 class="font-bold text-slate-900">II. KOMPONEN INTI</h4>
+        <p>Peserta didik dapat memahami konsep ${bab} dan menerapkannya dalam kehidupan sehari-hari.</p>
+      </div>`;
+  } else if (tabName === 'atp') {
+    previewBox.innerHTML = `
+      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">2. ALUR TUJUAN PEMBELAJARAN (ATP)</div>
+      <h3 class="font-bold text-slate-900 text-sm mb-2">ATP - ${mapel} (${bab})</h3>
+      <table class="w-full border-collapse border border-slate-300 text-left text-xs">
+        <tr class="bg-slate-100">
+          <th class="border border-slate-300 p-2">Fase</th>
+          <th class="border border-slate-300 p-2">Elemen / Capaian</th>
+          <th class="border border-slate-300 p-2">Tujuan Pembelajaran</th>
+        </tr>
+        <tr>
+          <td class="border border-slate-300 p-2">${fase}</td>
+          <td class="border border-slate-300 p-2">Pemahaman Konsep</td>
+          <td class="border border-slate-300 p-2">Menganalisis pentingnya ${bab} dalam kehidupan sosial.</td>
+        </tr>
+      </table>`;
+  } else if (tabName === 'lkpd') {
+    previewBox.innerHTML = `
+      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">3. LEMBAR KERJA PESERTA DIDIK (LKPD)</div>
+      <div class="border p-4 rounded-lg bg-slate-50 space-y-3">
+        <h4 class="font-bold text-slate-800 text-center">LKPD: ${bab.toUpperCase()}</h4>
+        <p><strong>Instruksi:</strong> Buatlah kelompok yang terdiri dari 4-5 siswa. Diskusikan studi kasus mengenai ${bab} berikut ini.</p>
+        <div class="p-3 bg-white border rounded">
+          <p class="italic text-slate-600">Pertanyaan 1: Mengapa sikap ${bab} sangat penting dijaga dalam kehidupan sehari-hari?</p>
+        </div>
+      </div>`;
+  } else if (tabName === 'bahan') {
+    previewBox.innerHTML = `
+      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">4. BAHAN AJAR / RINGKASAN MATERI</div>
+      <div class="space-y-3">
+        <h3 class="font-bold text-slate-900 text-sm">Ringkasan Materi: ${bab}</h3>
+        <p class="text-slate-700 leading-relaxed">Materi ini membahas tentang konsep dasar ${bab}, prinsip-prinsip utama, serta implementasinya pada kegiatan sehari-hari di lingkungan sekolah maupun masyarakat.</p>
+      </div>`;
+  } else if (tabName === 'asesmen') {
+    previewBox.innerHTML = `
+      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">5. ASESMEN & RUBRIK PENILAIAN</div>
+      <div class="space-y-3">
+        <h4 class="font-bold text-slate-900">Teknik Penilaian:</h4>
+        <ul class="list-disc pl-5 text-slate-700 space-y-1">
+          <li><strong>Asesmen Formatif:</strong> Observasi diskusi kelompok saat membahas materi ${bab}.</li>
+          <li><strong>Asesmen Sumatif:</strong> Tes tertulis/kuis pilihan ganda dan esai.</li>
+        </ul>
+      </div>`;
+  }
+}
+
+// Function Form Submit (Generate Modul)
+function generateModulAjar(e) {
+  e.preventDefault();
+  const bab = document.getElementById('modul-bab').value;
+  const guru = document.getElementById('modul-guru').value || 'Ahmad Fauzi, S.Pd.I.';
+  const mapel = document.getElementById('modul-mapel').value;
+  const fase = document.getElementById('modul-fase').value;
+  const waktu = document.getElementById('modul-waktu').value;
+  const model = document.getElementById('modul-model').value;
+  const satuan = document.getElementById('modul-satuan').value;
+
+  document.getElementById('prev-guru').innerText = guru;
+  document.getElementById('prev-satuan').innerText = satuan;
+  document.getElementById('prev-mapel').innerText = mapel;
+  document.getElementById('prev-fase').innerText = fase;
+  document.getElementById('prev-model').innerText = model;
+  document.getElementById('prev-waktu').innerText = waktu;
+  document.getElementById('prev-header-sub').innerText = `MATA PELAJARAN: ${mapel.toUpperCase()} | ${fase.toUpperCase()}`;
+  document.getElementById('prev-header-topik').innerText = `Bab / Topik Utama: ${bab.toUpperCase()} | Alokasi Waktu: ${waktu}`;
+
+  switchTabModul('modul');
+}
+    
+  </script> 
 </body>
 </html>
