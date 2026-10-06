@@ -1056,34 +1056,30 @@ document.addEventListener('DOMContentLoaded', function() {
   
   switchTabModul('modul');
 
-// 1. Isi Dropdown Mata Pelajaran dari Data Sistem (dengan Fallback)
+// 1. Isi Dropdown Mata Pelajaran dari Data Sistem
   const mapelSelect = document.getElementById('modul-mapel');
   if (mapelSelect) {
     let listMapel = [];
-    if (typeof dataMapel !== 'undefined' && dataMapel.length > 0) {
+    
+    // Cek semua kemungkinan variabel array mapel di sistem
+    if (typeof dataMapel !== 'undefined' && Array.isArray(dataMapel) && dataMapel.length > 0) {
       listMapel = dataMapel;
-    } else if (typeof mataPelajaranData !== 'undefined' && mataPelajaranData.length > 0) {
+    } else if (typeof mataPelajaranData !== 'undefined' && Array.isArray(mataPelajaranData) && mataPelajaranData.length > 0) {
       listMapel = mataPelajaranData;
-    } else if (typeof dataMataPelajaran !== 'undefined' && dataMataPelajaran.length > 0) {
+    } else if (typeof dataMataPelajaran !== 'undefined' && Array.isArray(dataMataPelajaran) && dataMataPelajaran.length > 0) {
       listMapel = dataMataPelajaran;
     }
 
     if (listMapel.length > 0) {
       mapelSelect.innerHTML = listMapel.map(m => {
-        const namaMapel = m.nama || m.namaMapel || m;
+        const namaMapel = (typeof m === 'object' && m !== null) 
+          ? (m.namaMapel || m.nama || m.nama_mapel || m.mapel || '') 
+          : m;
         return `<option value="${namaMapel}">${namaMapel}</option>`;
       }).join('');
-    } else {
-      // Cadangan jika data di sistem belum terisi
-      mapelSelect.innerHTML = `
-        <option value="PENDIDIKAN PANCASILA">PENDIDIKAN PANCASILA</option>
-        <option value="BAHASA INDONESIA">BAHASA INDONESIA</option>
-        <option value="MATEMATIKA">MATEMATIKA</option>
-        <option value="IPAS">IPAS</option>
-        <option value="BAHASA INGGRIS">BAHASA INGGRIS</option>
-      `;
     }
-  }
+  }  
+  
   // 2. Isi Dropdown Kelas / Fase dari Data Kelas
   const faseSelect = document.getElementById('modul-fase');
   if (faseSelect && typeof dataKelas !== 'undefined' && dataKelas.length > 0) {
