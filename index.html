@@ -702,34 +702,51 @@ function updateKelasDropdowns() {
   const currentValue = selectJenjang.value;
   selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
 
-  try {
-    let dataKelas = [];
-    
-    // Cek semua kemungkinan sumber data kelas
-    if (window.appData && Array.isArray(window.appData.kelas) && window.appData.kelas.length > 0) {
-      dataKelas = window.appData.kelas;
-    } else {
-      const saved = localStorage.getItem('dataKelas') || localStorage.getItem('kelasList') || localStorage.getItem('eduadmin_kelas');
-      if (saved) dataKelas = JSON.parse(saved);
-    }
+  let daftarKelas = new Set();
 
-    if (Array.isArray(dataKelas) && dataKelas.length > 0) {
-      dataKelas.forEach(item => {
-        const option = document.createElement('option');
-        const namaKelas = typeof item === 'object' ? (item.nama || item.namaKelas || item.tingkat || item.nama_kelas) : item;
-        if (namaKelas) {
-          option.value = namaKelas;
-          option.textContent = namaKelas;
-          selectJenjang.appendChild(option);
+  // 1. Coba ambil dari dropdown kelas yang ada di halaman "Kelas" (jika DOM sudah dirender)
+  const kelasSelectElements = document.querySelectorAll('select[id*="kelas"], select[name*="kelas"]');
+  kelasSelectElements.forEach(select => {
+    if (select.id !== 'modul-jenjang') {
+      Array.from(select.options).forEach(opt => {
+        if (opt.value && !opt.value.includes('--')) {
+          daftarKelas.add(opt.value);
         }
       });
     }
+  });
 
-    if (currentValue) selectJenjang.value = currentValue;
-  } catch (err) {
-    console.error("Error updating kelas dropdown:", err);
+  // 2. Jika tidak ada di DOM, cari dari seluruh localStorage yang berisi data kelas
+  if (daftarKelas.size === 0) {
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.toLowerCase().includes('kelas')) {
+        try {
+          const val = JSON.parse(localStorage.getItem(key));
+          if (Array.isArray(val)) {
+            val.forEach(item => {
+              const nama = typeof item === 'object' ? (item.nama || item.namaKelas || item.tingkat || item.nama_kelas || item.kelas) : item;
+              if (nama) daftarKelas.add(nama);
+            });
+          }
+        } catch(e) {}
+      }
+    }
   }
-}
+
+  // 3. Masukkan ke dropdown modul-jenjang
+  if (daftarKelas.size > 0) {
+    daftarKelas.forEach(namaKelas => {
+      const option = document.createElement('option');
+      option.value = namaKelas;
+      option.textContent = namaKelas;
+      selectJenjang.appendChild(option);
+    });
+  }
+
+  if (currentValue) selectJenjang.value = currentValue;
+}    
+
     
 function updateGuruDropdowns() {
   const dropdowns = document.querySelectorAll('.select-guru-dropdown');
