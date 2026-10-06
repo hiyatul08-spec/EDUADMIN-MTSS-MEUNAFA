@@ -1112,12 +1112,48 @@ function switchTabModul(tabName) {
   }
 }
 
-// Function Form Submit
-function generateModulAjar(e) {
-  if (e) e.preventDefault();
-  switchTabModul('modul');
-}
+// Function Form Submit & Update Dynamic Preview
+    function generateModulAjar(e) {
+        if (e) e.preventDefault();
 
+        // 1. Ambil Data Form & Pengaturan System
+        const mapel = document.getElementById('modul-mapel')?.value || '-';
+        const fase = document.getElementById('modul-fase')?.value || '-';
+        const bab = document.getElementById('modul-bab')?.value || '-';
+        const waktu = document.getElementById('modul-waktu')?.value || '-';
+        const model = document.getElementById('modul-model')?.value || '-';
+        const guru = document.getElementById('modul-guru')?.value || document.getElementById('cfg-guru')?.value || '-';
+        const nipGuru = document.getElementById('cfg-nip-guru')?.value || '-';
+        const satuan = document.getElementById('modul-satuan')?.value || document.getElementById('cfg-satuan')?.value || '-';
+        const kepala = document.getElementById('cfg-kepala')?.value || '-';
+        const nipKepala = document.getElementById('cfg-nip-kepala')?.value || '-';
+
+        // 2. Inject ke Preview Modul Ajar
+        if (document.getElementById('prev-header-sub')) {
+            document.getElementById('prev-header-sub').innerText = `MATA PELAJARAN: ${mapel} | FASE / KELAS: ${fase}`;
+        }
+        if (document.getElementById('out-nama-guru')) document.getElementById('out-nama-guru').innerText = guru;
+        if (document.getElementById('out-satuan-pendidikan')) document.getElementById('out-satuan-pendidikan').innerText = satuan;
+        if (document.getElementById('out-mapel')) document.getElementById('out-mapel').innerText = mapel;
+        if (document.getElementById('out-kelas')) document.getElementById('out-kelas').innerText = fase;
+        if (document.getElementById('out-model-belajar')) document.getElementById('out-model-belajar').innerText = model;
+        if (document.getElementById('out-alokasi-waktu')) document.getElementById('out-alokasi-waktu').innerText = waktu;
+
+        // Update semua teks topik/bab
+        document.querySelectorAll('.out-topik-text').forEach(el => {
+            el.innerText = bab;
+        });
+
+        // 3. Inject ke Lembar Pengesahan
+        if (document.getElementById('out-kepala-nama')) document.getElementById('out-kepala-nama').innerText = kepala;
+        if (document.getElementById('out-kepala-nip')) document.getElementById('out-kepala-nip').innerText = nipKepala;
+        if (document.getElementById('out-guru-nama')) document.getElementById('out-guru-nama').innerText = guru;
+        if (document.getElementById('out-guru-nip')) document.getElementById('out-guru-nip').innerText = nipGuru;
+
+        // Pindah/Aktifkan Tab Modul
+        switchTabModul('modul');
+    }
+    
 // Event listener otomatis saat halaman terbuka atau input berubah
 document.addEventListener('DOMContentLoaded', function() {
   const inputs = ['modul-fase', 'modul-mapel', 'modul-bab', 'modul-waktu', 'modul-model', 'modul-guru', 'modul-satuan'];
