@@ -1056,14 +1056,34 @@ document.addEventListener('DOMContentLoaded', function() {
   
   switchTabModul('modul');
 
-// 1. Isi Dropdown Mata Pelajaran dari Data Sistem
+// 1. Isi Dropdown Mata Pelajaran dari Data Sistem (dengan Fallback)
   const mapelSelect = document.getElementById('modul-mapel');
-  if (mapelSelect && typeof dataMapel !== 'undefined' && dataMapel.length > 0) {
-    mapelSelect.innerHTML = dataMapel.map(m => `<option value="${m.nama}">${m.nama}</option>`).join('');
-  } else if (mapelSelect && typeof mataPelajaranData !== 'undefined' && mataPelajaranData.length > 0) {
-    mapelSelect.innerHTML = mataPelajaranData.map(m => `<option value="${m.nama}">${m.nama}</option>`).join('');
-  }
+  if (mapelSelect) {
+    let listMapel = [];
+    if (typeof dataMapel !== 'undefined' && dataMapel.length > 0) {
+      listMapel = dataMapel;
+    } else if (typeof mataPelajaranData !== 'undefined' && mataPelajaranData.length > 0) {
+      listMapel = mataPelajaranData;
+    } else if (typeof dataMataPelajaran !== 'undefined' && dataMataPelajaran.length > 0) {
+      listMapel = dataMataPelajaran;
+    }
 
+    if (listMapel.length > 0) {
+      mapelSelect.innerHTML = listMapel.map(m => {
+        const namaMapel = m.nama || m.namaMapel || m;
+        return `<option value="${namaMapel}">${namaMapel}</option>`;
+      }).join('');
+    } else {
+      // Cadangan jika data di sistem belum terisi
+      mapelSelect.innerHTML = `
+        <option value="PENDIDIKAN PANCASILA">PENDIDIKAN PANCASILA</option>
+        <option value="BAHASA INDONESIA">BAHASA INDONESIA</option>
+        <option value="MATEMATIKA">MATEMATIKA</option>
+        <option value="IPAS">IPAS</option>
+        <option value="BAHASA INGGRIS">BAHASA INGGRIS</option>
+      `;
+    }
+  }
   // 2. Isi Dropdown Kelas / Fase dari Data Kelas
   const faseSelect = document.getElementById('modul-fase');
   if (faseSelect && typeof dataKelas !== 'undefined' && dataKelas.length > 0) {
