@@ -442,11 +442,14 @@
           <input type="text" id="cfg-thn" value="2026 / 2027" class="w-full border rounded-lg p-2 text-sm outline-none">
         </div>
         <div>
-          <label class="text-xs font-semibold block mb-1">Kepala Madrasah</label>
-          <input type="text" id="cfg-kepala" value="Administrator" class="w-full border rounded-lg p-2 text-sm outline-none">
-        </div>
-        <button onclick="alert('Pengaturan berhasil disimpan!')" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600">Simpan Pengaturan</button>
-      </div>
+  <label class="text-xs font-semibold block mb-1">Kepala Madrasah</label>
+  <input type="text" id="cfg-kepala" value="Administrator" class="w-full border rounded-lg p-2 text-sm outline-none">
+</div>
+<div>
+  <label class="text-xs font-semibold block mb-1">NIP Kepala Madrasah</label>
+  <input type="text" id="cfg-nip-kepala" placeholder="Contoh: 19800101 200501 1 001" class="w-full border rounded-lg p-2 text-sm outline-none">
+</div>
+<button onclick="alert('Pengaturan berhasil disimpan!')" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600">Simpan Pengaturan</button>      </div>
     </div>
 
   </main>
@@ -878,27 +881,38 @@ function updateSiswaDropdowns() {
       }
     };
 
-// Function untuk Memperbarui Preview secara Otomatis saat Form Diisi/Diubah
+// Function untuk Mengambil Data Form dan Update Preview
 function updatePreviewContent() {
-  const bab = document.getElementById('modul-bab')?.value || 'AMANAH';
+  const babInput = document.getElementById('modul-bab');
+  const bab = (babInput && babInput.value.trim() !== '') ? babInput.value : 'AMANAH';
+
   const guruSelect = document.getElementById('modul-guru');
-  const guru = (guruSelect && guruSelect.options[guruSelect.selectedIndex]?.text !== '-- Pilih Guru Pengajar --') 
+  const guru = (guruSelect && guruSelect.selectedIndex >= 0 && guruSelect.options[guruSelect.selectedIndex].text !== '-- Pilih Guru Pengajar --') 
                 ? guruSelect.options[guruSelect.selectedIndex].text 
                 : 'Ahmad Fauzi, S.Pd.I.';
-  
+
   const mapelSelect = document.getElementById('modul-mapel');
-  const mapel = (mapelSelect && mapelSelect.value) ? mapelSelect.value : 'PENDIDIKAN PANCASILA';
-  
+  const mapel = (mapelSelect && mapelSelect.options[mapelSelect.selectedIndex]) 
+                ? mapelSelect.options[mapelSelect.selectedIndex].text 
+                : 'PENDIDIKAN PANCASILA';
+
   const faseSelect = document.getElementById('modul-fase');
-  const fase = (faseSelect && faseSelect.value) ? faseSelect.value : 'SMP / MTs - Kelas 7 (Fase D)';
-  
+  const fase = (faseSelect && faseSelect.options[faseSelect.selectedIndex]) 
+               ? faseSelect.options[faseSelect.selectedIndex].text 
+               : 'SMP / MTs - Kelas 7 (Fase D)';
+
   const waktuSelect = document.getElementById('modul-waktu');
-  const waktu = (waktuSelect && waktuSelect.value) ? waktuSelect.value : '2 JP x 40 Menit (SMP)';
-  
+  const waktu = (waktuSelect && waktuSelect.options[waktuSelect.selectedIndex]) 
+                ? waktuSelect.options[waktuSelect.selectedIndex].text 
+                : '2 JP x 40 Menit';
+
   const modelSelect = document.getElementById('modul-model');
-  const model = (modelSelect && modelSelect.value) ? modelSelect.value : 'Problem Based Learning (PBL)';
-  
-  const satuan = document.getElementById('modul-satuan')?.value || 'MTsS Meunafa';
+  const model = (modelSelect && modelSelect.options[modelSelect.selectedIndex]) 
+                ? modelSelect.options[modelSelect.selectedIndex].text 
+                : 'Problem Based Learning (PBL)';
+
+  const satuanInput = document.getElementById('modul-satuan');
+  const satuan = (satuanInput && satuanInput.value.trim() !== '') ? satuanInput.value : 'MTsS Meunafa';
 
   return { bab, guru, mapel, fase, waktu, model, satuan };
 }
@@ -1026,7 +1040,7 @@ function switchTabModul(tabName) {
   }
 }
 
-// Function Form Submit (Generate Modul)
+// Function Form Submit
 function generateModulAjar(e) {
   if (e) e.preventDefault();
   switchTabModul('modul');
@@ -1042,7 +1056,110 @@ document.addEventListener('DOMContentLoaded', function() {
       el.addEventListener('input', () => switchTabModul('modul'));
     }
   });
-});    
+  
+  switchTabModul('modul');
+
+// 1. Isi Dropdown Mata Pelajaran dari Data Sistem / LocalStorage / Fallback
+  const mapelSelect = document.getElementById('modul-mapel');
+  if (mapelSelect) {
+    let listMapel = [];
+    
+    // 1. Cek dari Variabel Global
+    if (typeof dataMapel !== 'undefined' && Array.isArray(dataMapel) && dataMapel.length > 0) {
+      listMapel = dataMapel;
+    } else if (typeof mataPelajaranData !== 'undefined' && Array.isArray(mataPelajaranData) && mataPelajaranData.length > 0) {
+      listMapel = mataPelajaranData;
+    } else if (typeof dataMataPelajaran !== 'undefined' && Array.isArray(dataMataPelajaran) && dataMataPelajaran.length > 0) {
+      listMapel = dataMataPelajaran;
+    } 
+    // 2. Jika variabel kosong, ambil dari LocalStorage
+    else {
+      try {
+        const localData = localStorage.getItem('dataMapel') || localStorage.getItem('mataPelajaranData') || localStorage.getItem('dataMataPelajaran');
+        if (localData) listMapel = JSON.parse(localData);
+      } catch (e) { console.error(e); }
+    }
+
+    // 3. Render ke Dropdown
+    if (listMapel && listMapel.length > 0) {
+      mapelSelect.innerHTML = listMapel.map(m => {
+        const namaMapel = (typeof m === 'object' && m !== null) 
+          ? (m.namaMapel || m.nama || m.nama_mapel || m.mapel || '') 
+          : m;
+        return `<option value="${namaMapel}">${namaMapel}</option>`;
+      }).join('');
+    } else {
+      // 4. Fallback jika data sistem belum terbaca
+      mapelSelect.innerHTML = `
+        <option value="Al-Qur'an Hadis">Al-Qur'an Hadis</option>
+        <option value="Akidah Akhlak">Akidah Akhlak</option>
+        <option value="Fikih">Fikih</option>
+        <option value="Sejarah Kebudayaan Islam (SKI)">Sejarah Kebudayaan Islam (SKI)</option>
+        <option value="Bahasa Arab">Bahasa Arab</option>
+        <option value="Pendidikan Pancasila">Pendidikan Pancasila</option>
+        <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+        <option value="Matematika">Matematika</option>
+        <option value="Ilmu Pengetahuan Alam (IPA)">Ilmu Pengetahuan Alam (IPA)</option>
+        <option value="Ilmu Pengetahuan Sosial (IPS)">Ilmu Pengetahuan Sosial (IPS)</option>
+        <option value="Bahasa Inggris">Bahasa Inggris</option>
+        <option value="PJOK">PJOK</option>
+        <option value="Informatika">Informatika</option>
+        <option value="Seni & Budaya / Prakarya">Seni & Budaya / Prakarya</option>
+        <option value="Muatan Lokal / Bahasa Daerah">Muatan Lokal / Bahasa Daerah</option>
+      `;
+    }
+  }  
+  
+  // 2. Isi Dropdown Kelas / Fase dari Data Kelas (Dynamic Object Mapping)
+  const faseSelect = document.getElementById('modul-fase');
+  if (faseSelect) {
+    let listKelas = [];
+    
+    // 1. Ambil dari Variabel Global
+    if (typeof dataKelas !== 'undefined' && Array.isArray(dataKelas) && dataKelas.length > 0) {
+      listKelas = dataKelas;
+    } else if (typeof kelasData !== 'undefined' && Array.isArray(kelasData) && kelasData.length > 0) {
+      listKelas = kelasData;
+    } 
+    // 2. Ambil dari LocalStorage
+    else {
+      try {
+        const localKelas = localStorage.getItem('dataKelas') || localStorage.getItem('kelasData');
+        if (localKelas) listKelas = JSON.parse(localKelas);
+      } catch (e) { console.error(e); }
+    }
+
+    // 3. Render ke Dropdown dengan membaca semua properti nama yang mungkin
+    if (listKelas && listKelas.length > 0) {
+      faseSelect.innerHTML = listKelas.map(k => {
+        let namaKls = '';
+        if (typeof k === 'object' && k !== null) {
+          namaKls = k.namaKelas || k.nama || k.tingkat || k.nama_kelas || '';
+        } else {
+          namaKls = k;
+        }
+
+        // Tentukan Fase
+        let faseText = 'Fase D';
+        const strNama = String(namaKls).toUpperCase();
+        if (strNama.includes('I_') || strNama.startsWith('1') || strNama.startsWith('2') || strNama === 'I') {
+          faseText = 'Fase A/B/C';
+        }
+        
+        const labelFull = `SMP / MTs - Kelas ${namaKls} (${faseText})`;
+        return `<option value="${labelFull}">${labelFull}</option>`;
+      }).join('');
+    } else {
+      // Fallback jika belum ada data sama sekali
+      faseSelect.innerHTML = `
+        <option value="SMP / MTs - Kelas VII A (Fase D)">SMP / MTs - Kelas VII A (Fase D)</option>
+        <option value="SMP / MTs - Kelas VIII A (Fase D)">SMP / MTs - Kelas VIII A (Fase D)</option>
+        <option value="SMP / MTs - Kelas IX A (Fase D)">SMP / MTs - Kelas IX A (Fase D)</option>
+        <option value="SMP / MTs - Kelas I_A (Fase A/B/C)">SMP / MTs - Kelas I_A (Fase A/B/C)</option>
+      `;
+    }
+  }});  
+  
   </script> 
 </body>
 </html>
