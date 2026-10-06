@@ -705,21 +705,24 @@ function updateKelasDropdowns() {
   try {
     let dataKelas = [];
 
-    // Ambil data dari key 'app_kelas'
+    // 1. Ambil data dari key 'app_kelas' atau variabel global
     const saved = localStorage.getItem('app_kelas');
     if (saved) {
       dataKelas = JSON.parse(saved);
+    } else if (window.appData && Array.isArray(window.appData.kelas)) {
+      dataKelas = window.appData.kelas;
     }
 
+    // 2. Tampilkan data kelas asli pengguna
     if (Array.isArray(dataKelas) && dataKelas.length > 0) {
       dataKelas.forEach(item => {
         const option = document.createElement('option');
-        // Ambil nama kelas baik berupa objek maupun teks langsung
-        const namaKelas = typeof item === 'object' ? (item.nama || item.namaKelas || item.tingkat || item.nama_kelas || item.kelas) : item;
+        // Utamakan item.namaKelas atau item.nama dari struktur Data Kelas
+        const nama = typeof item === 'object' ? (item.namaKelas || item.nama || item.tingkat) : item;
         
-        if (namaKelas) {
-          option.value = namaKelas;
-          option.textContent = namaKelas;
+        if (nama) {
+          option.value = nama;
+          option.textContent = nama;
           selectJenjang.appendChild(option);
         }
       });
@@ -729,7 +732,7 @@ function updateKelasDropdowns() {
   } catch (err) {
     console.error("Error updating kelas dropdown:", err);
   }
-}    
+}   
     
 function updateGuruDropdowns() {
   const dropdowns = document.querySelectorAll('.select-guru-dropdown');
