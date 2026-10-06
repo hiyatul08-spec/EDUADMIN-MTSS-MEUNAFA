@@ -248,10 +248,13 @@
                 <select id="modul-guru" class="select-guru-dropdown w-full border rounded-lg p-2 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500"></select>
               </div>
               <div>
-                <label class="text-slate-600 block mb-1">Nama Kepala Sekolah</label>
-                <input type="text" id="modul-kepsek" placeholder="Drs. H. Muhammad Ridwan, M.Pd." class="w-full border rounded-lg p-2 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500">
-              </div>
-              <div>
+                        <label class="text-slate-600 block mb-1">Nama Kepala Sekolah</label>
+                        <input type="text" id="modul-kepsak" readonly placeholder="Otomatis dari Pengaturan" class="w-full border rounded-lg p-2 bg-slate-100 text-slate-600 cursor-not-allowed">
+                    </div>
+                    <div>
+                        <label class="text-slate-600 block mb-1">NIP Kepala Madrasah</label>
+                        <input type="text" id="modul-nip-kepala" readonly placeholder="Otomatis dari Pengaturan" class="w-full border rounded-lg p-2 bg-slate-100 text-slate-600 cursor-not-allowed">
+                    </div>              <div>
                 <label class="text-slate-600 block mb-1">Satuan Pendidikan</label>
                 <input type="text" id="modul-satuan" value="MTsS Meunafa" class="w-full border rounded-lg p-2 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500">
               </div>
@@ -285,53 +288,123 @@
             </button>
           </div>
 
-          <!-- AREA PREVIEW DOKUMEN -->
-          <div id="preview-content-modul" class="p-6 overflow-y-auto max-h-[750px] text-xs text-slate-800 space-y-4">
-            <div class="text-center border-b-2 border-slate-800 pb-3">
-              <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>
-              <p id="prev-header-sub" class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: PENDIDIKAN PANCASILA | SMP / MTs - KELAS 7 (FASE D)</p>
-              <p id="prev-header-topik" class="text-slate-600 italic">Bab / Topik Utama: AMANAH | Alokasi Waktu: 2 JP x 40 Menit</p>
-            </div>
-
-            <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit">
-              1. MODUL AJAR (RPP PLUS STANDAR RESMI)
-            </div>
-
-            <div class="border rounded-lg p-3 bg-slate-50/50 space-y-1">
-              <h4 class="font-bold text-slate-900 mb-2">I. INFORMASI UMUM</h4>
-              <div class="grid grid-cols-2 gap-x-4 gap-y-1">
-                <p><span class="inline-block w-28 text-slate-500">Nama Penyusun</span>: <strong id="prev-guru">Ahmad Fauzi, S.Pd.I.</strong></p>
-                <p><span class="inline-block w-28 text-slate-500">Satuan Pendidikan</span>: <span id="prev-satuan">MTsS Meunafa</span></p>
-                <p><span class="inline-block w-28 text-slate-500">Mata Pelajaran</span>: <span id="prev-mapel">Pendidikan Pancasila</span></p>
-                <p><span class="inline-block w-28 text-slate-500">Jenjang / Kelas</span>: <span id="prev-fase">SMP / MTs - Kelas 7 (Fase D)</span></p>
-                <p><span class="inline-block w-28 text-slate-500">Model Learning</span>: <span id="prev-model">Problem Based Learning (PBL)</span></p>
-                <p><span class="inline-block w-28 text-slate-500">Alokasi Waktu</span>: <span id="prev-waktu">2 JP x 40 Menit</span></p>
-              </div>
-            </div>
-
-            <div class="space-y-3">
-              <h4 class="font-bold text-slate-900">II. KOMPONEN INTI</h4>
-              <div>
-                <h5 class="font-semibold text-slate-800">A. Tujuan Pembelajaran (TP)</h5>
-                <ul class="list-disc pl-5 text-slate-700 space-y-1 mt-1">
-                  <li>Peserta didik mampu menjelaskan makna dan konsep nilai <span class="topik-text font-semibold">AMANAH</span> secara komprehensif.</li>
-                  <li>Peserta didik mampu mengidentifikasi serta menganalisis contoh perilaku yang mencerminkan sikap jujur dan bertanggung jawab.</li>
-                </ul>
-              </div>
-              <div>
-                <h5 class="font-semibold text-slate-800">B. Kegiatan Pembelajaran</h5>
-                <div class="border-l-2 border-indigo-500 pl-3 space-y-2 mt-1">
-                  <p><strong>1. Pendahuluan:</strong> Membuka pelajaran dengan salam, berdoa, dan memberikan pertanyaan pemantik terkait topik.</p>
-                  <p><strong>2. Inti:</strong> Siswa mengamati studi kasus, mendiskusikan masalah dalam kelompok, dan menyajikan hasil karya.</p>
-                  <p><strong>3. Penutup:</strong> Menyimpulkan pembelajaran bersama, refleksi, dan apresiasi kelompok.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
+         <!-- AREA PREVIEW DOKUMEN MODUL AJAR -->
+<div id="preview-content-modul" class="p-6 overflow-y-auto max-h-[750px] text-xs text-slate-800 space-y-6 bg-white border rounded-lg shadow-sm">
+    
+    <!-- HEADER DOKUMEN -->
+    <div class="text-center border-b-2 border-slate-800 pb-3">
+        <h2 class="font-extrabold text-base uppercase tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>
+        <p class="font-bold text-xs uppercase text-indigo-700 mt-1" id="prev-header-sub">MATA PELAJARAN: - | FASE / KELAS: -</p>
     </div>
+
+    <!-- I. INFORMASI UMUM -->
+    <div class="space-y-3">
+        <h3 class="font-bold text-slate-900 border-b pb-1 text-sm">I. INFORMASI UMUM</h3>
+        <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-xs bg-slate-50 p-3 rounded-lg border border-slate-200">
+            <div><strong>Nama Penyusun:</strong> <span id="out-nama-guru">-</span></div>
+            <div><strong>Satuan Pendidikan:</strong> <span id="out-satuan-pendidikan">-</span></div>
+            <div><strong>Mata Pelajaran:</strong> <span id="out-mapel">-</span></div>
+            <div><strong>Jenjang / Kelas:</strong> <span id="out-kelas">-</span></div>
+            <div><strong>Model Pembelajaran:</strong> <span id="out-model-belajar">-</span></div>
+            <div><strong>Alokasi Waktu:</strong> <span id="out-alokasi-waktu">-</span></div>
+        </div>
+        
+        <div class="space-y-1 text-xs">
+            <p><strong>Profil Pelajar (P3 & P3RA):</strong> Beriman & Bertakwa kepada Tuhan YME, Gotong Royong, Bernalar Kritis, Berkeadaban (Ta'addub), Toleransi (Tasamuh).</p>
+            <p><strong>Sarana & Prasarana:</strong> LCD Projector, Laptop, Buku Teks/Modul Digital, Ruang Kelas/Musholla.</p>
+            <p><strong>Target Peserta Didik:</strong> Reguler / Tipikal (Fase D).</p>
+        </div>
+    </div>
+
+    <!-- II. KOMPONEN INTI -->
+    <div class="space-y-4">
+        <h3 class="font-bold text-slate-900 border-b pb-1 text-sm">II. KOMPONEN INTI</h3>
+        
+        <!-- A. TUJUAN PEMBELAJARAN -->
+        <div>
+            <h4 class="font-bold text-slate-800">A. Tujuan Pembelajaran (TP)</h4>
+            <ul class="list-disc pl-5 space-y-1 text-slate-700 mt-1">
+                <li>Peserta didik mampu menjelaskan makna dan konsep nilai <span class="out-topik-text font-semibold">AMANAH</span> secara komprehensif.</li>
+                <li>Peserta didik mampu mengidentifikasi serta menganalisis contoh perilaku mencerminkan sikap jujur dan bertanggung jawab.</li>
+            </ul>
+        </div>
+
+        <!-- B. PEMAHAMAN BERMAKNA & PERTANYAAN PEMANTIK -->
+        <div>
+            <h4 class="font-bold text-slate-800">B. Pemahaman Bermakna & Pertanyaan Pemantik</h4>
+            <p class="text-slate-700 italic bg-amber-50 p-2 rounded border border-amber-200 mt-1">
+                "Bagaimana rasa percaya orang lain terhadap kita membentuk karakter seorang muslim yang sejati?"
+            </p>
+        </div>
+
+        <!-- C. KEGIATAN PEMBELAJARAN -->
+        <div class="space-y-3">
+            <h4 class="font-bold text-slate-800">C. Kegiatan Pembelajaran</h4>
+            
+            <!-- 1. Pendahuluan -->
+            <div class="bg-slate-50 p-3 rounded border">
+                <p class="font-bold text-slate-800 border-b pb-1 mb-2">1. Pendahuluan (10 Menit)</p>
+                <ul class="list-disc pl-5 space-y-1 text-slate-700 text-xs">
+                    <li>Membuka pelajaran dengan salam, berdoa, dan memeriksa kehadiran siswa.</li>
+                    <li>Apersepsi: Mengaitkan materi dengan pengalaman peserta didik sehari-hari.</li>
+                    <li>Menyampaikan tujuan pembelajaran dan penjelasan alur kegiatan.</li>
+                </ul>
+            </div>
+
+            <!-- 2. Kegiatan Inti -->
+            <div class="bg-slate-50 p-3 rounded border space-y-2">
+                <p class="font-bold text-slate-800 border-b pb-1">2. Kegiatan Inti (60 Menit)</p>
+                <p class="text-xs"><strong>Fase 1: Orientasi Peserta Didik pada Masalah</strong><br>Guru menyajikan artikel/studi kasus nyata mengenai fenomena pelanggaran <span class="out-topik-text font-semibold">AMANAH</span> di lingkungan sekitar. Siswa mengamati dan mengidentifikasi masalah utama.</p>
+                <p class="text-xs"><strong>Fase 2: Mengorganisasikan Peserta Didik</strong><br>Siswa dibagi menjadi beberapa kelompok heterogen (4-5 siswa). Guru membagikan LKPD dan menjelaskan petunjuk pengerjaan diskusi.</p>
+                <p class="text-xs"><strong>Fase 3: Membimbing Penyelidikan Individu maupun Kelompok</strong><br>Siswa mengumpulkan informasi dari Buku Siswa dan Bahan Ajar untuk merumuskan solusi atas masalah <span class="out-topik-text font-semibold">AMANAH</span>. Guru berkeliling memfasilitasi diskusi.</p>
+                <p class="text-xs"><strong>Fase 4: Mengembangkan dan Menyajikan Hasil Karya</strong><br>Masing-masing kelompok menyusun hasil diskusi pada lembar LKPD dan menyiapkan perwakilan untuk melakukan presentasi di depan kelas.</p>
+                <p class="text-xs"><strong>Fase 5: Menganalisis dan Mengevaluasi Proses Pemecahan Masalah</strong><br>Kelompok lain memberikan tanggapan/pertanyaan. Guru memberikan klarifikasi, apresiasi, dan penguatan terhadap hasil presentasi siswa.</p>
+            </div>
+
+            <!-- 3. Kegiatan Penutup -->
+            <div class="bg-slate-50 p-3 rounded border">
+                <p class="font-bold text-slate-800 border-b pb-1 mb-2">3. Kegiatan Penutup (10 Menit)</p>
+                <ul class="list-disc pl-5 space-y-1 text-slate-700 text-xs">
+                    <li>Siswa bersama guru menyimpulkan poin-poin utama materi <span class="out-topik-text font-semibold">AMANAH</span>.</li>
+                    <li>Siswa melakukan refleksi pembelajaran (apa yang dipahami, apa yang masih membingungkan).</li>
+                    <li>Guru memberikan tes asesmen sumatif / kuis singkat.</li>
+                    <li>Guru menyampaikan rencana materi untuk pertemuan berikutnya dan menutup kegiatan dengan doa serta salam.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- D. ASESMEN PEMBELAJARAN -->
+        <div>
+            <h4 class="font-bold text-slate-800">D. Asesmen Pembelajaran</h4>
+            <ul class="list-disc pl-5 space-y-1 text-slate-700 mt-1 text-xs">
+                <li><strong>Asesmen Diagnostik:</strong> Kuis pemantik kognitif awal sebelum materi dimulai.</li>
+                <li><strong>Asesmen Formatif:</strong> Observasi sikap (Profil Pelajar Pancasila) dan penilaian unjuk kerja presentasi kelompok.</li>
+                <li><strong>Asesmen Sumatif:</strong> Tes tertulis (Pilihan Ganda & Uraian) di akhir materi.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- LEMBAR PENGESAHAN / TANDA TANGAN -->
+    <div class="border-t pt-6 mt-8">
+        <div class="grid grid-cols-2 text-center text-xs">
+            <div>
+                <p class="mb-1">Mengetahui,</p>
+                <p class="font-bold text-slate-900">Kepala Sekolah / Madrasah</p>
+                <div class="h-16"></div>
+                <p class="font-bold underline text-slate-900" id="out-kepala-nama">-</p>
+                <p class="text-slate-600">NIP. <span id="out-kepala-nip">-</span></p>
+            </div>
+            <div>
+                <p class="mb-1">Dibuat Oleh,</p>
+                <p class="font-bold text-slate-900">Guru Mata Pelajaran</p>
+                <div class="h-16"></div>
+                <p class="font-bold underline text-slate-900" id="out-guru-nama">-</p>
+                <p class="text-slate-600">NIP. <span id="out-guru-nip">-</span></p>
+            </div>
+        </div>
+    </div>
+
+</div>
 
     <div id="page-media" class="page-content p-8 space-y-6 hidden">
       <div class="flex justify-end items-center">
@@ -431,27 +504,40 @@
       </div>
     </div>
 
-    <div id="page-pengaturan" class="page-content p-8 space-y-6 hidden">
-      <div class="bg-white p-6 rounded-xl border border-slate-200 max-w-xl space-y-4">
-        <div>
-          <label class="text-xs font-semibold block mb-1">Nama Madrasah / Sekolah</label>
-          <input type="text" id="cfg-nama" value="MTs Meunafa" class="w-full border rounded-lg p-2 text-sm outline-none">
-        </div>
-        <div>
-          <label class="text-xs font-semibold block mb-1">Tahun Pelajaran</label>
-          <input type="text" id="cfg-thn" value="2026 / 2027" class="w-full border rounded-lg p-2 text-sm outline-none">
-        </div>
-        <div>
-  <label class="text-xs font-semibold block mb-1">Kepala Madrasah</label>
-  <input type="text" id="cfg-kepala" value="Administrator" class="w-full border rounded-lg p-2 text-sm outline-none">
-</div>
-<div>
-  <label class="text-xs font-semibold block mb-1">NIP Kepala Madrasah</label>
-  <input type="text" id="cfg-nip-kepala" placeholder="Contoh: 19800101 200501 1 001" class="w-full border rounded-lg p-2 text-sm outline-none">
-</div>
-<button onclick="alert('Pengaturan berhasil disimpan!')" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600">Simpan Pengaturan</button>      </div>
+    <!-- PAGE PENGATURAN SYSTEM -->
+<div id="page-pengaturan" class="page-content p-8 space-y-6 hidden">
+  <div class="max-w-4xl bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-6">
+    <div class="border-b pb-4">
+      <h3 class="text-lg font-bold text-slate-800">Pengaturan Identitas Madrasah & TTD</h3>
+      <p class="text-xs text-slate-500 mt-1">Data ini digunakan otomatis untuk lembar pengesahan dan cetak dokumen.</p>
     </div>
 
+    <form onsubmit="event.preventDefault(); generateModulAjar(); alert('Pengaturan berhasil disimpan!');" class="space-y-4 text-xs">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="font-semibold text-slate-700 block mb-1">Satuan Pendidikan / Madrasah</label>
+          <input type="text" id="cfg-satuan" value="MTsS Meunafa" class="w-full border rounded-lg p-2.5 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500">
+        </div>
+        <div>
+          <label class="font-semibold text-slate-700 block mb-1">Nama Kepala Madrasah</label>
+          <input type="text" id="cfg-kepala" value="H. Muhammad, M.Pd." class="w-full border rounded-lg p-2.5 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500">
+        </div>
+        <div>
+          <label class="font-semibold text-slate-700 block mb-1">NIP Kepala Madrasah</label>
+          <input type="text" id="cfg-nip-kepala" value="197501012000031001" class="w-full border rounded-lg p-2.5 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500">
+        </div>
+        <div>
+          <label class="font-semibold text-slate-700 block mb-1">Kota / Kabupaten Surat</label>
+          <input type="text" id="cfg-kota" value="Meunafa" class="w-full border rounded-lg p-2.5 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500">
+        </div>
+      </div>
+
+      <div class="pt-4 border-t flex justify-end">
+        <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-5 py-2.5 rounded-lg shadow-sm">Simpan Perubahan</button>
+      </div>
+    </form>
+  </div>
+</div>
   </main>
 
 
@@ -1040,126 +1126,67 @@ function switchTabModul(tabName) {
   }
 }
 
-// Function Form Submit
-function generateModulAjar(e) {
-  if (e) e.preventDefault();
-  switchTabModul('modul');
-}
-
-// Event listener otomatis saat halaman terbuka atau input berubah
-document.addEventListener('DOMContentLoaded', function() {
-  const inputs = ['modul-fase', 'modul-mapel', 'modul-bab', 'modul-waktu', 'modul-model', 'modul-guru', 'modul-satuan'];
-  inputs.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      el.addEventListener('change', () => switchTabModul('modul'));
-      el.addEventListener('input', () => switchTabModul('modul'));
+// Function Form Submit & Update Dynamic Preview
+  function generateModulAjar(e) {
+    if (e && e.preventDefault) {
+      e.preventDefault();
     }
+
+    // 1. Ambil Data Form & Pengaturan System
+    var mapel = (document.getElementById('modul-mapel') && document.getElementById('modul-mapel').value) || '-';
+    var fase = (document.getElementById('modul-fase') && document.getElementById('modul-fase').value) || '-';
+    var bab = (document.getElementById('modul-bab') && document.getElementById('modul-bab').value) || '-';
+    var waktu = (document.getElementById('modul-waktu') && document.getElementById('modul-waktu').value) || '-';
+    var model = (document.getElementById('modul-model') && document.getElementById('modul-model').value) || '-';
+    var guru = (document.getElementById('modul-guru') && document.getElementById('modul-guru').value) || (document.getElementById('cfg-guru') && document.getElementById('cfg-guru').value) || '-';
+    var nipGuru = (document.getElementById('cfg-nip-guru') && document.getElementById('cfg-nip-guru').value) || '-';
+    var satuan = (document.getElementById('modul-satuan') && document.getElementById('modul-satuan').value) || (document.getElementById('cfg-satuan') && document.getElementById('cfg-satuan').value) || '-';
+    var kepala = (document.getElementById('cfg-kepala') && document.getElementById('cfg-kepala').value) || '-';
+    var nipKepala = (document.getElementById('cfg-nip-kepala') && document.getElementById('cfg-nip-kepala').value) || '-';
+
+    // 2. Inject ke Preview Modul Ajar
+    var prevHeaderSub = document.getElementById('prev-header-sub');
+    if (prevHeaderSub) {
+      prevHeaderSub.innerText = 'MATA PELAJARAN: ' + mapel + ' | FASE / KELAS: ' + fase;
+    }
+    
+    if (document.getElementById('out-nama-guru')) document.getElementById('out-nama-guru').innerText = guru;
+    if (document.getElementById('out-satuan-pendidikan')) document.getElementById('out-satuan-pendidikan').innerText = satuan;
+    if (document.getElementById('out-mapel')) document.getElementById('out-mapel').innerText = mapel;
+    if (document.getElementById('out-kelas')) document.getElementById('out-kelas').innerText = fase;
+    if (document.getElementById('out-model-belajar')) document.getElementById('out-model-belajar').innerText = model;
+    if (document.getElementById('out-alokasi-waktu')) document.getElementById('out-alokasi-waktu').innerText = waktu;
+
+    // Update semua teks topik/bab
+    var topikElements = document.querySelectorAll('.out-topik-text');
+    topikElements.forEach(function(el) {
+      el.innerText = bab;
+    });
+
+    // 3. Inject ke Lembar Pengesahan
+    if (document.getElementById('out-kepala-nama')) document.getElementById('out-kepala-nama').innerText = kepala;
+    if (document.getElementById('out-kepala-nip')) document.getElementById('out-kepala-nip').innerText = nipKepala;
+    if (document.getElementById('out-guru-nama')) document.getElementById('out-guru-nama').innerText = guru;
+    if (document.getElementById('out-guru-nip')) document.getElementById('out-guru-nip').innerText = nipGuru;
+
+    // Pindah/Aktifkan Tab Modul
+    if (typeof switchTabModul === 'function') {
+      switchTabModul('modul');
+    }
+  }
+
+  // Event Listener otomatis saat halaman terbuka atau input berubah
+  document.addEventListener('DOMContentLoaded', function() {
+    var inputs = ['modul-fase', 'modul-mapel', 'modul-bab', 'modul-waktu', 'modul-model', 'modul-guru', 'modul-satuan'];
+    inputs.forEach(function(id) {
+      var el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('change', function() { generateModulAjar(); });
+        el.addEventListener('input', function() { generateModulAjar(); });
+      }
+    });
+    generateModulAjar();
   });
-  
-  switchTabModul('modul');
-
-// 1. Isi Dropdown Mata Pelajaran dari Data Sistem / LocalStorage / Fallback
-  const mapelSelect = document.getElementById('modul-mapel');
-  if (mapelSelect) {
-    let listMapel = [];
-    
-    // 1. Cek dari Variabel Global
-    if (typeof dataMapel !== 'undefined' && Array.isArray(dataMapel) && dataMapel.length > 0) {
-      listMapel = dataMapel;
-    } else if (typeof mataPelajaranData !== 'undefined' && Array.isArray(mataPelajaranData) && mataPelajaranData.length > 0) {
-      listMapel = mataPelajaranData;
-    } else if (typeof dataMataPelajaran !== 'undefined' && Array.isArray(dataMataPelajaran) && dataMataPelajaran.length > 0) {
-      listMapel = dataMataPelajaran;
-    } 
-    // 2. Jika variabel kosong, ambil dari LocalStorage
-    else {
-      try {
-        const localData = localStorage.getItem('dataMapel') || localStorage.getItem('mataPelajaranData') || localStorage.getItem('dataMataPelajaran');
-        if (localData) listMapel = JSON.parse(localData);
-      } catch (e) { console.error(e); }
-    }
-
-    // 3. Render ke Dropdown
-    if (listMapel && listMapel.length > 0) {
-      mapelSelect.innerHTML = listMapel.map(m => {
-        const namaMapel = (typeof m === 'object' && m !== null) 
-          ? (m.namaMapel || m.nama || m.nama_mapel || m.mapel || '') 
-          : m;
-        return `<option value="${namaMapel}">${namaMapel}</option>`;
-      }).join('');
-    } else {
-      // 4. Fallback jika data sistem belum terbaca
-      mapelSelect.innerHTML = `
-        <option value="Al-Qur'an Hadis">Al-Qur'an Hadis</option>
-        <option value="Akidah Akhlak">Akidah Akhlak</option>
-        <option value="Fikih">Fikih</option>
-        <option value="Sejarah Kebudayaan Islam (SKI)">Sejarah Kebudayaan Islam (SKI)</option>
-        <option value="Bahasa Arab">Bahasa Arab</option>
-        <option value="Pendidikan Pancasila">Pendidikan Pancasila</option>
-        <option value="Bahasa Indonesia">Bahasa Indonesia</option>
-        <option value="Matematika">Matematika</option>
-        <option value="Ilmu Pengetahuan Alam (IPA)">Ilmu Pengetahuan Alam (IPA)</option>
-        <option value="Ilmu Pengetahuan Sosial (IPS)">Ilmu Pengetahuan Sosial (IPS)</option>
-        <option value="Bahasa Inggris">Bahasa Inggris</option>
-        <option value="PJOK">PJOK</option>
-        <option value="Informatika">Informatika</option>
-        <option value="Seni & Budaya / Prakarya">Seni & Budaya / Prakarya</option>
-        <option value="Muatan Lokal / Bahasa Daerah">Muatan Lokal / Bahasa Daerah</option>
-      `;
-    }
-  }  
-  
-  // 2. Isi Dropdown Kelas / Fase dari Data Kelas (Dynamic Object Mapping)
-  const faseSelect = document.getElementById('modul-fase');
-  if (faseSelect) {
-    let listKelas = [];
-    
-    // 1. Ambil dari Variabel Global
-    if (typeof dataKelas !== 'undefined' && Array.isArray(dataKelas) && dataKelas.length > 0) {
-      listKelas = dataKelas;
-    } else if (typeof kelasData !== 'undefined' && Array.isArray(kelasData) && kelasData.length > 0) {
-      listKelas = kelasData;
-    } 
-    // 2. Ambil dari LocalStorage
-    else {
-      try {
-        const localKelas = localStorage.getItem('dataKelas') || localStorage.getItem('kelasData');
-        if (localKelas) listKelas = JSON.parse(localKelas);
-      } catch (e) { console.error(e); }
-    }
-
-    // 3. Render ke Dropdown dengan membaca semua properti nama yang mungkin
-    if (listKelas && listKelas.length > 0) {
-      faseSelect.innerHTML = listKelas.map(k => {
-        let namaKls = '';
-        if (typeof k === 'object' && k !== null) {
-          namaKls = k.namaKelas || k.nama || k.tingkat || k.nama_kelas || '';
-        } else {
-          namaKls = k;
-        }
-
-        // Tentukan Fase
-        let faseText = 'Fase D';
-        const strNama = String(namaKls).toUpperCase();
-        if (strNama.includes('I_') || strNama.startsWith('1') || strNama.startsWith('2') || strNama === 'I') {
-          faseText = 'Fase A/B/C';
-        }
-        
-        const labelFull = `SMP / MTs - Kelas ${namaKls} (${faseText})`;
-        return `<option value="${labelFull}">${labelFull}</option>`;
-      }).join('');
-    } else {
-      // Fallback jika belum ada data sama sekali
-      faseSelect.innerHTML = `
-        <option value="SMP / MTs - Kelas VII A (Fase D)">SMP / MTs - Kelas VII A (Fase D)</option>
-        <option value="SMP / MTs - Kelas VIII A (Fase D)">SMP / MTs - Kelas VIII A (Fase D)</option>
-        <option value="SMP / MTs - Kelas IX A (Fase D)">SMP / MTs - Kelas IX A (Fase D)</option>
-        <option value="SMP / MTs - Kelas I_A (Fase A/B/C)">SMP / MTs - Kelas I_A (Fase A/B/C)</option>
-      `;
-    }
-  }});  
-  
-  </script> 
+</script>
 </body>
 </html>
