@@ -699,27 +699,38 @@ function updateKelasDropdowns() {
   const selectJenjang = document.getElementById('modul-jenjang');
   if (!selectJenjang) return;
 
-  const dataKelas = (window.appData && Array.isArray(window.appData.kelas)) ? window.appData.kelas : [];
-  
-  // Simpan opsi yang sedang dipilih pengguna
   const currentValue = selectJenjang.value;
-
-  // Reset isi dropdown ke opsi default
   selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
 
-  // Langsung tambahkan daftar kelas dari sistem
-  if (dataKelas.length > 0) {
-    dataKelas.forEach(item => {
-      const option = document.createElement('option');
-      const namaKelas = typeof item === 'object' ? (item.nama || item.namaKelas || item.tingkat || item.f1 || item) : item;
-      option.value = namaKelas;
-      option.textContent = namaKelas;
-      selectJenjang.appendChild(option);
-    });
-  }
+  try {
+    let dataKelas = [];
+    
+    // Cek semua kemungkinan sumber data kelas
+    if (window.appData && Array.isArray(window.appData.kelas) && window.appData.kelas.length > 0) {
+      dataKelas = window.appData.kelas;
+    } else {
+      const saved = localStorage.getItem('dataKelas') || localStorage.getItem('kelasList') || localStorage.getItem('eduadmin_kelas');
+      if (saved) dataKelas = JSON.parse(saved);
+    }
 
-  if (currentValue) selectJenjang.value = currentValue;
+    if (Array.isArray(dataKelas) && dataKelas.length > 0) {
+      dataKelas.forEach(item => {
+        const option = document.createElement('option');
+        const namaKelas = typeof item === 'object' ? (item.nama || item.namaKelas || item.tingkat || item.nama_kelas) : item;
+        if (namaKelas) {
+          option.value = namaKelas;
+          option.textContent = namaKelas;
+          selectJenjang.appendChild(option);
+        }
+      });
+    }
+
+    if (currentValue) selectJenjang.value = currentValue;
+  } catch (err) {
+    console.error("Error updating kelas dropdown:", err);
+  }
 }
+    
 function updateGuruDropdowns() {
   const dropdowns = document.querySelectorAll('.select-guru-dropdown');
   dropdowns.forEach(select => {
