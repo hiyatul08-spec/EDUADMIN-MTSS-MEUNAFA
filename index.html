@@ -699,27 +699,27 @@ function updateKelasDropdowns() {
   const selectJenjang = document.getElementById('modul-jenjang');
   if (!selectJenjang) return;
 
-  const dataKelas = window.appData && Array.isArray(window.appData.kelas) ? window.appData.kelas : [];
+  const dataKelas = (window.appData && Array.isArray(window.appData.kelas)) ? window.appData.kelas : [];
+  
+  // Simpan opsi yang sedang dipilih pengguna
+  const currentValue = selectJenjang.value;
 
+  // Reset isi dropdown ke opsi default
+  selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
+
+  // Langsung tambahkan daftar kelas dari sistem
   if (dataKelas.length > 0) {
-    let dynamicGroup = selectJenjang.querySelector('optgroup[label="— KELAS DARI SYSTEM —"]');
-    if (!dynamicGroup) {
-      dynamicGroup = document.createElement('optgroup');
-      dynamicGroup.label = '— KELAS DARI SYSTEM —';
-      selectJenjang.insertBefore(dynamicGroup, selectJenjang.firstChild);
-    }
-    
-    dynamicGroup.innerHTML = '';
     dataKelas.forEach(item => {
       const option = document.createElement('option');
-      const namaKelas = typeof item === 'object' ? (item.nama || item.tingkat || item.namaKelas || item) : item;
+      const namaKelas = typeof item === 'object' ? (item.nama || item.namaKelas || item.tingkat || item.f1 || item) : item;
       option.value = namaKelas;
       option.textContent = namaKelas;
-      dynamicGroup.appendChild(option);
+      selectJenjang.appendChild(option);
     });
   }
-}
 
+  if (currentValue) selectJenjang.value = currentValue;
+}
 function updateGuruDropdowns() {
   const dropdowns = document.querySelectorAll('.select-guru-dropdown');
   dropdowns.forEach(select => {
