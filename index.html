@@ -3,494 +3,804 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduAdmin - Sistem Manajemen Sekolah</title>
-  <!-- Tailwind CSS CDN -->
+  <title>EduAdmin - MTs Meunafa</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <!-- Chart.js CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .nav-active {
+      background-color: #10b981 !important;
+      color: #ffffff !important;
+      font-weight: 600;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 font-sans text-gray-800 antialiased min-h-screen flex flex-col">
+<body class="bg-slate-100 font-sans text-slate-800 antialiased flex h-screen overflow-hidden">
 
-  <!-- TOP NAVBAR -->
-  <header class="bg-slate-900 text-white shadow-md sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <div class="bg-emerald-500 p-2 rounded-lg text-white">
-          <i data-lucide="graduation-cap" class="w-6 h-6"></i>
+  <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between p-4 overflow-y-auto shrink-0">
+    <div>
+      <div class="flex items-center gap-3 mb-6 px-2">
+        <div class="bg-emerald-500 text-white p-2 rounded-lg font-bold">EA</div>
+        <div>
+          <h1 class="font-bold text-white leading-none">EduAdmin</h1>
+          <span class="text-xs text-slate-400">MTs Meunafa</span>
         </div>
-        <span class="text-xl font-bold tracking-wide">EduAdmin</span>
       </div>
       
-      <div class="flex items-center space-x-4">
-        <div class="text-right hidden sm:block">
-          <p class="text-sm font-semibold">Administrator</p>
-          <p class="text-xs text-gray-400">admin@sekolah.sch.id</p>
+      <nav class="space-y-1 text-sm">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn nav-active w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-gauge w-5"></i> Dashboard</button>
+        <button onclick="switchTab('siswa')" id="nav-siswa" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-user-graduate w-5"></i> Data Siswa</button>
+        <button onclick="switchTab('guru')" id="nav-guru" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-chalkboard-user w-5"></i> Data Guru</button>
+        <button onclick="switchTab('mapel')" id="nav-mapel" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-book w-5"></i> Mata Pelajaran</button>
+        <button onclick="switchTab('kelas')" id="nav-kelas" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-door-open w-5"></i> Kelas</button>
+        <button onclick="switchTab('nilai')" id="nav-nilai" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-graduation-cap w-5"></i> Nilai Siswa</button>
+        <button onclick="switchTab('jadwal')" id="nav-jadwal" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-calendar-days w-5"></i> Jadwal Pelajaran</button>
+        <button onclick="switchTab('modul')" id="nav-modul" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-bookmark w-5"></i> Perangkat / Modul Ajar</button>
+        <button onclick="switchTab('media')" id="nav-media" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-photo-film w-5"></i> Media Pembelajaran</button>
+        <button onclick="switchTab('asesmen')" id="nav-asesmen" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-file-pen w-5"></i> Asesmen & Kuis</button>
+        <button onclick="switchTab('rubrik')" id="nav-rubrik" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-chart-line w-5"></i> Rubrik Penilaian</button>
+        <button onclick="switchTab('lkpd')" id="nav-lkpd" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-file-lines w-5"></i> LKPD Interaktif</button>
+        <button onclick="switchTab('absensi')" id="nav-absensi" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-clock w-5"></i> Absensi Harian</button>
+        <button onclick="switchTab('keuangan')" id="nav-keuangan" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-wallet w-5"></i> Administrasi & Keuangan</button>
+        <button onclick="switchTab('surat')" id="nav-surat" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-envelope w-5"></i> Surat & Persuratan</button>
+        <button onclick="switchTab('pengaturan')" id="nav-pengaturan" class="nav-btn w-full flex items-center gap-3 hover:bg-slate-800 px-3 py-2.5 rounded-lg text-left transition"><i class="fa-solid fa-gear w-5"></i> Pengaturan</button>
+      </nav>
+    </div>
+
+    <div class="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-400">
+      <p class="font-semibold text-slate-300">Status Penyimpanan</p>
+      <p class="text-emerald-400 flex items-center gap-1 mt-1"><i class="fa-solid fa-circle-check"></i> Lokal (Offline Ready)</p>
+    </div>
+  </aside>
+
+  <main class="flex-1 overflow-y-auto flex flex-col">
+    <header class="bg-white border-b border-slate-200 px-8 py-4 flex justify-between items-center sticky top-0 z-10">
+      <h2 id="header-title" class="text-xl font-bold text-slate-800">Dashboard</h2>
+      <div class="flex items-center gap-4">
+        <button class="text-slate-500 hover:text-slate-700"><i class="fa-regular fa-bell text-lg"></i></button>
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center font-bold text-sm">A</div>
+          <div class="text-xs">
+            <p class="font-semibold leading-none">Administrator</p>
+            <p class="text-slate-400">Administrator</p>
+          </div>
         </div>
-        <div class="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center font-bold text-white shadow">
-          A
+      </div>
+    </header>
+
+    <div id="page-dashboard" class="page-content p-8 space-y-6">
+      <div>
+        <h3 class="text-2xl font-bold text-slate-800">Selamat Datang di EduAdmin MTs Meunafa</h3>
+        <p class="text-xs text-slate-500 mt-1">Tahun Pelajaran 2026 / 2027 | Kepala Madrasah: Administrator</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4">
+          <div class="p-3 bg-emerald-50 text-emerald-500 rounded-lg"><i class="fa-solid fa-user-graduate text-xl"></i></div>
+          <div><p class="text-xs text-slate-500">Total Siswa</p><p id="count-siswa" class="text-xl font-bold">0 Siswa</p></div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4">
+          <div class="p-3 bg-sky-50 text-sky-500 rounded-lg"><i class="fa-solid fa-chalkboard-user text-xl"></i></div>
+          <div><p class="text-xs text-slate-500">Total Guru</p><p id="count-guru" class="text-xl font-bold">0 Guru</p></div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4">
+          <div class="p-3 bg-amber-50 text-amber-500 rounded-lg"><i class="fa-solid fa-door-open text-xl"></i></div>
+          <div><p class="text-xs text-slate-500">Kelas Active</p><p id="count-kelas" class="text-xl font-bold">0 Kelas</p></div>
+        </div>
+        <div class="bg-white p-4 rounded-xl border border-slate-200 flex items-center gap-4">
+          <div class="p-3 bg-purple-50 text-purple-500 rounded-lg"><i class="fa-solid fa-book text-xl"></i></div>
+          <div><p class="text-xs text-slate-500">Mata Pelajaran</p><p id="count-mapel" class="text-xl font-bold">0 Mapel</p></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-xl border border-slate-200">
+          <h4 class="font-bold mb-4 text-sm">Rasio Gender Siswa</h4>
+          <div class="w-48 h-48 mx-auto"><canvas id="genderChart"></canvas></div>
+        </div>
+        <div class="bg-white p-6 rounded-xl border border-slate-200">
+          <h4 class="font-bold mb-4 text-sm">Statistik Usia Guru</h4>
+          <div class="h-48"><canvas id="ageChart"></canvas></div>
         </div>
       </div>
     </div>
-  </header>
 
-  <!-- MAIN NAVIGATION TABS -->
-  <nav class="bg-white border-b border-gray-200 shadow-sm sticky top-16 z-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 overflow-x-auto py-2">
-      <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-tab flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors bg-emerald-50 text-emerald-600">
-        <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-        <span>Dashboard</span>
-      </button>
-      <button onclick="switchTab('siswa')" id="tab-siswa" class="nav-tab flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors text-gray-600 hover:bg-gray-100">
-        <i data-lucide="users" class="w-4 h-4"></i>
-        <span>Data Siswa</span>
-      </button>
-      <button onclick="switchTab('guru')" id="tab-guru" class="nav-tab flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors text-gray-600 hover:bg-gray-100">
-        <i data-lucide="user-check" class="w-4 h-4"></i>
-        <span>Data Guru</span>
-      </button>
-      <button onclick="switchTab('kelas')" id="tab-kelas" class="nav-tab flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors text-gray-600 hover:bg-gray-100">
-        <i data-lucide="school" class="w-4 h-4"></i>
-        <span>Data Kelas</span>
-      </button>
-      <button onclick="switchTab('mapel')" id="tab-mapel" class="nav-tab flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors text-gray-600 hover:bg-gray-100">
-        <i data-lucide="book-open" class="w-4 h-4"></i>
-        <span>Mata Pelajaran</span>
-      </button>
-      <button onclick="switchTab('nilai')" id="tab-nilai" class="nav-tab flex items-center space-x-2 px-4 py-2.5 text-sm font-medium rounded-lg transition-colors text-gray-600 hover:bg-gray-100">
-        <i data-lucide="clipboard-list" class="w-4 h-4"></i>
-        <span>Nilai Siswa</span>
-      </button>
+    <div id="page-siswa" class="page-content p-8 space-y-6 hidden">
+      <div class="flex justify-end items-center">
+        <button onclick="toggleModal('modal-siswa', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Tambah Siswa</button>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-4">NISN</th><th class="p-4">Nama Siswa</th><th class="p-4">Jenis Kelamin</th><th class="p-4">Kelas</th><th class="p-4">Aksi</th></tr>
+          </thead>
+          <tbody id="table-siswa" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
     </div>
-  </nav>
 
-  <!-- CONTENT CONTAINER -->
-  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div id="page-guru" class="page-content p-8 space-y-6 hidden">
+      <div class="flex justify-end items-center">
+        <button onclick="toggleModal('modal-guru', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Tambah Guru</button>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-4">NIP</th><th class="p-4">Nama Guru</th><th class="p-4">Mata Pelajaran</th><th class="p-4">Aksi</th></tr>
+          </thead>
+          <tbody id="table-guru" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+    </div>
 
-    <!-- DASHBOARD SECTION -->
-    <section id="section-dashboard" class="content-section space-y-6">
-      <!-- STATS CARDS -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Total Siswa</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1" id="stat-siswa">0</h3>
+    <div id="page-mapel" class="page-content p-8 space-y-6 hidden">
+      <div class="flex justify-between items-center">
+        <p class="text-xs text-slate-500">Mata Pelajaran Gabungan Kurikulum Kemendikbud & Kemenag MTs</p>
+        <button onclick="toggleModal('modal-mapel', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Tambah Mapel</button>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-4">Kode Mapel</th><th class="p-4">Nama Mata Pelajaran</th><th class="p-4">Kategori / Instansi</th><th class="p-4">KKM</th><th class="p-4">Aksi</th></tr>
+          </thead>
+          <tbody id="table-mapel" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="page-kelas" class="page-content p-8 space-y-6 hidden">
+      <div class="flex justify-end items-center">
+        <button onclick="toggleModal('modal-kelas', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Tambah Kelas</button>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-4">Nama Kelas</th><th class="p-4">Wali Kelas</th><th class="p-4">Tingkat</th><th class="p-4">Aksi</th></tr>
+          </thead>
+          <tbody id="table-kelas" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="page-nilai" class="page-content p-8 space-y-6 hidden">
+      <div class="flex justify-end items-center">
+        <button onclick="toggleModal('modal-nilai', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Input Nilai</button>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-4">Nama Siswa</th><th class="p-4">Mata Pelajaran</th><th class="p-4">Tugas</th><th class="p-4">UTS</th><th class="p-4">UAS</th><th class="p-4">Nilai Akhir</th><th class="p-4">Aksi</th></tr>
+          </thead>
+          <tbody id="table-nilai" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="page-jadwal" class="page-content p-8 space-y-6 hidden">
+      <div class="flex justify-end items-center">
+        <button onclick="toggleModal('modal-jadwal', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Tambah Jadwal</button>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-4">Hari</th><th class="p-4">Jam</th><th class="p-4">Kelas</th><th class="p-4">Mata Pelajaran</th><th class="p-4">Guru Pengajar</th><th class="p-4">Aksi</th></tr>
+          </thead>
+          <tbody id="table-jadwal" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="page-modul" class="page-content p-8 space-y-6 hidden">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- KOLOM KIRI: FORM PENGATURAN AJAR -->
+        <div class="lg:col-span-4 bg-white p-5 rounded-xl shadow-sm border border-slate-200 h-fit space-y-4">
+          <div class="flex justify-between items-center border-b pb-3">
+            <h3 class="font-bold text-slate-800 flex items-center gap-2 text-sm">
+              <i class="fas fa-sliders-h text-indigo-600"></i> Pengaturan Ajar
+            </h3>
+            <button type="button" onclick="document.getElementById('form-perangkat-ajar').reset()" class="text-xs text-indigo-600 font-semibold hover:underline">Reset</button>
           </div>
-          <div class="bg-blue-50 text-blue-600 p-3 rounded-xl">
-            <i data-lucide="users" class="w-6 h-6"></i>
-          </div>
+
+          <form id="form-perangkat-ajar" onsubmit="generateModulAjar(event)" class="space-y-3 text-xs">
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">JENJANG & KELAS / FASE</label>
+              <select id="modul-fase" class="w-full border rounded-lg p-2 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                <option value="SMP / MTs - Kelas 7 (Fase D)">SMP / MTs - Kelas 7 (Fase D)</option>
+                <option value="SMP / MTs - Kelas 8 (Fase D)">SMP / MTs - Kelas 8 (Fase D)</option>
+                <option value="SMP / MTs - Kelas 9 (Fase D)">SMP / MTs - Kelas 9 (Fase D)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">MATA PELAJARAN</label>
+              <select id="modul-mapel" class="select-mapel-dropdown w-full border rounded-lg p-2 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                <!-- Otomatis dari Data Mapel -->
+              </select>
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">BAB / TOPIK UTAMA</label>
+              <input type="text" id="modul-bab" required placeholder="Contoh: AMANAH" class="w-full border rounded-lg p-2 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">ALOKASI WAKTU</label>
+              <select id="modul-waktu" class="w-full border rounded-lg p-2 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                <option value="2 JP x 40 Menit (SMP)">2 JP x 40 Menit (SMP)</option>
+                <option value="4 JP x 40 Menit (SMP)">4 JP x 40 Menit (SMP)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="font-semibold text-slate-700 block mb-1">MODEL PEMBELAJARAN</label>
+              <select id="modul-model" class="w-full border rounded-lg p-2 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+                <option value="Problem Based Learning (PBL)">Problem Based Learning (PBL)</option>
+                <option value="Project Based Learning (PjBL)">Project Based Learning (PjBL)</option>
+                <option value="Discovery Learning">Discovery Learning</option>
+              </select>
+            </div>
+
+            <div class="pt-2 border-t space-y-2">
+              <p class="font-bold text-slate-800 uppercase mb-2 text-[11px]">IDENTITAS DOKUMEN</p>
+              <div>
+                <label class="text-slate-600 block mb-1">Nama Guru</label>
+                <select id="modul-guru" class="select-guru-dropdown w-full border rounded-lg p-2 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500"></select>
+              </div>
+              <div>
+                <label class="text-slate-600 block mb-1">Nama Kepala Sekolah</label>
+                <input type="text" id="modul-kepsek" placeholder="Drs. H. Muhammad Ridwan, M.Pd." class="w-full border rounded-lg p-2 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+              </div>
+              <div>
+                <label class="text-slate-600 block mb-1">Satuan Pendidikan</label>
+                <input type="text" id="modul-satuan" value="MTsS Meunafa" class="w-full border rounded-lg p-2 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+              </div>
+            </div>
+
+            <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg transition-all flex items-center justify-center gap-2 shadow-md">
+              <i class="fas fa-magic"></i> Generate Perangkat Ajar
+            </button>
+          </form>
         </div>
 
-        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Total Guru</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1" id="stat-guru">0</h3>
+        <!-- KOLOM KANAN: PREVIEW DOKUMEN & TAB NAVIGASI -->
+        <div class="lg:col-span-8 bg-white rounded-xl shadow-sm border border-slate-200 flex flex-col overflow-hidden">
+          
+          <!-- TAB NAVIGASI -->
+          <div class="flex overflow-x-auto border-b bg-slate-50 text-xs font-semibold text-slate-600 scrollbar-none">
+            <button onclick="switchTabModul('modul')" id="tab-modul" class="px-4 py-3 text-indigo-600 border-b-2 border-indigo-600 bg-white flex items-center gap-1.5 whitespace-nowrap font-bold">
+              <i class="fas fa-book-open"></i> 1. Modul Ajar
+            </button>
+            <button onclick="switchTabModul('atp')" id="tab-atp" class="px-4 py-3 hover:text-indigo-600 flex items-center gap-1.5 whitespace-nowrap">
+              <i class="fas fa-project-diagram"></i> 2. ATP
+            </button>
+            <button onclick="switchTabModul('lkpd')" id="tab-lkpd" class="px-4 py-3 hover:text-indigo-600 flex items-center gap-1.5 whitespace-nowrap">
+              <i class="fas fa-file-alt"></i> 3. LKPD
+            </button>
+            <button onclick="switchTabModul('bahan')" id="tab-bahan" class="px-4 py-3 hover:text-indigo-600 flex items-center gap-1.5 whitespace-nowrap">
+              <i class="fas fa-book"></i> 4. Bahan Ajar
+            </button>
+            <button onclick="switchTabModul('asesmen')" id="tab-asesmen" class="px-4 py-3 hover:text-indigo-600 flex items-center gap-1.5 whitespace-nowrap">
+              <i class="fas fa-check-double"></i> 5. Asesmen
+            </button>
           </div>
-          <div class="bg-emerald-50 text-emerald-600 p-3 rounded-xl">
-            <i data-lucide="user-check" class="w-6 h-6"></i>
-          </div>
-        </div>
 
-        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Total Kelas</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1" id="stat-kelas">0</h3>
-          </div>
-          <div class="bg-amber-50 text-amber-600 p-3 rounded-xl">
-            <i data-lucide="school" class="w-6 h-6"></i>
-          </div>
-        </div>
+          <!-- AREA PREVIEW DOKUMEN -->
+          <div id="preview-content-modul" class="p-6 overflow-y-auto max-h-[750px] text-xs text-slate-800 space-y-4">
+            <div class="text-center border-b-2 border-slate-800 pb-3">
+              <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>
+              <p id="prev-header-sub" class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: PENDIDIKAN PANCASILA | SMP / MTs - KELAS 7 (FASE D)</p>
+              <p id="prev-header-topik" class="text-slate-600 italic">Bab / Topik Utama: AMANAH | Alokasi Waktu: 2 JP x 40 Menit</p>
+            </div>
 
-        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Mata Pelajaran</p>
-            <h3 class="text-2xl font-bold text-gray-800 mt-1" id="stat-mapel">0</h3>
+            <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit">
+              1. MODUL AJAR (RPP PLUS STANDAR RESMI)
+            </div>
+
+            <div class="border rounded-lg p-3 bg-slate-50/50 space-y-1">
+              <h4 class="font-bold text-slate-900 mb-2">I. INFORMASI UMUM</h4>
+              <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+                <p><span class="inline-block w-28 text-slate-500">Nama Penyusun</span>: <strong id="prev-guru">Ahmad Fauzi, S.Pd.I.</strong></p>
+                <p><span class="inline-block w-28 text-slate-500">Satuan Pendidikan</span>: <span id="prev-satuan">MTsS Meunafa</span></p>
+                <p><span class="inline-block w-28 text-slate-500">Mata Pelajaran</span>: <span id="prev-mapel">Pendidikan Pancasila</span></p>
+                <p><span class="inline-block w-28 text-slate-500">Jenjang / Kelas</span>: <span id="prev-fase">SMP / MTs - Kelas 7 (Fase D)</span></p>
+                <p><span class="inline-block w-28 text-slate-500">Model Learning</span>: <span id="prev-model">Problem Based Learning (PBL)</span></p>
+                <p><span class="inline-block w-28 text-slate-500">Alokasi Waktu</span>: <span id="prev-waktu">2 JP x 40 Menit</span></p>
+              </div>
+            </div>
+
+            <div class="space-y-3">
+              <h4 class="font-bold text-slate-900">II. KOMPONEN INTI</h4>
+              <div>
+                <h5 class="font-semibold text-slate-800">A. Tujuan Pembelajaran (TP)</h5>
+                <ul class="list-disc pl-5 text-slate-700 space-y-1 mt-1">
+                  <li>Peserta didik mampu menjelaskan makna dan konsep nilai <span class="topik-text font-semibold">AMANAH</span> secara komprehensif.</li>
+                  <li>Peserta didik mampu mengidentifikasi serta menganalisis contoh perilaku yang mencerminkan sikap jujur dan bertanggung jawab.</li>
+                </ul>
+              </div>
+              <div>
+                <h5 class="font-semibold text-slate-800">B. Kegiatan Pembelajaran</h5>
+                <div class="border-l-2 border-indigo-500 pl-3 space-y-2 mt-1">
+                  <p><strong>1. Pendahuluan:</strong> Membuka pelajaran dengan salam, berdoa, dan memberikan pertanyaan pemantik terkait topik.</p>
+                  <p><strong>2. Inti:</strong> Siswa mengamati studi kasus, mendiskusikan masalah dalam kelompok, dan menyajikan hasil karya.</p>
+                  <p><strong>3. Penutup:</strong> Menyimpulkan pembelajaran bersama, refleksi, dan apresiasi kelompok.</p>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="bg-purple-50 text-purple-600 p-3 rounded-xl">
-            <i data-lucide="book-open" class="w-6 h-6"></i>
-          </div>
+
         </div>
       </div>
+    </div>
 
-      <!-- CHARTS SECTION -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
-          <h4 class="font-bold text-gray-800 text-base">Distribusi Gender Siswa</h4>
-          <div class="relative h-64 w-full flex justify-center items-center">
-            <canvas id="genderChart"></canvas>
-          </div>
-        </div>
-
-        <div class="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-4">
-          <h4 class="font-bold text-gray-800 text-base">Rentang Usia Tenaga Pengajar (Guru)</h4>
-          <div class="relative h-64 w-full">
-            <canvas id="ageChart"></canvas>
-          </div>
-        </div>
+    <div id="page-media" class="page-content p-8 space-y-6 hidden">
+      <div class="flex justify-end items-center">
+        <button onclick="toggleModal('modal-media', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Tambah Media</button>
       </div>
-    </section>
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-4">Judul Media</th><th class="p-4">Mata Pelajaran</th><th class="p-4">Tipe Media</th><th class="p-4">Link / File</th><th class="p-4">Aksi</th></tr>
+          </thead>
+          <tbody id="table-media" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+    </div>
 
-    <!-- DATA SISWA SECTION -->
-    <section id="section-siswa" class="content-section hidden space-y-4">
-      <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-200">
+    <div id="page-asesmen" class="page-content p-8 space-y-6 hidden">
+      <div class="flex justify-end items-center">
+        <button onclick="toggleModal('modal-asesmen', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Buat Asesmen</button>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-4">Nama Asesmen</th><th class="p-4">Mata Pelajaran</th><th class="p-4">Kelas</th><th class="p-4">Jumlah Soal</th><th class="p-4">Aksi</th></tr>
+          </thead>
+          <tbody id="table-asesmen" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="page-rubrik" class="page-content p-8 space-y-6 hidden">
+      <div class="flex justify-end items-center">
+        <button onclick="toggleModal('modal-rubrik', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Tambah Rubrik</button>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-4">Nama Rubrik</th><th class="p-4">Kategori</th><th class="p-4">Skor Maksimal</th><th class="p-4">Aksi</th></tr>
+          </thead>
+          <tbody id="table-rubrik" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="page-lkpd" class="page-content p-8 space-y-6 hidden">
+      <div class="flex justify-end items-center">
+        <button onclick="toggleModal('modal-lkpd', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Tambah LKPD</button>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-4">Judul LKPD</th><th class="p-4">Mata Pelajaran</th><th class="p-4">Kelas</th><th class="p-4">Aksi</th></tr>
+          </thead>
+          <tbody id="table-lkpd" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="page-absensi" class="page-content p-8 space-y-6 hidden">
+      <div class="flex justify-end items-center">
+        <button onclick="toggleModal('modal-absensi', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Catat Absensi</button>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-4">Tanggal</th><th class="p-4">Nama Siswa</th><th class="p-4">Kelas</th><th class="p-4">Keterangan</th><th class="p-4">Aksi</th></tr>
+          </thead>
+          <tbody id="table-absensi" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="page-keuangan" class="page-content p-8 space-y-6 hidden">
+      <div class="flex justify-end items-center">
+        <button onclick="toggleModal('modal-keuangan', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Tambah Transaksi</button>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-4">Tanggal</th><th class="p-4">Jenis</th><th class="p-4">Keterangan</th><th class="p-4">Jumlah (Rp)</th><th class="p-4">Aksi</th></tr>
+          </thead>
+          <tbody id="table-keuangan" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="page-surat" class="page-content p-8 space-y-6 hidden">
+      <div class="flex justify-end items-center">
+        <button onclick="toggleModal('modal-surat', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Catat Surat</button>
+      </div>
+      <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-slate-50 text-slate-500 border-b border-slate-200">
+            <tr><th class="p-4">No. Surat</th><th class="p-4">Tipe</th><th class="p-4">Perihal</th><th class="p-4">Tanggal</th><th class="p-4">Aksi</th></tr>
+          </thead>
+          <tbody id="table-surat" class="divide-y divide-slate-200"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="page-pengaturan" class="page-content p-8 space-y-6 hidden">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 max-w-xl space-y-4">
         <div>
-          <h2 class="text-lg font-bold text-gray-800">Daftar Siswa</h2>
-          <p class="text-xs text-gray-500">Kelola data seluruh siswa terpilih</p>
+          <label class="text-xs font-semibold block mb-1">Nama Madrasah / Sekolah</label>
+          <input type="text" id="cfg-nama" value="MTs Meunafa" class="w-full border rounded-lg p-2 text-sm outline-none">
         </div>
-        <button onclick="openModal('modal-siswa')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition">
-          <i data-lucide="plus" class="w-4 h-4"></i>
-          <span>Tambah Siswa</span>
-        </button>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-gray-50 text-gray-600 font-semibold border-b border-gray-200">
-              <tr>
-                <th class="p-3 pl-4">NISN</th>
-                <th class="p-3">Nama Siswa</th>
-                <th class="p-3">Kelas</th>
-                <th class="p-3">Jenis Kelamin</th>
-                <th class="p-3 text-right pr-4">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="table-siswa-body" class="divide-y divide-gray-100">
-              <!-- Render via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- DATA GURU SECTION -->
-    <section id="section-guru" class="content-section hidden space-y-4">
-      <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-200">
         <div>
-          <h2 class="text-lg font-bold text-gray-800">Daftar Guru</h2>
-          <p class="text-xs text-gray-500">Kelola data tenaga pengajar</p>
+          <label class="text-xs font-semibold block mb-1">Tahun Pelajaran</label>
+          <input type="text" id="cfg-thn" value="2026 / 2027" class="w-full border rounded-lg p-2 text-sm outline-none">
         </div>
-        <button onclick="openModal('modal-guru')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition">
-          <i data-lucide="plus" class="w-4 h-4"></i>
-          <span>Tambah Guru</span>
-        </button>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-gray-50 text-gray-600 font-semibold border-b border-gray-200">
-              <tr>
-                <th class="p-3 pl-4">NIP</th>
-                <th class="p-3">Nama Guru</th>
-                <th class="p-3">Mengampu Mapel</th>
-                <th class="p-3 text-right pr-4">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="table-guru-body" class="divide-y divide-gray-100">
-              <!-- Render via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- DATA KELAS SECTION -->
-    <section id="section-kelas" class="content-section hidden space-y-4">
-      <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-200">
         <div>
-          <h2 class="text-lg font-bold text-gray-800">Daftar Kelas</h2>
-          <p class="text-xs text-gray-500">Kelola data kelas dan wali kelas</p>
+          <label class="text-xs font-semibold block mb-1">Kepala Madrasah</label>
+          <input type="text" id="cfg-kepala" value="Administrator" class="w-full border rounded-lg p-2 text-sm outline-none">
         </div>
-        <button onclick="openModal('modal-kelas')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition">
-          <i data-lucide="plus" class="w-4 h-4"></i>
-          <span>Tambah Kelas</span>
-        </button>
+        <button onclick="alert('Pengaturan berhasil disimpan!')" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600">Simpan Pengaturan</button>
       </div>
-
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-gray-50 text-gray-600 font-semibold border-b border-gray-200">
-              <tr>
-                <th class="p-3 pl-4">Nama Kelas</th>
-                <th class="p-3">Wali Kelas</th>
-                <th class="p-3">Tingkat</th>
-                <th class="p-3 text-right pr-4">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="table-kelas-body" class="divide-y divide-gray-100">
-              <!-- Render via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- MATA PELAJARAN SECTION -->
-    <section id="section-mapel" class="content-section hidden space-y-4">
-      <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-        <div>
-          <h2 class="text-lg font-bold text-gray-800">Mata Pelajaran</h2>
-          <p class="text-xs text-gray-500">Daftar mata pelajaran aktif</p>
-        </div>
-        <button onclick="openModal('modal-mapel')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition">
-          <i data-lucide="plus" class="w-4 h-4"></i>
-          <span>Tambah Mapel</span>
-        </button>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-gray-50 text-gray-600 font-semibold border-b border-gray-200">
-              <tr>
-                <th class="p-3 pl-4">Kode Mapel</th>
-                <th class="p-3">Nama Mata Pelajaran</th>
-                <th class="p-3">KKM</th>
-                <th class="p-3 text-right pr-4">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="table-mapel-body" class="divide-y divide-gray-100">
-              <!-- Render via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- NILAI SISWA SECTION -->
-    <section id="section-nilai" class="content-section hidden space-y-4">
-      <div class="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-        <div>
-          <h2 class="text-lg font-bold text-gray-800">Nilai Siswa</h2>
-          <p class="text-xs text-gray-500">Rekapitulasi penilaian akademis siswa</p>
-        </div>
-        <button onclick="openModal('modal-nilai')" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center space-x-2 transition">
-          <i data-lucide="plus" class="w-4 h-4"></i>
-          <span>Input Nilai Siswa</span>
-        </button>
-      </div>
-
-      <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-gray-50 text-gray-600 font-semibold border-b border-gray-200">
-              <tr>
-                <th class="p-3 pl-4">Nama Siswa</th>
-                <th class="p-3">Mata Pelajaran</th>
-                <th class="p-3 text-center">Tugas</th>
-                <th class="p-3 text-center">UTS</th>
-                <th class="p-3 text-center">UAS</th>
-                <th class="p-3 text-center font-bold">Nilai Akhir</th>
-                <th class="p-3 text-right pr-4">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="table-nilai-body" class="divide-y divide-gray-100">
-              <!-- Render via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+    </div>
 
   </main>
 
-  <!-- MODALS -->
 
-  <!-- Modal Tambah Siswa -->
-  <div id="modal-siswa" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
-      <h3 class="text-xl font-bold text-gray-800">Tambah Data Siswa</h3>
-      <form onsubmit="addData(event, 'siswa')" class="space-y-4">
+  <!-- Modal Siswa -->
+  <div id="modal-siswa" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
+    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
+      <h3 class="text-lg font-bold">Tambah Data Siswa</h3>
+      <form onsubmit="addData(event, 'siswa')" class="space-y-3">
+        <div><label class="text-xs font-semibold block mb-1">NISN</label><input type="number" id="siswa-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div><label class="text-xs font-semibold block mb-1">Nama Lengkap</label><input type="text" id="siswa-f2" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div><label class="text-xs font-semibold block mb-1">Jenis Kelamin</label><select id="siswa-f3" class="w-full border rounded-lg p-2 text-sm outline-none"><option>Laki-laki</option><option>Perempuan</option></select></div>
         <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">NISN</label>
-          <input type="text" id="siswa-f1" required placeholder="Contoh: 0051234567" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Nama Siswa</label>
-          <input type="text" id="siswa-f2" required placeholder="Contoh: Ahmad Subagja" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Kelas</label>
-          <select id="siswa-f3" required class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
-            <!-- Dynamic Options -->
+          <label class="text-xs font-semibold block mb-1">Kelas</label>
+          <select id="siswa-f4" required class="select-kelas-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
+            <option value="">-- Pilih Kelas --</option>
           </select>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Jenis Kelamin</label>
-          <select id="siswa-f4" required class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
-            <option value="Laki-laki">Laki-laki</option>
-            <option value="Perempuan">Perempuan</option>
-          </select>
-        </div>
-        <div class="flex justify-end space-x-2 pt-2">
-          <button type="button" onclick="closeModal('modal-siswa')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium">Batal</button>
-          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium">Simpan</button>
-        </div>
+        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-siswa', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Tambah Guru -->
-  <div id="modal-guru" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
-      <h3 class="text-xl font-bold text-gray-800">Tambah Data Guru</h3>
-      <form onsubmit="addData(event, 'guru')" class="space-y-4">
+  <!-- Modal Guru -->
+  <div id="modal-guru" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
+    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
+      <h3 class="text-lg font-bold">Tambah Data Guru</h3>
+      <form onsubmit="addData(event, 'guru')" class="space-y-3">
+        <div><label class="text-xs font-semibold block mb-1">NIP</label><input type="text" id="guru-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div><label class="text-xs font-semibold block mb-1">Nama Guru</label><input type="text" id="guru-f2" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
         <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">NIP</label>
-          <input type="text" id="guru-f1" required placeholder="Contoh: 19850101 201001 1 001" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Nama Guru</label>
-          <input type="text" id="guru-f2" required placeholder="Contoh: Budi Santoso, S.Pd." class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Mata Pelajaran</label>
-          <select id="guru-f3" required class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
-            <!-- Dynamic Options dari Data Mapel -->
-          </select>
-        </div>
-        <div class="flex justify-end space-x-2 pt-2">
-          <button type="button" onclick="closeModal('modal-guru')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium">Batal</button>
-          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium">Simpan</button>
-        </div>
+  <label class="text-xs font-semibold block mb-1">Mata Pelajaran</label>
+  <select id="guru-f3" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
+    <!-- Diisi otomatis dari Data Mapel -->
+  </select>
+</div>        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-guru', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Tambah Kelas -->
-  <div id="modal-kelas" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
-      <h3 class="text-xl font-bold text-gray-800">Tambah Data Kelas</h3>
-      <form onsubmit="addData(event, 'kelas')" class="space-y-4">
+  <!-- Modal Mapel -->
+  <div id="modal-mapel" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
+    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
+      <h3 class="text-lg font-bold">Tambah Mata Pelajaran</h3>
+      <form onsubmit="addData(event, 'mapel')" class="space-y-3">
+        <div><label class="text-xs font-semibold block mb-1">Kode Mapel</label><input type="text" id="mapel-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div><label class="text-xs font-semibold block mb-1">Nama Mapel</label><input type="text" id="mapel-f2" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
         <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Nama Kelas</label>
-          <input type="text" id="kelas-f1" required placeholder="Contoh: VII A" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Wali Kelas</label>
-          <select id="kelas-f2" required class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
-            <!-- Dynamic Options -->
+          <label class="text-xs font-semibold block mb-1">Kategori / Instansi</label>
+          <select id="mapel-f3" class="w-full border rounded-lg p-2 text-sm outline-none">
+            <option>Kemenag (PAI)</option>
+            <option>Kemendikbud (Umum)</option>
+            <option>Muatan Lokal</option>
           </select>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Tingkat</label>
-          <select id="kelas-f3" required class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
-            <option value="VII">VII</option>
-            <option value="VIII">VIII</option>
-            <option value="IX">IX</option>
-          </select>
-        </div>
-        <div class="flex justify-end space-x-2 pt-2">
-          <button type="button" onclick="closeModal('modal-kelas')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium">Batal</button>
-          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium">Simpan</button>
-        </div>
+        <div><label class="text-xs font-semibold block mb-1">KKM</label><input type="number" id="mapel-f4" value="75" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-mapel', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Tambah Mapel -->
-  <div id="modal-mapel" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
-      <h3 class="text-xl font-bold text-gray-800">Tambah Mata Pelajaran</h3>
-      <form onsubmit="addData(event, 'mapel')" class="space-y-4">
+  <!-- Modal Kelas (Dengan Dropdown Dynamic Guru/Wali Kelas) -->
+  <div id="modal-kelas" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
+    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
+      <h3 class="text-lg font-bold">Tambah Data Kelas</h3>
+      <form onsubmit="addData(event, 'kelas')" class="space-y-3">
+        <div><label class="text-xs font-semibold block mb-1">Nama Kelas</label><input type="text" id="kelas-f1" placeholder="Contoh: VII A" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
         <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Kode Mapel</label>
-          <input type="text" id="mapel-f1" required placeholder="Contoh: MAT01" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <label class="text-xs font-semibold block mb-1">Wali Kelas</label>
+          <select id="kelas-f2" required class="select-guru-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
+            <option value="">-- Pilih Wali Kelas --</option>
+          </select>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Nama Mata Pelajaran</label>
-          <input type="text" id="mapel-f2" required placeholder="Contoh: Matematika" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">KKM</label>
-          <input type="number" id="mapel-f3" min="0" max="100" value="75" required class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-        </div>
-        <div class="flex justify-end space-x-2 pt-2">
-          <button type="button" onclick="closeModal('modal-mapel')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium">Batal</button>
-          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium">Simpan</button>
-        </div>
+        <div><label class="text-xs font-semibold block mb-1">Tingkat</label><input type="text" id="kelas-f3" placeholder="VII / VIII / IX" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-kelas', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
       </form>
     </div>
   </div>
 
-  <!-- Modal Input Nilai Siswa -->
-  <div id="modal-nilai" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 space-y-4">
-      <h3 class="text-xl font-bold text-gray-800">Input Nilai Siswa</h3>
-      <form onsubmit="addData(event, 'nilai')" class="space-y-4">
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Nama Siswa</label>
-          <select id="nilai-f1" required class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
-            <!-- Dynamic Options -->
-          </select>
+  <!-- Modal Nilai -->
+  <div id="modal-nilai" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
+    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
+      <h3 class="text-lg font-bold">Input Nilai Siswa</h3>
+      <form onsubmit="addData(event, 'nilai')" class="space-y-3">
+        <div><label class="text-xs font-semibold block mb-1">Nama Siswa</label><select id="nilai-f1" required class="select-siswa-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white"></select></div>
+<div><label class="text-xs font-semibold block mb-1">Mata Pelajaran</label><select id="nilai-f2" required class="select-mapel-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white"></select></div>        <div class="grid grid-cols-3 gap-2">
+          <div><label class="text-xs font-semibold block mb-1">Tugas</label><input type="number" id="nilai-f3" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+          <div><label class="text-xs font-semibold block mb-1">UTS</label><input type="number" id="nilai-f4" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+          <div><label class="text-xs font-semibold block mb-1">UAS</label><input type="number" id="nilai-f5" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
         </div>
-        <div>
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Mata Pelajaran</label>
-          <select id="nilai-f2" required class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
-            <!-- Dynamic Options -->
-          </select>
-        </div>
-        <div class="grid grid-cols-3 gap-3">
-          <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1">Tugas</label>
-            <input type="number" id="nilai-f3" min="0" max="100" required placeholder="0" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1">UTS</label>
-            <input type="number" id="nilai-f4" min="0" max="100" required placeholder="0" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1">UAS</label>
-            <input type="number" id="nilai-f5" min="0" max="100" required placeholder="0" class="w-full border border-gray-300 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
-          </div>
-        </div>
-        <div class="flex justify-end space-x-2 pt-2">
-          <button type="button" onclick="closeModal('modal-nilai')" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium">Batal</button>
-          <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium">Simpan</button>
-        </div>
+        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-nilai', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
       </form>
     </div>
   </div>
 
-  <!-- JAVASCRIPT LOGIC -->
+  <!-- Modal Jadwal -->
+  <div id="modal-jadwal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
+    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
+      <h3 class="text-lg font-bold">Tambah Jadwal Pelajaran</h3>
+      <form onsubmit="addData(event, 'jadwal')" class="space-y-3">
+        <div><label class="text-xs font-semibold block mb-1">Hari</label><select id="jadwal-f1" class="w-full border rounded-lg p-2 text-sm outline-none"><option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option></select></div>
+        <div><label class="text-xs font-semibold block mb-1">Jam</label><input type="text" id="jadwal-f2" placeholder="08.00 - 09.30" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div>
+          <label class="text-xs font-semibold block mb-1">Kelas</label>
+          <select id="jadwal-f3" required class="select-kelas-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
+            <option value="">-- Pilih Kelas --</option>
+          </select>
+        </div>
+       <div><label class="text-xs font-semibold block mb-1">Mata Pelajaran</label><select id="jadwal-f4" required class="select-mapel-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white"></select></div>        <div>
+          <label class="text-xs font-semibold block mb-1">Guru Pengajar</label>
+          <select id="jadwal-f5" required class="select-guru-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
+            <option value="">-- Pilih Guru Pengajar --</option>
+          </select>
+        </div>
+        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-jadwal', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Modul -->
+  <div id="modal-modul" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
+    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
+      <h3 class="text-lg font-bold">Upload Modul Ajar</h3>
+      <form onsubmit="addData(event, 'modul')" class="space-y-3">
+        <div><label class="text-xs font-semibold block mb-1">Judul Modul</label><input type="text" id="modul-f1" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div><label class="text-xs font-semibold block mb-1">Mata Pelajaran</label><input type="text" id="modul-f2" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div>
+          <label class="text-xs font-semibold block mb-1">Kelas</label>
+          <select id="modul-f3" required class="select-kelas-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
+            <option value="">-- Pilih Kelas --</option>
+          </select>
+        </div>
+        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-modul', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
+      </form>
+    </div>
+  </div>
+
   <script>
-    const appData = {
+    // Initial Standard Curriculum Mapel
+    const defaultMapelList = [
+      { id: 101, f1: 'PAI-01', f2: 'Al-Qur\'an Hadis', f3: 'Kemenag (PAI)', f4: '75' },
+      { id: 102, f1: 'PAI-02', f2: 'Akidah Akhlak', f3: 'Kemenag (PAI)', f4: '75' },
+      { id: 103, f1: 'PAI-03', f2: 'Fikih', f3: 'Kemenag (PAI)', f4: '75' },
+      { id: 104, f1: 'PAI-04', f2: 'Sejarah Kebudayaan Islam (SKI)', f3: 'Kemenag (PAI)', f4: '75' },
+      { id: 105, f1: 'ARB-01', f2: 'Bahasa Arab', f3: 'Kemenag (PAI)', f4: '75' },
+      { id: 106, f1: 'KMD-01', f2: 'Pendidikan Pancasila', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 107, f1: 'KMD-02', f2: 'Bahasa Indonesia', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 108, f1: 'KMD-03', f2: 'Matematika', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 109, f1: 'KMD-04', f2: 'Ilmu Pengetahuan Alam (IPA)', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 110, f1: 'KMD-05', f2: 'Ilmu Pengetahuan Sosial (IPS)', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 111, f1: 'KMD-06', f2: 'Bahasa Inggris', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 112, f1: 'KMD-07', f2: 'PJOK', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 113, f1: 'KMD-08', f2: 'Informatika', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 114, f1: 'KMD-09', f2: 'Seni & Budaya / Prakarya', f3: 'Kemendikbud (Umum)', f4: '75' },
+      { id: 115, f1: 'MULOK-01', f2: 'Muatan Lokal / Bahasa Daerah', f3: 'Muatan Lokal', f4: '75' }
+    ];
+
+    // System Data Store (LocalStorage Backup)
+    let appData = JSON.parse(localStorage.getItem('eduadmin_data')) || {
       siswa: [
-        { id: 1, f1: "0051234567", f2: "Ahmad Subagja", f3: "VII A", f4: "Laki-laki" },
-        { id: 2, f1: "0057654321", f2: "Dina Mariana", f3: "VIII B", f4: "Perempuan" },
-        { id: 3, f1: "0059876543", f2: "Rizky Ramadhan", f3: "VII A", f4: "Laki-laki" }
+        { id: 1, f1: '0012345678', f2: 'Ahmad Raihan', f3: 'Laki-laki', f4: 'VII A' },
+        { id: 2, f1: '0012345679', f2: 'Siti Nurhaliza', f3: 'Perempuan', f4: 'VII A' }
       ],
       guru: [
-        { id: 1, f1: "19850101 201001 1 001", f2: "Budi Santoso, S.Pd.", f3: "Matematika" },
-        { id: 2, f1: "19880315 201202 2 004", f2: "Siti Rahma, M.Pd.", f3: "Bahasa Indonesia" }
+        { id: 1, f1: '198501012010011001', f2: 'Budi Santoso, S.Pd', f3: 'Matematika' },
+        { id: 2, f1: '198803152015022002', f2: 'Siti Aminah, M.Pd', f3: 'Bahasa Indonesia' },
+        { id: 3, f1: '199007202018011003', f2: 'Ahmad, S.Ag', f3: 'Fikih' }
       ],
+      mapel: defaultMapelList,
       kelas: [
-        { id: 1, f1: "VII A", f2: "Budi Santoso, S.Pd.", f3: "VII" },
-        { id: 2, f1: "VIII B", f2: "Siti Rahma, M.Pd.", f3: "VIII" }
+        { id: 1, f1: 'VII A', f2: 'Budi Santoso, S.Pd', f3: 'VII' },
+        { id: 2, f1: 'VIII A', f2: 'Siti Aminah, M.Pd', f3: 'VIII' },
+        { id: 3, f1: 'IX A', f2: 'Ahmad, S.Ag', f3: 'IX' }
       ],
-      mapel: [
-        { id: 1, f1: "MAT01", f2: "Matematika", f3: 75 },
-        { id: 2, f1: "IND01", f2: "Bahasa Indonesia", f3: 75 },
-        { id: 3, f1: "IPA01", f2: "IPA Terpadu", f3: 70 }
-      ],
-      nilai: [
-        { id: 1, f1: "Ahmad Subagja", f2: "Matematika", f3: 80, f4: 75, f5: 85 }
-      ]
+      nilai: [],
+      jadwal: [],
+      modul: [],
+      media: [],
+      asesmen: [],
+      rubrik: [],
+      lkpd: [],
+      absensi: [],
+      keuangan: [],
+      surat: []
     };
 
-    let genderChartInstance = null;
-    let ageChartInstance = null;
+    function saveData() {
+      localStorage.setItem('eduadmin_data', JSON.stringify(appData));
+      updateCounts();
+      updateKelasDropdowns();
+      updateGuruDropdowns();
+    }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      lucide.createIcons();
-      refreshAllDropdowns();
-      renderAllTables();
-      updateDashboardStats();
-      initCharts();
+    // Tab Switcher
+    function switchTab(tabId) {
+      document.querySelectorAll('.page-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('nav-active'));
+      
+      const selectedPage = document.getElementById(`page-${tabId}`);
+      if(selectedPage) selectedPage.classList.remove('hidden');
+      
+      const selectedNav = document.getElementById(`nav-${tabId}`);
+      if(selectedNav) selectedNav.classList.add('nav-active');
+
+      const titleMap = {
+        'dashboard': 'Dashboard',
+        'siswa': 'Data Siswa',
+        'guru': 'Data Guru',
+        'mapel': 'Mata Pelajaran',
+        'kelas': 'Data Kelas',
+        'nilai': 'Nilai Siswa',
+        'jadwal': 'Jadwal Pelajaran',
+        'modul': 'Perangkat / Modul Ajar',
+        'media': 'Media Pembelajaran',
+        'asesmen': 'Asesmen & Kuis',
+        'rubrik': 'Rubrik Penilaian',
+        'lkpd': 'LKPD Interaktif',
+        'absensi': 'Absensi Harian',
+        'keuangan': 'Administrasi & Keuangan',
+        'surat': 'Surat & Persuratan',
+        'pengaturan': 'Pengaturan System'
+      };
+      
+      document.getElementById('header-title').innerText = titleMap[tabId] || 'Dashboard';
+    }
+
+    // Modal Manager
+function toggleModal(modalId, show) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    if (show) {
+      updateKelasDropdowns();
+      updateGuruDropdowns();
+      updateMapelDropdowns();
+      updateSiswaDropdowns();
+      modal.classList.remove('hidden');
+    } else {
+      modal.classList.add('hidden');
+    }
+  }
+}
+
+// Dynamic Dropdown Helpers
+function updateKelasDropdowns() {
+  const dropdowns = document.querySelectorAll('.select-kelas-dropdown');
+  dropdowns.forEach(select => {
+    const currentValue = select.value;
+    select.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+    if (appData.kelas && appData.kelas.length > 0) {
+      appData.kelas.forEach(k => {
+        const opt = document.createElement('option');
+        opt.value = k.f1;
+        opt.textContent = k.f1;
+        select.appendChild(opt);
+      });
+    }
+    if (currentValue) select.value = currentValue;
+  });
+}
+
+function updateGuruDropdowns() {
+  const dropdowns = document.querySelectorAll('.select-guru-dropdown');
+  dropdowns.forEach(select => {
+    const currentValue = select.value;
+    const defaultText = select.id === 'kelas-f2' ? '-- Pilih Wali Kelas --' : '-- Pilih Guru Pengajar --';
+    select.innerHTML = `<option value="">${defaultText}</option>`;
+    if (appData.guru && appData.guru.length > 0) {
+      appData.guru.forEach(g => {
+        const opt = document.createElement('option');
+        opt.value = g.f2;
+        opt.textContent = `${g.f2} (${g.f3})`;
+        select.appendChild(opt);
+      });
+    }
+    if (currentValue) select.value = currentValue;
+  });
+}
+
+function updateMapelDropdowns() {
+  const dropdowns = document.querySelectorAll('.select-mapel-dropdown');
+  
+  if (dropdowns.length > 0) {
+    dropdowns.forEach(select => {
+      const currentValue = select.value;
+      select.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
+      if (appData.mapel && appData.mapel.length > 0) {
+        appData.mapel.forEach(m => {
+          const opt = document.createElement('option');
+          opt.value = m.f2;
+          opt.textContent = m.f2;
+          select.appendChild(opt);
+        });
+      }
+      if (currentValue) select.value = currentValue;
     });
+  }
+
+  const guruSelect = document.getElementById('guru-f3');
+  if (guruSelect) {
+    const currentValue = guruSelect.value;
+    guruSelect.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
+    if (appData.mapel && appData.mapel.length > 0) {
+      appData.mapel.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.f2;
+        opt.textContent = m.f2;
+        guruSelect.appendChild(opt);
+      });
+    }
+    if (currentValue) guruSelect.value = currentValue;
+  }
+}
+function updateSiswaDropdowns() {
+  const select = document.getElementById('nilai-f1');
+  if (select) {
+    const currentValue = select.value;
+    select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+    if (appData.siswa && appData.siswa.length > 0) {
+      appData.siswa.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.f2;
+        opt.textContent = s.f2;
+        select.appendChild(opt);
+      });
+    }
+    if (currentValue) select.value = currentValue;
+  }
+}
+    
+    // Render Table Data
+    function renderTables() {
+      Object.keys(appData).forEach(key => {
+        const tbody = document.getElementById(`table-${key}`);
+        if (!tbody) return;
+        
+        tbody.innerHTML = '';
+        appData[key].forEach(item => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-50 transition';
+          
+          let content = '';
+          Object.keys(item).forEach(k => {
+            if (k !== 'id') {
+              content += `<td class="p-4">${item[k]}</td>`;
+            }
+          });
+          
+          content += `<td class="p-4"><button onclick="deleteData('${key}', ${item.id})" class="text-red-500 hover:text-red-700 text-xs font-semibold"><i class="fa-solid fa-trash"></i> Hapus</button></td>`;
+          tr.innerHTML = content;
+          tbody.appendChild(tr);
+        });
+      });
+    }
 
     // Add Data Function
     function addData(e, type) {
@@ -505,199 +815,45 @@
       }
 
       appData[type].push(newItem);
-      renderAllTables();
-      refreshAllDropdowns();
-      updateDashboardStats();
-      updateCharts();
-      closeModal(`modal-${type}`);
+      saveData();
+      renderTables();
+      toggleModal(`modal-${type}`, false);
     }
 
-    function switchTab(tabName) {
-      document.querySelectorAll(".content-section").forEach(sec => sec.classList.add("hidden"));
-      document.querySelectorAll(".nav-tab").forEach(tab => {
-        tab.classList.remove("bg-emerald-50", "text-emerald-600");
-        tab.classList.add("text-gray-600", "hover:bg-gray-100");
-      });
-
-      const targetSection = document.getElementById(`section-${tabName}`);
-      const targetTab = document.getElementById(`tab-${tabName}`);
-
-      if (targetSection && targetTab) {
-        targetSection.classList.remove("hidden");
-        targetTab.classList.remove("text-gray-600", "hover:bg-gray-100");
-        targetTab.classList.add("bg-emerald-50", "text-emerald-600");
+    // Delete Data Function
+    function deleteData(type, id) {
+      if (confirm('Yakin ingin menghapus data ini?')) {
+        appData[type] = appData[type].filter(item => item.id !== id);
+        saveData();
+        renderTables();
       }
     }
 
-    function refreshAllDropdowns() {
-      // Dropdown Mapel di Modal Guru
-      const guruMapelSelect = document.getElementById("guru-f3");
-      guruMapelSelect.innerHTML = appData.mapel.length === 0 
-        ? '<option value="">-- Belum ada data Mapel --</option>' 
-        : appData.mapel.map(m => `<option value="${m.f2}">${m.f2}</option>`).join("");
-
-      // Dropdown Wali Kelas di Modal Kelas
-      const kelasWaliSelect = document.getElementById("kelas-f2");
-      kelasWaliSelect.innerHTML = appData.guru.length === 0 
-        ? '<option value="">-- Belum ada data Guru --</option>' 
-        : appData.guru.map(g => `<option value="${g.f2}">${g.f2}</option>`).join("");
-
-      // Dropdown Kelas di Modal Siswa
-      const siswaKelasSelect = document.getElementById("siswa-f3");
-      siswaKelasSelect.innerHTML = appData.kelas.length === 0 
-        ? '<option value="">-- Belum ada data Kelas --</option>' 
-        : appData.kelas.map(k => `<option value="${k.f1}">${k.f1}</option>`).join("");
-
-      // Dropdown Siswa di Modal Nilai
-      const nilaiSiswaSelect = document.getElementById("nilai-f1");
-      nilaiSiswaSelect.innerHTML = appData.siswa.length === 0 
-        ? '<option value="">-- Belum ada data Siswa --</option>' 
-        : appData.siswa.map(s => `<option value="${s.f2}">${s.f2} (${s.f3})</option>`).join("");
-
-      // Dropdown Mapel di Modal Nilai
-      const nilaiMapelSelect = document.getElementById("nilai-f2");
-      nilaiMapelSelect.innerHTML = appData.mapel.length === 0 
-        ? '<option value="">-- Belum ada data Mapel --</option>' 
-        : appData.mapel.map(m => `<option value="${m.f2}">${m.f2}</option>`).join("");
+    // Count Updates
+    function updateCounts() {
+      if(document.getElementById('count-siswa')) document.getElementById('count-siswa').innerText = `${appData.siswa.length} Siswa`;
+      if(document.getElementById('count-guru')) document.getElementById('count-guru').innerText = `${appData.guru.length} Guru`;
+      if(document.getElementById('count-kelas')) document.getElementById('count-kelas').innerText = `${appData.kelas.length} Kelas`;
+      if(document.getElementById('count-mapel')) document.getElementById('count-mapel').innerText = `${appData.mapel.length} Mapel`;
     }
 
-    function renderAllTables() {
-      renderSiswaTable();
-      renderGuruTable();
-      renderKelasTable();
-      renderMapelTable();
-      renderNilaiTable();
-    }
+    // Initializer
+    window.onload = function() {
+      renderTables();
+      updateCounts();
+      updateKelasDropdowns();
+      updateGuruDropdowns();
 
-    function renderSiswaTable() {
-      const tbody = document.getElementById("table-siswa-body");
-      tbody.innerHTML = appData.siswa.map((item, index) => `
-        <tr class="hover:bg-gray-50">
-          <td class="p-3 pl-4 font-medium text-gray-900">${item.f1}</td>
-          <td class="p-3 font-semibold text-gray-800">${item.f2}</td>
-          <td class="p-3 text-gray-600"><span class="bg-gray-100 text-gray-700 px-2.5 py-1 rounded-md text-xs font-semibold">${item.f3}</span></td>
-          <td class="p-3 text-gray-600">${item.f4}</td>
-          <td class="p-3 text-right pr-4">
-            <button onclick="deleteRow('siswa', ${index})" class="text-red-500 hover:text-red-700 p-1 rounded transition">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
-            </button>
-          </td>
-        </tr>
-      `).join("");
-      lucide.createIcons();
-    }
-
-    function renderGuruTable() {
-      const tbody = document.getElementById("table-guru-body");
-      tbody.innerHTML = appData.guru.map((item, index) => `
-        <tr class="hover:bg-gray-50">
-          <td class="p-3 pl-4 font-medium text-gray-900">${item.f1}</td>
-          <td class="p-3 font-semibold text-gray-800">${item.f2}</td>
-          <td class="p-3 text-gray-600"><span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs font-semibold">${item.f3}</span></td>
-          <td class="p-3 text-right pr-4">
-            <button onclick="deleteRow('guru', ${index})" class="text-red-500 hover:text-red-700 p-1 rounded transition">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
-            </button>
-          </td>
-        </tr>
-      `).join("");
-      lucide.createIcons();
-    }
-
-    function renderKelasTable() {
-      const tbody = document.getElementById("table-kelas-body");
-      tbody.innerHTML = appData.kelas.map((item, index) => `
-        <tr class="hover:bg-gray-50">
-          <td class="p-3 pl-4 font-bold text-gray-800">${item.f1}</td>
-          <td class="p-3 text-gray-700 font-medium">${item.f2}</td>
-          <td class="p-3 text-gray-600">${item.f3}</td>
-          <td class="p-3 text-right pr-4">
-            <button onclick="deleteRow('kelas', ${index})" class="text-red-500 hover:text-red-700 p-1 rounded transition">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
-            </button>
-          </td>
-        </tr>
-      `).join("");
-      lucide.createIcons();
-    }
-
-    function renderMapelTable() {
-      const tbody = document.getElementById("table-mapel-body");
-      tbody.innerHTML = appData.mapel.map((item, index) => `
-        <tr class="hover:bg-gray-50">
-          <td class="p-3 pl-4 font-mono text-xs font-bold text-emerald-700">${item.f1}</td>
-          <td class="p-3 font-semibold text-gray-800">${item.f2}</td>
-          <td class="p-3 font-medium text-gray-600">${item.f3}</td>
-          <td class="p-3 text-right pr-4">
-            <button onclick="deleteRow('mapel', ${index})" class="text-red-500 hover:text-red-700 p-1 rounded transition">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
-            </button>
-          </td>
-        </tr>
-      `).join("");
-      lucide.createIcons();
-    }
-
-    function renderNilaiTable() {
-      const tbody = document.getElementById("table-nilai-body");
-      tbody.innerHTML = appData.nilai.map((item, index) => {
-        const tugas = parseInt(item.f3) || 0;
-        const uts = parseInt(item.f4) || 0;
-        const uas = parseInt(item.f5) || 0;
-        const nilaiAkhir = Math.round((tugas * 0.3) + (uts * 0.3) + (uas * 0.4));
-        const statusClass = nilaiAkhir >= 75 ? 'text-emerald-700 bg-emerald-50' : 'text-amber-700 bg-amber-50';
-
-        return `
-          <tr class="hover:bg-gray-50">
-            <td class="p-3 pl-4 font-semibold text-gray-800">${item.f1}</td>
-            <td class="p-3 text-gray-600">${item.f2}</td>
-            <td class="p-3 text-center text-gray-600">${tugas}</td>
-            <td class="p-3 text-center text-gray-600">${uts}</td>
-            <td class="p-3 text-center text-gray-600">${uas}</td>
-            <td class="p-3 text-center font-bold">
-              <span class="px-2.5 py-1 rounded-md ${statusClass}">${nilaiAkhir}</span>
-            </td>
-            <td class="p-3 text-right pr-4">
-              <button onclick="deleteRow('nilai', ${index})" class="text-red-500 hover:text-red-700 p-1 rounded transition">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
-            </td>
-          </tr>
-        `;
-      }).join("");
-      lucide.createIcons();
-    }
-
-    function openModal(id) {
-      refreshAllDropdowns();
-      document.getElementById(id).classList.remove("hidden");
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).classList.add("hidden");
-    }
-
-    function updateDashboardStats() {
-      document.getElementById('stat-siswa').textContent = appData.siswa.length;
-      document.getElementById('stat-guru').textContent = appData.guru.length;
-      document.getElementById('stat-kelas').textContent = appData.kelas.length;
-      document.getElementById('stat-mapel').textContent = appData.mapel.length;
-    }
-
-    function initCharts() {
       // Gender Chart
       const ctxGender = document.getElementById('genderChart');
       if (ctxGender) {
-        const maleCount = appData.siswa.filter(s => s.f4 === 'Laki-laki').length;
-        const femaleCount = appData.siswa.filter(s => s.f4 === 'Perempuan').length;
-
-        genderChartInstance = new Chart(ctxGender, {
+        new Chart(ctxGender, {
           type: 'doughnut',
           data: {
             labels: ['Laki-laki', 'Perempuan'],
             datasets: [{
-              data: [maleCount, femaleCount],
-              backgroundColor: ['#3b82f6', '#ec4899']
+              data: [12, 15],
+              backgroundColor: ['#10b981', '#3b82f6']
             }]
           },
           options: { responsive: true, maintainAspectRatio: false }
@@ -707,7 +863,7 @@
       // Age Chart
       const ctxAge = document.getElementById('ageChart');
       if (ctxAge) {
-        ageChartInstance = new Chart(ctxAge, {
+        new Chart(ctxAge, {
           type: 'bar',
           data: {
             labels: ['< 30 Thn', '30-40 Thn', '40-50 Thn', '> 50 Thn'],
@@ -720,26 +876,173 @@
           options: { responsive: true, maintainAspectRatio: false }
         });
       }
-    }
+    };
 
-    function updateCharts() {
-      if (genderChartInstance) {
-        const maleCount = appData.siswa.filter(s => s.f4 === 'Laki-laki').length;
-        const femaleCount = appData.siswa.filter(s => s.f4 === 'Perempuan').length;
-        genderChartInstance.data.datasets[0].data = [maleCount, femaleCount];
-        genderChartInstance.update();
+// Function untuk Memperbarui Preview secara Otomatis saat Form Diisi/Diubah
+function updatePreviewContent() {
+  const bab = document.getElementById('modul-bab')?.value || 'AMANAH';
+  const guruSelect = document.getElementById('modul-guru');
+  const guru = (guruSelect && guruSelect.options[guruSelect.selectedIndex]?.text !== '-- Pilih Guru Pengajar --') 
+                ? guruSelect.options[guruSelect.selectedIndex].text 
+                : 'Ahmad Fauzi, S.Pd.I.';
+  
+  const mapelSelect = document.getElementById('modul-mapel');
+  const mapel = (mapelSelect && mapelSelect.value) ? mapelSelect.value : 'PENDIDIKAN PANCASILA';
+  
+  const faseSelect = document.getElementById('modul-fase');
+  const fase = (faseSelect && faseSelect.value) ? faseSelect.value : 'SMP / MTs - Kelas 7 (Fase D)';
+  
+  const waktuSelect = document.getElementById('modul-waktu');
+  const waktu = (waktuSelect && waktuSelect.value) ? waktuSelect.value : '2 JP x 40 Menit (SMP)';
+  
+  const modelSelect = document.getElementById('modul-model');
+  const model = (modelSelect && modelSelect.value) ? modelSelect.value : 'Problem Based Learning (PBL)';
+  
+  const satuan = document.getElementById('modul-satuan')?.value || 'MTsS Meunafa';
+
+  return { bab, guru, mapel, fase, waktu, model, satuan };
+}
+
+// Function Switch Tab Preview Modul Ajar
+function switchTabModul(tabName) {
+  const tabs = ['modul', 'atp', 'lkpd', 'bahan', 'asesmen'];
+  
+  tabs.forEach(t => {
+    const btn = document.getElementById(`tab-${t}`);
+    if (btn) {
+      if (t === tabName) {
+        btn.className = "px-4 py-3 text-indigo-600 border-b-2 border-indigo-600 bg-white flex items-center gap-1.5 whitespace-nowrap font-bold";
+      } else {
+        btn.className = "px-4 py-3 hover:text-indigo-600 flex items-center gap-1.5 whitespace-nowrap";
       }
     }
+  });
 
-    function deleteRow(type, index) {
-      if(confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-        appData[type].splice(index, 1);
-        renderAllTables();
-        refreshAllDropdowns();
-        updateDashboardStats();
-        updateCharts();
-      }
+  const previewBox = document.getElementById('preview-content-modul');
+  if (!previewBox) return;
+
+  const data = updatePreviewContent();
+
+  if (tabName === 'modul') {
+    previewBox.innerHTML = `
+      <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+        <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>
+        <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${data.mapel.toUpperCase()} | ${data.fase.toUpperCase()}</p>
+        <p class="text-slate-600 italic text-xs mt-0.5">Bab / Topik Utama: ${data.bab.toUpperCase()} | Alokasi Waktu: ${data.waktu}</p>
+      </div>
+      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">1. MODUL AJAR (RPP PLUS STANDAR RESMI)</div>
+      
+      <div class="border rounded-lg p-3 bg-slate-50/50 space-y-2 text-xs mb-4">
+        <h4 class="font-bold text-slate-900 border-b pb-1">I. INFORMASI UMUM</h4>
+        <div class="grid grid-cols-2 gap-2">
+          <div><p><strong>Nama Penyusun:</strong> ${data.guru}</p></div>
+          <div><p><strong>Satuan Pendidikan:</strong> ${data.satuan}</p></div>
+          <div><p><strong>Mata Pelajaran:</strong> ${data.mapel}</p></div>
+          <div><p><strong>Jenjang / Kelas:</strong> ${data.fase}</p></div>
+          <div><p><strong>Model Learning:</strong> ${data.model}</p></div>
+          <div><p><strong>Alokasi Waktu:</strong> ${data.waktu}</p></div>
+        </div>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <h4 class="font-bold text-slate-900 border-b pb-1">II. KOMPONEN INTI</h4>
+        <div>
+          <p class="font-bold text-slate-800 mb-1">A. Tujuan Pembelajaran (TP)</p>
+          <ul class="list-disc pl-5 space-y-1 text-slate-700">
+            <li>Peserta didik mampu menjelaskan makna dan konsep nilai <strong>${data.bab}</strong> secara komprehensif.</li>
+            <li>Peserta didik mampu mengidentifikasi serta menganalisis contoh perilaku yang mencerminkan sikap jujur dan bertanggung jawab.</li>
+          </ul>
+        </div>
+        <div>
+          <p class="font-bold text-slate-800 mb-1">B. Kegiatan Pembelajaran</p>
+          <ol class="list-decimal pl-5 space-y-1 text-slate-700">
+            <li><strong>Pendahuluan:</strong> Membuka pelajaran dengan salam, berdoa, dan memberikan pertanyaan pemantik terkait topik ${data.bab}.</li>
+            <li><strong>Inti:</strong> Siswa mengamati studi kasus, mendiskusikan masalah dalam kelompok dengan model ${data.model}, dan menyajikan hasil karya.</li>
+            <li><strong>Penutup:</strong> Menyimpulkan pembelajaran bersama, refleksi, dan apresiasi kelompok.</li>
+          </ol>
+        </div>
+      </div>`;
+  } else if (tabName === 'atp') {
+    previewBox.innerHTML = `
+      <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+        <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">ALUR TUJUAN PEMBELAJARAN (ATP)</h2>
+        <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${data.mapel.toUpperCase()} | ${data.fase.toUpperCase()}</p>
+        <p class="text-slate-600 italic text-xs mt-0.5">Bab / Topik Utama: ${data.bab.toUpperCase()} | Alokasi Waktu: ${data.waktu}</p>
+      </div>
+      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">2. ALUR TUJUAN PEMBELAJARAN (ATP)</div>
+      <table class="w-full border-collapse border border-slate-300 text-left text-xs">
+        <thead>
+          <tr class="bg-slate-100">
+            <th class="border border-slate-300 p-2">Jenjang & Fase</th>
+            <th class="border border-slate-300 p-2">Mata Pelajaran</th>
+            <th class="border border-slate-300 p-2">Materi / Bab</th>
+            <th class="border border-slate-300 p-2">Alokasi Waktu</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border border-slate-300 p-2">${data.fase}</td>
+            <td class="border border-slate-300 p-2">${data.mapel}</td>
+            <td class="border border-slate-300 p-2">${data.bab}</td>
+            <td class="border border-slate-300 p-2">${data.waktu}</td>
+          </tr>
+        </tbody>
+      </table>`;
+  } else if (tabName === 'lkpd') {
+    previewBox.innerHTML = `
+      <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+        <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR KERJA PESERTA DIDIK (LKPD)</h2>
+        <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${data.mapel.toUpperCase()} (${data.fase})</p>
+      </div>
+      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">3. LEMBAR KERJA PESERTA DIDIK (LKPD)</div>
+      <div class="border p-4 rounded-lg bg-slate-50 space-y-3 text-xs">
+        <h4 class="font-bold text-slate-800 text-center uppercase">TOPIK: ${data.bab}</h4>
+        <p><strong>Alokasi Waktu:</strong> ${data.waktu}</p>
+        <p><strong>Instruksi:</strong> Kerjakan tugas kelompok ini bersama 4-5 teman sekelasmu berdasarkan materi ${data.mapel}.</p>
+      </div>`;
+  } else if (tabName === 'bahan') {
+    previewBox.innerHTML = `
+      <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+        <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">BAHAN AJAR & RINGKASAN MATERI</h2>
+        <p class="font-bold text-indigo-700 uppercase mt-1">${data.mapel.toUpperCase()} - ${data.fase.toUpperCase()}</p>
+      </div>
+      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">4. BAHAN AJAR / RINGKASAN MATERI</div>
+      <div class="space-y-3 text-xs">
+        <h3 class="font-bold text-slate-900 text-sm">Ringkasan Utama: ${data.bab}</h3>
+        <p class="text-slate-700 leading-relaxed">Berikut ini ringkasan bahan ajar untuk mata pelajaran <strong>${data.mapel}</strong> kelas <strong>${data.fase}</strong> dengan durasi pembelajaran <strong>${data.waktu}</strong>.</p>
+      </div>`;
+  } else if (tabName === 'asesmen') {
+    previewBox.innerHTML = `
+      <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+        <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">ASESMEN & RUBRIK PENILAIAN</h2>
+        <p class="font-bold text-indigo-700 uppercase mt-1">${data.mapel.toUpperCase()} - ${data.fase.toUpperCase()}</p>
+      </div>
+      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">5. ASESMEN & RUBRIK PENILAIAN</div>
+      <div class="space-y-3 text-xs">
+        <p><strong>Mata Pelajaran:</strong> ${data.mapel}</p>
+        <p><strong>Materi Evaluasi:</strong> ${data.bab}</p>
+        <p><strong>Alokasi Waktu Evaluasi:</strong> ${data.waktu}</p>
+      </div>`;
+  }
+}
+
+// Function Form Submit (Generate Modul)
+function generateModulAjar(e) {
+  if (e) e.preventDefault();
+  switchTabModul('modul');
+}
+
+// Event listener otomatis saat halaman terbuka atau input berubah
+document.addEventListener('DOMContentLoaded', function() {
+  const inputs = ['modul-fase', 'modul-mapel', 'modul-bab', 'modul-waktu', 'modul-model', 'modul-guru', 'modul-satuan'];
+  inputs.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('change', () => switchTabModul('modul'));
+      el.addEventListener('input', () => switchTabModul('modul'));
     }
-  </script>
+  });
+});    
+  </script> 
 </body>
 </html>
