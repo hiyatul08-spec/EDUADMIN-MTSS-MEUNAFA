@@ -512,7 +512,7 @@
       <p class="text-xs text-slate-500 mt-1">Data ini digunakan otomatis untuk lembar pengesahan dan cetak dokumen.</p>
     </div>
 
-    <form onsubmit="event.preventDefault(); alert('Pengaturan berhasil disimpan!');" class="space-y-4 text-xs">
+   <form onsubmit="simpanPengaturan(event)" class="space-y-4 text-xs">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <label class="font-semibold text-slate-700 block mb-1">Satuan Pendidikan / Madrasah</label>
@@ -1189,6 +1189,41 @@ function switchTabModul(tabName) {
     });
     generateModulAjar();
   });
+
+// Fungsi Simpan ke LocalStorage
+function simpanPengaturan(e) {
+  if (e) e.preventDefault();
+  
+  const data = {
+    satuan: document.getElementById('cfg-satuan')?.value || '',
+    kepala: document.getElementById('cfg-kepala')?.value || '',
+    nip: document.getElementById('cfg-nip-kepala')?.value || '',
+    kota: document.getElementById('cfg-kota')?.value || ''
+  };
+
+  localStorage.setItem('edu_settings', JSON.stringify(data));
+  alert('Pengaturan berhasil disimpan!');
+  
+  // Refresh isi preview modul jika ada
+  if (typeof generateModulAjar === 'function') {
+    generateModulAjar();
+  }
+}
+
+// Fungsi Muat Data dari LocalStorage
+function muatPengaturan() {
+  const saved = JSON.parse(localStorage.getItem('edu_settings'));
+  if (!saved) return;
+
+  if (document.getElementById('cfg-satuan')) document.getElementById('cfg-satuan').value = saved.satuan || '';
+  if (document.getElementById('cfg-kepala')) document.getElementById('cfg-kepala').value = saved.kepala || '';
+  if (document.getElementById('cfg-nip-kepala')) document.getElementById('cfg-nip-kepala').value = saved.nip || '';
+  if (document.getElementById('cfg-kota')) document.getElementById('cfg-kota').value = saved.kota || '';
+}
+
+// Panggil fungsi muatPengaturan saat halaman selesai dimuat
+muatPengaturan();
+    
 </script>
 </body>
 </html>
