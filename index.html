@@ -449,8 +449,7 @@
   <label class="text-xs font-semibold block mb-1">NIP Kepala Madrasah</label>
   <input type="text" id="cfg-nip-kepala" placeholder="Contoh: 19800101 200501 1 001" class="w-full border rounded-lg p-2 text-sm outline-none">
 </div>
-<button onclick="alert('Pengaturan berhasil disimpan!')" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600">Simpan Pengaturan</button>      </div>
-    </div>
+<button type="button" onclick="simpanPengaturanSystem()" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600">Simpan Pengaturan</button>    </div>
 
   </main>
 
@@ -1159,7 +1158,46 @@ document.addEventListener('DOMContentLoaded', function() {
       `;
     }
   }});  
-  
+
+// --- FUNGSI PENGATURAN SYSTEM ---
+  function simpanPengaturanSystem() {
+    const kepalaSekolah = document.getElementById('cfg-kepala')?.value || '';
+    const nipKepala = document.getElementById('cfg-nip-kepala')?.value || '';
+
+    const dataSettings = {
+      kepalaSekolah,
+      nipKepala
+    };
+
+    localStorage.setItem('appSettings', JSON.stringify(dataSettings));
+    alert('Pengaturan berhasil disimpan!');
+    
+    // Auto update jika fungsi update modul ajar ada
+    if (typeof updatePerangkatAjarSetting === 'function') {
+      updatePerangkatAjarSetting();
+    }
+  }
+
+  function loadPengaturanSystem() {
+    const saved = localStorage.getItem('appSettings');
+    if (saved) {
+      try {
+        const config = JSON.parse(saved);
+        if (document.getElementById('cfg-kepala') && config.kepalaSekolah) {
+          document.getElementById('cfg-kepala').value = config.kepalaSekolah;
+        }
+        if (document.getElementById('cfg-nip-kepala') && config.nipKepala) {
+          document.getElementById('cfg-nip-kepala').value = config.nipKepala;
+        }
+      } catch (e) { console.error(e); }
+    }
+  }
+
+  // Jalankan muat data saat halaman dibuka
+  document.addEventListener('DOMContentLoaded', loadPengaturanSystem);
+  loadPengaturanSystem();
+
+    
   </script> 
 </body>
 </html>
