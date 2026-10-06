@@ -1161,26 +1161,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }});  
 
-function updateDropdownJenjang() {
-  const select = document.getElementById('modul-jenjang');
-  if (!select) return;
 
-  // Kosongkan opsi dropdown
-  select.innerHTML = '';
-
-  // Isi dropdown dengan data dari Data Kelas
-  if (typeof dataKelas !== 'undefined' && dataKelas.length > 0) {
-    dataKelas.forEach(k => {
-      const opt = document.createElement('option');
-      opt.value = `SMP / MTs - Kelas ${k.nama} (Fase D)`;
-      opt.textContent = `SMP / MTs - Kelas ${k.nama} (Fase D)`;
-      select.appendChild(opt);
-    });
-  }
-}
-
-// Jalankan saat halaman selesai dimuat
-document.addEventListener('DOMContentLoaded', updateDropdownJenjang);
     
   </script> 
 </body>
