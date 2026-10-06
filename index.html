@@ -1106,19 +1106,42 @@ document.addEventListener('DOMContentLoaded', function() {
       `;
     }
   }  
-  // 2. Isi Dropdown Kelas / Fase dari Data Kelas
+  
+  // 2. Isi Dropdown Kelas / Fase dari Data Kelas (Auto Read & Dynamic Mapping)
   const faseSelect = document.getElementById('modul-fase');
-  if (faseSelect && typeof dataKelas !== 'undefined' && dataKelas.length > 0) {
-    faseSelect.innerHTML = dataKelas.map(k => {
-      const namaKls = k.namaKelas || k.nama || k;
-      return `<option value="SMP / MTs - Kelas ${namaKls} (Fase D)">SMP / MTs - Kelas ${namaKls} (Fase D)</option>`;
-    }).join('');
-  } else if (faseSelect && typeof kelasData !== 'undefined' && kelasData.length > 0) {
-    faseSelect.innerHTML = kelasData.map(k => {
-      const namaKls = k.namaKelas || k.nama || k;
-      return `<option value="SMP / MTs - Kelas ${namaKls} (Fase D)">SMP / MTs - Kelas ${namaKls} (Fase D)</option>`;
-    }).join('');
-  }  
-});  </script> 
+  if (faseSelect) {
+    let listKelas = [];
+    
+    // 1. Ambil dari Variabel Global
+    if (typeof dataKelas !== 'undefined' && Array.isArray(dataKelas) && dataKelas.length > 0) {
+      listKelas = dataKelas;
+    } else if (typeof kelasData !== 'undefined' && Array.isArray(kelasData) && kelasData.length > 0) {
+      listKelas = kelasData;
+    } 
+    // 2. Ambil dari LocalStorage jika variabel belum terisi
+    else {
+      try {
+        const localKelas = localStorage.getItem('dataKelas') || localStorage.getItem('kelasData');
+        if (localKelas) listKelas = JSON.parse(localKelas);
+      } catch (e) { console.error(e); }
+    }
+
+    // 3. Render ke Dropdown
+    if (listKelas && listKelas.length > 0) {
+      faseSelect.innerHTML = listKelas.map(k => {
+        const namaKls = (typeof k === 'object' && k !== null) ? (k.namaKelas || k.nama || k.tingkat || k) : k;
+        
+        // Menentukan Fase berdasarkan Tingkat/Nama Kelas
+        let faseText = 'Fase D';
+        if (String(namaKls).includes('I_') || String(namaKls).startsWith('1') || String(namaKls).startsWith('2')) faseText = 'Fase A/B/C';
+        
+        const labelFull = `SMP / MTs - Kelas ${namaKls} (${faseText})`;
+        return `<option value="${labelFull}">${labelFull}</option>`;
+      }).join('');
+    }
+  }
+});  
+  
+  </script> 
 </body>
 </html>
