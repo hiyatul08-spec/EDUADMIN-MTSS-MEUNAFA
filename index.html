@@ -1181,30 +1181,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
- function loadPengaturanSystem() {
+function loadPengaturanSystem() {
     const saved = localStorage.getItem('appSettings');
     if (saved) {
         try {
             const config = JSON.parse(saved);
-            // Isi ke Pengaturan System
-            if (document.getElementById('cfg-kepala') && config.kepalaSekolah) {
-                document.getElementById('cfg-kepala').value = config.kepalaSekolah;
+            
+            // Ambil data nama kepala & NIP
+            const namaKepala = config.kepalaSekolah || config.kepala || '';
+            const nipKepala = config.nipKepala || config.nip || '';
+
+            // Set ke Pengaturan System
+            if (document.getElementById('cfg-kepala')) {
+                document.getElementById('cfg-kepala').value = namaKepala;
             }
-            if (document.getElementById('cfg-nip-kepala') && config.nipKepala) {
-                document.getElementById('cfg-nip-kepala').value = config.nipKepala;
+            if (document.getElementById('cfg-nip-kepala')) {
+                document.getElementById('cfg-nip-kepala').value = nipKepala;
             }
 
-            // Isi otomatis ke Perangkat Ajar
-            if (document.getElementById('modul-kepsak') && config.kepalaSekolah) {
-                document.getElementById('modul-kepsak').value = config.kepalaSekolah;
+            // Set otomatis ke Form Perangkat Ajar
+            if (document.getElementById('modul-kepsak')) {
+                document.getElementById('modul-kepsak').value = namaKepala;
             }
-            if (document.getElementById('modul-nip-kepala') && config.nipKepala) {
-                document.getElementById('modul-nip-kepala').value = config.nipKepala;
+            if (document.getElementById('modul-nip-kepala')) {
+                document.getElementById('modul-nip-kepala').value = nipKepala;
             }
         } catch (e) { console.error(e); }
     }
-}
-  // Jalankan muat data saat halaman dibuka
+}  
+    
+    // Jalankan muat data saat halaman dibuka
   document.addEventListener('DOMContentLoaded', loadPengaturanSystem);
   loadPengaturanSystem();
 
