@@ -204,10 +204,33 @@
 
           <form id="form-perangkat-ajar" onsubmit="generateModulAjar(event)" class="space-y-3 text-xs">
             <div>
- <label class="font-semibold text-slate-700 block mb-1">JENJANG & KELAS / FASE</label>
-<select id="modul-jenjang" class="w-full border rounded-lg p-2 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500">
-  <option value="">-- Pilih Jenjang / Kelas --</option>
-</select>
+    <label class="font-semibold text-slate-700 block mb-1">JENJANG & KELAS / FASE</label>
+    <select id="modul-jenjang" class="w-full border rounded-lg p-2 outline-none bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500">
+        <!-- SD / MI -->
+        <optgroup label="SD / MI">
+            <option value="SD/MI - Kelas I A (Fase A)">SD / MI - Kelas I A (Fase A)</option>
+            <option value="SD/MI - Kelas II A (Fase A)">SD / MI - Kelas II A (Fase A)</option>
+            <option value="SD/MI - Kelas III A (Fase B)">SD / MI - Kelas III A (Fase B)</option>
+            <option value="SD/MI - Kelas IV A (Fase B)">SD / MI - Kelas IV A (Fase B)</option>
+            <option value="SD/MI - Kelas V A (Fase C)">SD / MI - Kelas V A (Fase C)</option>
+            <option value="SD/MI - Kelas VI A (Fase C)">SD / MI - Kelas VI A (Fase C)</option>
+        </optgroup>
+
+        <!-- SMP / MTs -->
+        <optgroup label="SMP / MTs">
+            <option value="SMP/MTs - Kelas VII A (Fase D)" selected>SMP / MTs - Kelas VII A (Fase D)</option>
+            <option value="SMP/MTs - Kelas VIII A (Fase D)">SMP / MTs - Kelas VIII A (Fase D)</option>
+            <option value="SMP/MTs - Kelas IX A (Fase D)">SMP / MTs - Kelas IX A (Fase D)</option>
+        </optgroup>
+
+        <!-- SMA / MA -->
+        <optgroup label="SMA / MA">
+            <option value="SMA/MA - Kelas X A (Fase E)">SMA / MA - Kelas X A (Fase E)</option>
+            <option value="SMA/MA - Kelas XI A (Fase F)">SMA / MA - Kelas XI A (Fase F)</option>
+            <option value="SMA/MA - Kelas XII A (Fase F)">SMA / MA - Kelas XII A (Fase F)</option>
+        </optgroup>
+    </select>
+</div>
 
             <div>
               <label class="font-semibold text-slate-700 block mb-1">MATA PELAJARAN</label>
