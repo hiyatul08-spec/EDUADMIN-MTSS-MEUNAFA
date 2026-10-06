@@ -706,33 +706,34 @@ function updateKelasDropdowns() {
     let dataKelas = [];
 
     // 1. Ambil data dari key 'app_kelas' atau variabel global
-    const saved = localStorage.getItem('app_kelas');
+    const saved = localStorage.getItem('app_kelas') || localStorage.getItem('dataKelas');
     if (saved) {
       dataKelas = JSON.parse(saved);
+    } else if (typeof window.dataKelas !== 'undefined' && Array.isArray(window.dataKelas)) {
+      dataKelas = window.dataKelas;
     } else if (window.appData && Array.isArray(window.appData.kelas)) {
       dataKelas = window.appData.kelas;
     }
 
-    // 2. Tampilkan data kelas asli pengguna
+    // 2. Format dan tampilkan opsi khusus MTs (Fase D)
     if (Array.isArray(dataKelas) && dataKelas.length > 0) {
       dataKelas.forEach(item => {
         const option = document.createElement('option');
-        // Utamakan item.namaKelas atau item.nama dari struktur Data Kelas
-        const nama = typeof item === 'object' ? (item.namaKelas || item.nama || item.tingkat) : item;
+        const namaKls = typeof item === 'object' ? (item.nama || item.namaKelas || item.kelas) : item;
         
-        if (nama) {
-          option.value = nama;
-          option.textContent = nama;
+        if (namaKls) {
+          const fullLabel = `SMP / MTs - Kelas ${namaKls} (Fase D)`;
+          option.value = fullLabel;
+          option.textContent = fullLabel;
           selectJenjang.appendChild(option);
         }
       });
     }
-
-    if (currentValue) selectJenjang.value = currentValue;
   } catch (err) {
     console.error("Error updating kelas dropdown:", err);
   }
-}   
+
+  
     
 function updateGuruDropdowns() {
   const dropdowns = document.querySelectorAll('.select-guru-dropdown');
