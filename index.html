@@ -705,7 +705,7 @@ function updateKelasDropdowns() {
   try {
     let dataKelas = [];
 
-    // 1. Ambil data dari key 'app_kelas' atau variabel global
+    // Prioritas 1: Ambil dari localStorage key 'app_kelas' atau 'dataKelas'
     const saved = localStorage.getItem('app_kelas') || localStorage.getItem('dataKelas');
     if (saved) {
       dataKelas = JSON.parse(saved);
@@ -715,24 +715,26 @@ function updateKelasDropdowns() {
       dataKelas = window.appData.kelas;
     }
 
-    // 2. Format dan tampilkan opsi khusus MTs (Fase D)
-    if (Array.isArray(dataKelas) && dataKelas.length > 0) {
-      dataKelas.forEach(item => {
-        const option = document.createElement('option');
-        const namaKls = typeof item === 'object' ? (item.nama || item.namaKelas || item.kelas) : item;
+    if (dataKelas && dataKelas.length > 0) {
+      dataKelas.forEach(k => {
+        const opt = document.createElement('option');
+        // Menggunakan nama kelas langsung dari menu Data Kelas (VII A, VIII A, IX A, I_A)
+        const namaKls = k.nama || k.namaKelas || k.kelas || k;
+        const labelFull = `SMP / MTs - Kelas ${namaKls} (Fase D)`;
         
-        if (namaKls) {
-          const fullLabel = `SMP / MTs - Kelas ${namaKls} (Fase D)`;
-          option.value = fullLabel;
-          option.textContent = fullLabel;
-          selectJenjang.appendChild(option);
-        }
+        opt.value = labelFull;
+        opt.textContent = labelFull;
+        selectJenjang.appendChild(opt);
       });
     }
   } catch (err) {
-    console.error("Error updating kelas dropdown:", err);
+    console.error('Gagal memuat data kelas:', err);
   }
 
+  if (currentValue) {
+    selectJenjang.value = currentValue;
+  }
+}
   
     
 function updateGuruDropdowns() {
