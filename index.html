@@ -1080,24 +1080,30 @@ function generateModulAjar(e) {
   switchTabModul('modul');
 }
 
-// Event listener otomatis saat halaman terbuka atau input berubah
+// Event listener otomatis saat halaman terbuka
 document.addEventListener('DOMContentLoaded', function() {
-  updateKelasDropdowns();
+  try {
+    updateKelasDropdowns();
+  } catch (e) {
+    console.error(e);
+  }
 
-  // Ganti 'modul-fase' menjadi 'modul-jenjang'
   const inputs = ['modul-jenjang', 'modul-mapel', 'modul-bab', 'modul-waktu', 'modul-model', 'modul-guru', 'modul-satuan'];
   inputs.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
-      el.addEventListener('change', () => switchTabModul('modul'));
-      el.addEventListener('input', () => switchTabModul('modul'));
+      el.addEventListener('change', () => {
+        if (typeof switchTabModul === 'function') switchTabModul('modul');
+      });
+      el.addEventListener('input', () => {
+        if (typeof switchTabModul === 'function') switchTabModul('modul');
+      });
     }
   });
 });
-  
-  switchTabModul('modul');
 
-// 1. Isi Dropdown Mata Pelajaran dari Data Sistem / LocalStorage / Fallback
+
+    // 1. Isi Dropdown Mata Pelajaran dari Data Sistem / LocalStorage / Fallback
   const mapelSelect = document.getElementById('modul-mapel');
   if (mapelSelect) {
     let listMapel = [];
