@@ -1083,7 +1083,9 @@ function generateModulAjar(e) {
 // Event listener otomatis saat halaman terbuka atau input berubah
 document.addEventListener('DOMContentLoaded', function() {
   updateKelasDropdowns();
-  const inputs = ['modul-fase', 'modul-mapel', 'modul-bab', 'modul-waktu', 'modul-model', 'modul-guru', 'modul-satuan'];
+
+  // Ganti 'modul-fase' menjadi 'modul-jenjang'
+  const inputs = ['modul-jenjang', 'modul-mapel', 'modul-bab', 'modul-waktu', 'modul-model', 'modul-guru', 'modul-satuan'];
   inputs.forEach(id => {
     const el = document.getElementById(id);
     if (el) {
@@ -1091,6 +1093,7 @@ document.addEventListener('DOMContentLoaded', function() {
       el.addEventListener('input', () => switchTabModul('modul'));
     }
   });
+});
   
   switchTabModul('modul');
 
