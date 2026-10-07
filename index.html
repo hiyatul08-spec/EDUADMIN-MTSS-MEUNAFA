@@ -696,54 +696,31 @@ function toggleModal(modalId, show) {
 
 // Dynamic Dropdown Helpers
 function updateKelasDropdowns() {
-  const selectJenjang = document.getElementById('modul-jenjang');
-  if (!selectJenjang) return;
+  const faseSelect = document.getElementById('modul-jenjang');
+  if (!faseSelect) return;
 
-  const currentValue = selectJenjang.value;
-  selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
+  // 1. Ambil data dari localStorage
+  let dataKelas = JSON.parse(localStorage.getItem('dataKelas')) || [];
 
-  try {
-    let dataKelas = [];
-
-    // Ambil data dari localStorage atau data global aplikasi
-    const saved = localStorage.getItem('dataKelas') || localStorage.getItem('app_kelas');
-    if (saved) {
-      dataKelas = JSON.parse(saved);
-    } else if (typeof window.dataKelas !== 'undefined' && Array.isArray(window.dataKelas)) {
-      dataKelas = window.dataKelas;
-    } else if (window.appData && Array.isArray(window.appData.kelas)) {
-      dataKelas = window.appData.kelas;
-    }
-
-    // Tampilkan HANYA kelas yang tersimpan di Data Kelas
-    if (Array.isArray(dataKelas) && dataKelas.length > 0) {
-      dataKelas.forEach(item => {
-        const option = document.createElement('option');
-        
-        // Ambil nama kelas & tingkat dari objek dataKelas
-        const namaKls = typeof item === 'object' ? (item.nama || item.namaKelas || item.kelas) : item;
-        const tingkatKls = typeof item === 'object' ? (item.tingkat || '') : '';
-
-        if (namaKls) {
-          // Tentukan Fase berdasarkan tingkat (MTs = Fase D)
-          let fase = 'Fase D';
-          if (tingkatKls === 'X' || tingkatKls === '10') fase = 'Fase E';
-          if (tingkatKls === 'XI' || tingkatKls === 'XII' || tingkatKls === '11' || tingkatKls === '12') fase = 'Fase F';
-          if (['I','II','III','IV','V','VI','1','2','3','4','5','6'].includes(tingkatKls)) fase = 'Fase A/B/C';
-
-          const fullLabel = `SMP / MTs - Kelas ${namaKls} (${fase})`;
-          option.value = fullLabel;
-          option.textContent = fullLabel;
-          selectJenjang.appendChild(option);
-        }
-      });
-    }
-  } catch (err) {
-    console.error("Error updating kelas dropdown:", err);
+  // 2. Jika localStorage kosong, gunakan data kelas standar MTs Meunafa
+  if (dataKelas.length === 0) {
+    dataKelas = [
+      { nama: 'VII A', fase: 'Fase D' },
+      { nama: 'VIII A', fase: 'Fase D' },
+      { nama: 'IX A', fase: 'Fase D' },
+      { nama: 'I_A', fase: 'Fase A/B/C' }
+    ];
   }
 
-  if (currentValue) selectJenjang.value = currentValue;
-}  
+  // 3. Susun opsi dropdown modul-jenjang
+  let options = '<option value="">-- Pilih Jenjang / Kelas --</option>';
+  dataKelas.forEach(k => {
+    const label = `SMP / MTs - Kelas ${k.nama} (${k.fase || 'Fase D'})`;
+    options += `<option value="${label}">${label}</option>`;
+  });
+
+  faseSelect.innerHTML = options;
+} 
     
 function updateGuruDropdowns() {
   const dropdowns = document.querySelectorAll('.select-guru-dropdown');
