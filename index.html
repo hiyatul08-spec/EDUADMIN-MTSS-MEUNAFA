@@ -844,46 +844,54 @@ function updateSiswaDropdowns() {
     }
 
     // Initializer
-    window.onload = function() {
-      renderTables();
-      updateCounts();
-      updateKelasDropdowns();
-      updateGuruDropdowns();
+    // Deklarasikan variabel chart di luar agar bisa di-destroy
+let genderChartInstance = null;
+let ageChartInstance = null;
 
-      // Gender Chart
-      const ctxGender = document.getElementById('genderChart');
-      if (ctxGender) {
-        new Chart(ctxGender, {
-          type: 'doughnut',
-          data: {
-            labels: ['Laki-laki', 'Perempuan'],
-            datasets: [{
-              data: [12, 15],
-              backgroundColor: ['#10b981', '#3b82f6']
-            }]
-          },
-          options: { responsive: true, maintainAspectRatio: false }
-        });
-      }
+function renderDashboardCharts() {
+  const ctxGender = document.getElementById('genderChart');
+  const ctxAge = document.getElementById('ageChart');
 
-      // Age Chart
-      const ctxAge = document.getElementById('ageChart');
-      if (ctxAge) {
-        new Chart(ctxAge, {
-          type: 'bar',
-          data: {
-            labels: ['< 30 Thn', '30-40 Thn', '40-50 Thn', '> 50 Thn'],
-            datasets: [{
-              label: 'Jumlah Guru',
-              data: [3, 8, 5, 2],
-              backgroundColor: '#f59e0b'
-            }]
-          },
-          options: { responsive: true, maintainAspectRatio: false }
-        });
-      }
-    };
+  if (ctxGender) {
+    if (genderChartInstance) genderChartInstance.destroy();
+    genderChartInstance = new Chart(ctxGender, {
+      type: 'doughnut',
+      data: {
+        labels: ['Laki-laki', 'Perempuan'],
+        datasets: [{
+          data: [12, 15],
+          backgroundColor: ['#10b981', '#3b82f6']
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
 
+  if (ctxAge) {
+    if (ageChartInstance) ageChartInstance.destroy();
+    ageChartInstance = new Chart(ctxAge, {
+      type: 'bar',
+      data: {
+        labels: ['< 30 Thn', '30-40 Thn', '40-50 Thn', '> 50 Thn'],
+        datasets: [{
+          label: 'Jumlah Guru',
+          data: [3, 8, 5, 2],
+          backgroundColor: '#f59e0b'
+        }]
+      },
+      options: { responsive: true, maintainAspectRatio: false }
+    });
+  }
+}
+
+// Initializer
+window.onload = function() {
+  renderTables();
+  updateCounts();
+  updateKelasDropdowns();
+  updateGuruDropdowns();
+  renderDashboardCharts();
+};
 // Function untuk Mengambil Data Form dan Update Preview
 function updatePreviewContent() {
   const babInput = document.getElementById('modul-bab');
