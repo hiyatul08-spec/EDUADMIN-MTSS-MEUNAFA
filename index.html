@@ -699,47 +699,39 @@ function updateKelasDropdowns() {
   const faseSelect = document.getElementById('modul-jenjang');
   if (!faseSelect) return;
 
-  // 1. Ambil data dari localStorage
+  // 1. Ambil data kelas dari localStorage
   let dataKelas = JSON.parse(localStorage.getItem('dataKelas')) || [];
 
-  // 2. Jika localStorage kosong, gunakan data kelas standar MTs Meunafa
+  // 2. Jika data di localStorage kosong, gunakan default kelas MTs Meunafa
   if (dataKelas.length === 0) {
     dataKelas = [
-      { nama: 'VII A', fase: 'Fase D' },
-      { nama: 'VIII A', fase: 'Fase D' },
-      { nama: 'IX A', fase: 'Fase D' },
-      { nama: 'I_A', fase: 'Fase A/B/C' }
+      { nama: 'VII A', tingkat: 'VII', fase: 'Fase D' },
+      { nama: 'VIII A', tingkat: 'VIII', fase: 'Fase D' },
+      { nama: 'IX A', tingkat: 'IX', fase: 'Fase D' },
+      { nama: 'I_A', tingkat: 'I', fase: 'Fase A/B/C' },
+      { nama: 'II-A', tingkat: 'II', fase: 'Fase A/B/C' }
     ];
   }
 
-  // 3. Susun opsi dropdown modul-jenjang
+  // 3. Susun opsi dropdown secara dinamis untuk SELURUH data kelas yang ada
   let options = '<option value="">-- Pilih Jenjang / Kelas --</option>';
   dataKelas.forEach(k => {
-    const label = `SMP / MTs - Kelas ${k.nama} (${k.fase || 'Fase D'})`;
+    let fase = k.fase;
+    if (!fase) {
+      const t = String(k.tingkat || k.nama).toUpperCase();
+      if (t.includes('VII') || t.includes('VIII') || t.includes('IX') || ['7','8','9'].some(x => t.includes(x))) {
+        fase = 'Fase D';
+      } else {
+        fase = 'Fase A/B/C';
+      }
+    }
+    
+    const label = `SMP / MTs - Kelas ${k.nama} (${fase})`;
     options += `<option value="${label}">${label}</option>`;
   });
 
   faseSelect.innerHTML = options;
-} 
-    
-function updateGuruDropdowns() {
-  const dropdowns = document.querySelectorAll('.select-guru-dropdown');
-  dropdowns.forEach(select => {
-    const currentValue = select.value;
-    const defaultText = select.id === 'kelas-f2' ? '-- Pilih Wali Kelas --' : '-- Pilih Guru Pengajar --';
-    select.innerHTML = `<option value="">${defaultText}</option>`;
-    if (appData.guru && appData.guru.length > 0) {
-      appData.guru.forEach(g => {
-        const opt = document.createElement('option');
-        opt.value = g.f2;
-        opt.textContent = `${g.f2} (${g.f3})`;
-        select.appendChild(opt);
-      });
-    }
-    if (currentValue) select.value = currentValue;
-  });
 }
-
 function updateMapelDropdowns() {
   const dropdowns = document.querySelectorAll('.select-mapel-dropdown');
   
