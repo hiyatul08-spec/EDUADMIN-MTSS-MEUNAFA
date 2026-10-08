@@ -1228,6 +1228,40 @@ function generateModulAjar(e) {
 
 
     
+// Function untuk sync live preview
+function updatePreviewLive() {
+  const rawKelas = document.getElementById('modul-jenjang')?.value || '';
+  const rawMapel = document.getElementById('modul-mapel')?.value || '';
+
+  if (!rawKelas && !rawMapel) return;
+
+  // Tentukan Jenjang Sekolah secara otomatis
+  let jenjangPrefix = 'SMP / MTs';
+  if (rawKelas.match(/I|II|III|IV|V|VI|1|2|3|4|5|6/i) && !rawKelas.match(/VII|VIII|IX|X|XI|XII|7|8|9|10|11|12/i)) {
+    jenjangPrefix = 'SD / MI';
+  } else if (rawKelas.match(/X|XI|XII|10|11|12/i)) {
+    jenjangPrefix = 'SMA / MA';
+  }
+
+  const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - ${rawKelas}` : 'SMP / MTs - Kelas 7 (Fase D)';
+  const labelMapel = rawMapel || 'AL-QUR\'AN HADIS';
+
+  // Update semua teks header & informasi umum di preview kanan
+  document.querySelectorAll('h2, h3, div, p, span').forEach(el => {
+    if (el.children.length === 0 && el.innerText) {
+      if (el.innerText.includes('MATA PELAJARAN:')) {
+        el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelKelasLengkap.toUpperCase()}`;
+      }
+      if (el.innerText.includes('Jenjang / Kelas:')) {
+        el.innerText = `Jenjang / Kelas: ${labelKelasLengkap}`;
+      }
+      if (el.innerText.includes('Mata Pelajaran:') && !el.innerText.includes('MATA PELAJARAN:')) {
+        el.innerText = `Mata Pelajaran: ${labelMapel}`;
+      }
+    }
+  });
+}
+
 // Event listener otomatis saat halaman terbuka
 document.addEventListener('DOMContentLoaded', function() {
   try {
@@ -1242,15 +1276,17 @@ document.addEventListener('DOMContentLoaded', function() {
     if (el) {
       el.addEventListener('change', () => {
         if (typeof switchTabModul === 'function') switchTabModul('modul');
+        updatePreviewLive();
       });
       el.addEventListener('input', () => {
         if (typeof switchTabModul === 'function') switchTabModul('modul');
+        updatePreviewLive();
       });
     }
   });
 });
 
-
+    
     // 1. Isi Dropdown Mata Pelajaran dari Data Sistem / LocalStorage / Fallback
   const mapelSelect = document.getElementById('modul-mapel');
   if (mapelSelect) {
