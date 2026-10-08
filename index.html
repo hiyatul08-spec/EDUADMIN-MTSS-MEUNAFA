@@ -1173,21 +1173,20 @@ function switchTabModul(tabName) {
         <h3 class="font-bold text-slate-900 text-sm">Ringkasan Utama: ${data.bab}</h3>
         <p class="text-slate-700 leading-relaxed">Berikut ini ringkasan bahan ajar untuk mata pelajaran <strong>${data.mapel}</strong> kelas <strong>${data.fase}</strong> dengan durasi pembelajaran <strong>${data.waktu}</strong>.</p>
       </div>`;
+  
   } else if (tabName === 'asesmen') {
     previewBox.innerHTML = `
       <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
         <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">ASESMEN & RUBRIK PENILAIAN</h2>
-        <p class="font-bold text-indigo-700 uppercase mt-1">${data.mapel.toUpperCase()} - ${data.fase.toUpperCase()}</p>
+        <p class="font-bold text-indigo-700 uppercase mt-1">${data.mapel ? data.mapel.toUpperCase() : ''} \vert{} ${data.fase ? data.fase.toUpperCase() : ''}</p>
       </div>
       <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">5. ASESMEN & RUBRIK PENILAIAN</div>
-      <div class="space-y-3 text-xs">
+      <div class="space-y-1 text-xs">
         <p><strong>Mata Pelajaran:</strong> ${data.mapel}</p>
         <p><strong>Materi Evaluasi:</strong> ${data.bab}</p>
         <p><strong>Alokasi Waktu Evaluasi:</strong> ${data.waktu}</p>
-      </div>`;
-  }
-}
-
+      </div>
+    `;
 
     
     // Function Form Submit
