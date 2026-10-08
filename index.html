@@ -793,17 +793,18 @@ document.addEventListener('click', function() {
     
     
 function updateMapelDropdowns() {
-  // Ambil semua elemen select yang kemungkinan menjadi dropdown mata pelajaran
+  // Target seluruh dropdown mata pelajaran yang ada di aplikasi
   const targets = [
     document.getElementById('modul-mapel'),
     document.getElementById('nilai-mapel'),
+    document.getElementById('guru-f3'), // Modal Tambah Guru
     document.querySelector('#modal-nilai select[name="mapel"]'),
-    document.querySelectorAll('#modal-nilai select')[1] // Select kedua di modal nilai
+    document.querySelector('#modal-guru select[name="mapel"]')
   ];
 
   let rawList = [];
 
-  // 1. Ambil data mapel langsung dari baris tabel DOM (#table-mapel)
+  // 1. Ambil nama mapel langsung dari baris tabel DOM (#table-mapel)
   const rowsMapel = document.querySelectorAll('#table-mapel tr');
   rowsMapel.forEach(tr => {
     const tds = tr.querySelectorAll('td');
@@ -815,7 +816,7 @@ function updateMapelDropdowns() {
     }
   });
 
-  // 2. Cadangan jika tabel belum ter-render
+  // 2. Cadangan jika tabel DOM belum ter-render
   if (rawList.length === 0) {
     try {
       if (typeof appData !== 'undefined' && appData && Array.isArray(appData.mapel)) {
@@ -835,7 +836,7 @@ function updateMapelDropdowns() {
     }
   });
 
-  // 4. Render ke seluruh elemen select target yang ditemukan
+  // 4. Render ke seluruh dropdown mapel yang ditemukan
   targets.forEach(selectElem => {
     if (selectElem) {
       const currentValue = selectElem.value;
@@ -851,7 +852,7 @@ function updateMapelDropdowns() {
   });
 }
 
-// PEMICU SINKRONISASI REAL-TIME (termasuk saat modal dibuka)
+// PEMICU SINKRONISASI REAL-TIME
 document.addEventListener('click', function() {
   setTimeout(updateMapelDropdowns, 150);
 });
