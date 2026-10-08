@@ -699,7 +699,7 @@ function updateKelasDropdowns() {
   const modulKelas = document.getElementById('modul-jenjang');
   const modulMapel = document.getElementById('modul-mapel');
 
-  // 1. DROPDOWN KELAS (100% Dinamis dari localStorage)
+  // 1. DROPDOWN KELAS
   if (modulKelas) {
     let dataKelas = [];
     try {
@@ -709,35 +709,38 @@ function updateKelasDropdowns() {
 
     let options = '<option value="">-- Pilih Jenjang / Kelas --</option>';
 
-    if (Array.isArray(dataKelas) && dataKelas.length > 0) {
-      dataKelas.forEach(k => {
-        let textRaw = typeof k === 'string' ? k : (k.namaKelas || k.nama || k.kelas || k.tingkat || '');
-        if (!textRaw) return;
+    // Jika app_kelas belum lengkap 1-6, sediakan list default SD-SMP
+    let listKelas = (Array.isArray(dataKelas) && dataKelas.length > 0) 
+      ? dataKelas 
+      : ['Kelas 1', 'Kelas 2', 'Kelas 3', 'Kelas 4', 'Kelas 5', 'Kelas 6', 'Kelas 7', 'Kelas 8', 'Kelas 9'];
 
-        let cleanText = String(textRaw).replace(/^kelas\s+/i, '').trim();
+    listKelas.forEach(k => {
+      let textRaw = typeof k === 'string' ? k : (k.namaKelas || k.nama || k.kelas || k.tingkat || '');
+      if (!textRaw) return;
 
-        // Penentuan Fase Otomatis
-        let fase = '';
-        let match = cleanText.match(/^([IVX0-9]+)/i);
-        let angkaKelas = match ? match[1].toUpperCase() : cleanText.toUpperCase();
+      let cleanText = String(textRaw).replace(/^kelas\s+/i, '').trim();
 
-        if (['I', 'II', '1', '2'].includes(angkaKelas)) fase = 'Fase A';
-        else if (['III', 'IV', '3', '4'].includes(angkaKelas)) fase = 'Fase B';
-        else if (['V', 'VI', '5', '6'].includes(angkaKelas)) fase = 'Fase C';
-        else if (['VII', 'VIII', 'IX', '7', '8', '9'].includes(angkaKelas)) fase = 'Fase D';
-        else if (['X', '10'].includes(angkaKelas)) fase = 'Fase E';
-        else if (['XI', 'XII', '11', '12'].includes(angkaKelas)) fase = 'Fase F';
-        else fase = 'Fase A-F';
+      // Penentuan Fase Otomatis Kurikulum Merdeka
+      let fase = '';
+      let match = cleanText.match(/^([IVX0-9]+)/i);
+      let angkaKelas = match ? match[1].toUpperCase() : cleanText.toUpperCase();
 
-        let label = `Kelas ${cleanText} (${fase})`;
-        options += `<option value="${label}">${label}</option>`;
-      });
-    }
+      if (['I', 'II', '1', '2'].includes(angkaKelas)) fase = 'Fase A';
+      else if (['III', 'IV', '3', '4'].includes(angkaKelas)) fase = 'Fase B';
+      else if (['V', 'VI', '5', '6'].includes(angkaKelas)) fase = 'Fase C';
+      else if (['VII', 'VIII', 'IX', '7', '8', '9'].includes(angkaKelas)) fase = 'Fase D';
+      else if (['X', '10'].includes(angkaKelas)) fase = 'Fase E';
+      else if (['XI', 'XII', '11', '12'].includes(angkaKelas)) fase = 'Fase F';
+      else fase = 'Fase A-F';
+
+      let label = `Kelas ${cleanText} (${fase})`;
+      options += `<option value="${label}">${label}</option>`;
+    });
 
     modulKelas.innerHTML = options;
   }
 
-  // 2. DROPDOWN MATA PELAJARAN (100% Dinamis dari localStorage)
+  // 2. DROPDOWN MATA PELAJARAN (Membaca struktur {"nama": "..."})
   if (modulMapel) {
     let dataMapel = [];
     try {
@@ -747,44 +750,48 @@ function updateKelasDropdowns() {
 
     let optionsMapel = '<option value="">-- Pilih Mata Pelajaran --</option>';
 
+    // Mapel Standar SD/MI & Agama
+    let defaultMapel = [
+      'Pendidikan Pancasila', 'Bahasa Indonesia', 'Matematika', 'IPAS (IPA & IPS SD)',
+      'IPA', 'IPS', 'Bahasa Inggris', 'PJOK', 'Seni Budaya',
+      'Pendidikan Agama Islam (PAI)', 'Al-Qur\'an Hadis', 'Akidah Akhlak',
+      'Fikih', 'Sejarah Kebudayaan Islam (SKI)', 'Bahasa Arab', 'Informatika',
+      'Muatan Lokal / Bahasa Daerah'
+    ];
+
+    let listMapel = [];
+
+    // Ambil dari app_kelas/app_mapel (Object / String)
     if (Array.isArray(dataMapel) && dataMapel.length > 0) {
       dataMapel.forEach(m => {
-        let namaMapel = typeof m === 'string' ? m : (m.namaMataPelajaran || m.namaMapel || m.nama || m.mapel || m.mataPelajaran || m.nama_mapel || '');
-        if (namaMapel) {
-          optionsMapel += `<option value="${namaMapel}">${namaMapel}</option>`;
-        }
+        let nama = typeof m === 'string' ? m : (m.nama || m.namaMataPelajaran || m.namaMapel || m.mapel || '');
+        if (nama && !listMapel.includes(nama)) listMapel.push(nama);
       });
     }
+
+    // Gabungkan dengan default agar mapel SD kamu yang kurang langsung terisi
+    defaultMapel.forEach(dm => {
+      if (!listMapel.includes(dm)) listMapel.push(dm);
+    });
+
+    listMapel.forEach(mapel => {
+      optionsMapel += `<option value="${mapel}">${mapel}</option>`;
+    });
 
     modulMapel.innerHTML = optionsMapel;
   }
 }
 
-// Jalankan saat pertama kali dimuat
+// Jalankan & Re-sync otomatis
 updateKelasDropdowns();
-
-// Sinkronisasi dinamis otomatis saat berpindah tab atau saat localStorage berubah
 window.addEventListener('storage', updateKelasDropdowns);
-window.addEventListener('hashchange', updateKelasDropdowns);    
-    
-    function updateGuruDropdowns() {
-  const dropdowns = document.querySelectorAll('.select-guru-dropdown');
-  dropdowns.forEach(select => {
-    const currentValue = select.value;
-    const defaultText = select.id === 'kelas-f2' ? '-- Pilih Wali Kelas --' : '-- Pilih Guru Pengajar --';
-    select.innerHTML = `<option value="">${defaultText}</option>`;
-    if (appData.guru && appData.guru.length > 0) {
-      appData.guru.forEach(g => {
-        const opt = document.createElement('option');
-        opt.value = g.f2;
-        opt.textContent = `${g.f2} (${g.f3})`;
-        select.appendChild(opt);
-      });
-    }
-    if (currentValue) select.value = currentValue;
-  });
-}
+window.addEventListener('hashchange', updateKelasDropdowns);
 
+
+
+
+
+    
 function updateMapelDropdowns() {
   const dropdowns = document.querySelectorAll('.select-mapel-dropdown');
   
