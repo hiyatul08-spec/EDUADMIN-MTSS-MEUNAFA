@@ -701,27 +701,41 @@ function updateKelasDropdowns() {
 
   let listKelas = [];
 
-  // 1. Ambil dari localStorage
-  try {
-    const saved = localStorage.getItem('app_kelas');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        // Filter agar data contoh/dummy tidak ikut terbawa
-        listKelas = parsed.filter(item => {
-          const nama = typeof item === 'object' ? (item.namaKelas || item.nama) : item;
-          return nama && !nama.includes('Kelas 1-A') && !nama.includes('Kelas 4-B');
-        });
+  // 1. Ambil langsung dari tabel Data Kelas jika sedang ada di DOM
+  const rows = document.querySelectorAll('table tbody tr');
+  if (rows && rows.length > 0) {
+    rows.forEach(row => {
+      const firstCell = row.querySelector('td');
+      if (firstCell && firstCell.textContent) {
+        const nama = firstCell.textContent.trim();
+        if (nama && !listKelas.includes(nama) && !nama.includes('Tidak ada data')) {
+          listKelas.push(nama);
+        }
       }
-    }
-  } catch (e) {}
-
-  // 2. Jika kosong atau hanya data dummy, gunakan cadangan data kelas aktual (I - VI dan VII A - IX A)
-  if (listKelas.length === 0) {
-    listKelas = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII A', 'VIII A', 'IX A'];
+    });
   }
 
-  // Render ke dropdown
+  // 2. Jika tabel tidak ada (sedang di halaman lain), ambil dari window.appData atau localStorage
+  if (listKelas.length === 0 && window.appData && Array.isArray(window.appData.kelas) && window.appData.kelas.length > 0) {
+    listKelas = window.appData.kelas;
+  } else if (listKelas.length === 0) {
+    try {
+      const saved = localStorage.getItem('app_kelas');
+      if (saved) listKelas = JSON.parse(saved);
+    } catch (e) {}
+  }
+
+  // 3. Simpan data terbaru ke localStorage agar tersinkronisasi
+  if (listKelas.length > 0) {
+    localStorage.setItem('app_kelas', JSON.stringify(listKelas));
+  }
+
+  // Cek apakah data berubah sebelum re-render
+  const currentDataString = JSON.stringify(listKelas);
+  if (selectJenjang.dataset.lastData === currentDataString) return;
+  selectJenjang.dataset.lastData = currentDataString;
+
+  // Render ulang dropdown
   selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
   listKelas.forEach(item => {
     const option = document.createElement('option');
@@ -734,8 +748,7 @@ function updateKelasDropdowns() {
   });
 }
 
-// Jalankan saat halaman siap
-document.addEventListener('DOMContentLoaded', updateKelasDropdowns);
+// Jalankan otomatis setiap ada klik atau interaksi di halaman
 document.addEventListener('click', function() {
   setTimeout(updateKelasDropdowns, 200);
 });
