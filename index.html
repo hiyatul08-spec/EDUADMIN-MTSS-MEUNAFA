@@ -701,25 +701,17 @@ function updateKelasDropdowns() {
 
   let listKelasMurni = [];
 
-  // 1. PRIORITAS UTAMA: Ambil langsung dari tabel HTML Data Kelas di layar
-  const rowsKelas = document.querySelectorAll('.table-kelas tbody tr, table tbody tr');
+  // 1. Ambil khusus dari tabel kelas jika sedang berada di DOM
+  const rowsKelas = document.querySelectorAll('#table-kelas tbody tr, .table-kelas tbody tr');
   rowsKelas.forEach(tr => {
     const tds = tr.querySelectorAll('td');
     if (tds.length >= 1) {
-      // Ambil kolom Tingkat (kolom ke-3) jika ada, atau kolom Nama Kelas (kolom ke-1)
-      let namaKls = '';
-      if (tds.length >= 3 && tds[2].textContent.trim()) {
-        namaKls = tds[2].textContent.trim();
-      } else {
-        namaKls = tds[0].textContent.trim();
-      }
-      if (namaKls && !namaKls.includes('Wali') && !namaKls.includes('Aksi')) {
-        listKelasMurni.push(namaKls);
-      }
+      let namaKls = tds[2] ? tds[2].textContent.trim() : tds[0].textContent.trim();
+      if (namaKls) listKelasMurni.push(namaKls);
     }
   });
 
-  // 2. Jika tabel DOM belum/tidak terbaca, baru cek window.appData.kelas
+  // 2. Ambil dari window.appData.kelas
   if (listKelasMurni.length === 0 && window.appData && Array.isArray(window.appData.kelas)) {
     window.appData.kelas.forEach(item => {
       if (typeof item === 'object' && item !== null) {
@@ -731,34 +723,40 @@ function updateKelasDropdowns() {
     });
   }
 
-  // 3. Saring data: Ambil tingkat murni, buang duplikat, NIP, & header tabel
+  // 3. FILTER KETAT: Hanya izinkan format Angka Romawi Kelas (I - XII)
+  const regexRomawi = /^(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII)(\s+[A-Z0-9]+)?$/i;
+  
   let cleanedList = [];
   listKelasMurni.forEach(str => {
     let nama = str.toString().trim();
     
-    // Jika formatnya "VII A", ambil huruf depannya saja ("VII")
-    if (nama.includes(' ')) {
-      nama = nama.split(' ')[0];
-    }
-
-    const isPureNumber = /^\d+$/.test(nama);
-
-    if (nama && !isPureNumber && !nama.includes('-') && !cleanedList.includes(nama)) {
-      cleanedList.push(nama);
+    // Ambil bagian Romawinya saja (misal "VII A" jadi "VII")
+    const match = nama.match(/^(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII)\b/i);
+    if (match) {
+      const romawiMurni = match[1].toUpperCase();
+      if (!cleanedList.includes(romawiMurni)) {
+        cleanedList.push(romawiMurni);
+      }
     }
   });
 
-  // 4. Simpan hasil murni ke localStorage
-  try {
-    localStorage.setItem('app_kelas', JSON.stringify(cleanedList));
-  } catch (e) {}
+  // Urutkan angka Romawi sesuai tingkatan
+  const urutanRomawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+  cleanedList.sort((a, b) => urutanRomawi.indexOf(a) - urutanRomawi.indexOf(b));
 
-  // Hindari re-render berulang jika data tidak berubah
+  // Simpan ke localStorage
+  if (cleanedList.length > 0) {
+    try {
+      localStorage.setItem('app_kelas', JSON.stringify(cleanedList));
+    } catch (e) {}
+  }
+
+  // Hindari re-render berulang
   const currentKey = JSON.stringify(cleanedList);
   if (selectJenjang.dataset.lastKey === currentKey) return;
   selectJenjang.dataset.lastKey = currentKey;
 
-  // 5. Render ulang dropdown sesuai data persis di tabel
+  // 4. Render ulang dropdown
   selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
   cleanedList.forEach(kelas => {
     const option = document.createElement('option');
