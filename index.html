@@ -701,7 +701,7 @@ function updateKelasDropdowns() {
 
   let rawKelas = [];
 
-  // 1. Ambil data utama
+  // 1. Prioritaskan ambil dari window.appData.kelas jika ada
   if (window.appData && Array.isArray(window.appData.kelas) && window.appData.kelas.length > 0) {
     rawKelas = window.appData.kelas;
   } else {
@@ -711,7 +711,7 @@ function updateKelasDropdowns() {
     } catch (e) {}
   }
 
-  // 2. Filter ketat: Hapus NIP, angka murni (seperti 1234, 1980), dan kode mata pelajaran
+  // 2. Ekstrak nama kelas murni & saring sampah
   let listKelasMurni = [];
   if (Array.isArray(rawKelas)) {
     rawKelas.forEach(item => {
@@ -723,24 +723,22 @@ function updateKelasDropdowns() {
       }
 
       nama = nama.toString().trim();
+      const isPureNumber = /^\d+$/.test(nama);
 
-      // Hanya terima string yang BUKAN angka murni dan BUKAN kode/NIP
-      const isPureNumber = /^\d+$/.test(nama); // Mengecek apakah isinya angka saja
-      
       if (nama && !isPureNumber && !nama.includes('-') && !listKelasMurni.includes(nama)) {
         listKelasMurni.push(nama);
       }
     });
   }
 
-  // 3. Simpan data murni ke storage
+  // 3. FIX UTAMA: Simpan 'listKelasMurni' yang SUDAH TERFILTER ke localStorage
   if (listKelasMurni.length > 0) {
     try {
       localStorage.setItem('app_kelas', JSON.stringify(listKelasMurni));
     } catch (e) {}
   }
 
-  // Cek jika data tidak berubah
+  // Cek jika tampilan tidak perlu update
   const currentKey = JSON.stringify(listKelasMurni);
   if (selectJenjang.dataset.lastKey === currentKey) return;
   selectJenjang.dataset.lastKey = currentKey;
@@ -755,7 +753,7 @@ function updateKelasDropdowns() {
   });
 }
 
-// Event listeners untuk sinkronisasi otomatis
+// Panggil otomatis
 document.addEventListener('DOMContentLoaded', updateKelasDropdowns);
 document.addEventListener('click', function() {
   setTimeout(updateKelasDropdowns, 200);
