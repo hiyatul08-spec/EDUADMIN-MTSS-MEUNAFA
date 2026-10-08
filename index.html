@@ -1081,12 +1081,12 @@ function switchTabModul(tabName) {
 
   const data = updatePreviewContent();
 
- if (tabName === 'modul') {
+  if (tabName === 'modul') {
     previewBox.innerHTML = `
       <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
         <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>
-        <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: <span id="prev-header-mapel">${data.mapel ? data.mapel.toUpperCase() : ''}</span> | <span id="prev-header-fase">${data.fase ? data.fase.toUpperCase() : ''}</span></p>
-        <p class="text-slate-600 italic text-xs mt-0.5">Bab / Topik Utama: ${data.bab ? data.bab.toUpperCase() : ''} | Alokasi Waktu: ${data.waktu}</p>
+        <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${data.mapel.toUpperCase()} | ${data.fase.toUpperCase()}</p>
+        <p class="text-slate-600 italic text-xs mt-0.5">Bab / Topik Utama: ${data.bab.toUpperCase()} | Alokasi Waktu: ${data.waktu}</p>
       </div>
       <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">1. MODUL AJAR (RPP PLUS STANDAR RESMI)</div>
       
@@ -1095,16 +1095,12 @@ function switchTabModul(tabName) {
         <div class="grid grid-cols-2 gap-2">
           <div><p><strong>Nama Penyusun:</strong> ${data.guru}</p></div>
           <div><p><strong>Satuan Pendidikan:</strong> ${data.satuan}</p></div>
-          <div><p><strong>Mata Pelajaran:</strong> <span id="prev-mapel">${data.mapel}</span></p></div>
-          <div><p><strong>Jenjang / Kelas:</strong> <span id="prev-fase">${data.fase}</span></p></div>
+          <div><p><strong>Mata Pelajaran:</strong> ${data.mapel}</p></div>
+          <div><p><strong>Jenjang / Kelas:</strong> ${data.fase}</p></div>
           <div><p><strong>Model Learning:</strong> ${data.model}</p></div>
           <div><p><strong>Alokasi Waktu:</strong> ${data.waktu}</p></div>
         </div>
       </div>
-    `;
-  }
-
-
 
       <div class="space-y-3 text-xs">
         <h4 class="font-bold text-slate-900 border-b pb-1">II. KOMPONEN INTI</h4>
@@ -1173,22 +1169,22 @@ function switchTabModul(tabName) {
         <h3 class="font-bold text-slate-900 text-sm">Ringkasan Utama: ${data.bab}</h3>
         <p class="text-slate-700 leading-relaxed">Berikut ini ringkasan bahan ajar untuk mata pelajaran <strong>${data.mapel}</strong> kelas <strong>${data.fase}</strong> dengan durasi pembelajaran <strong>${data.waktu}</strong>.</p>
       </div>`;
-  
-} else if (tabName === 'asesmen') {
+  } else if (tabName === 'asesmen') {
     previewBox.innerHTML = `
       <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
         <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">ASESMEN & RUBRIK PENILAIAN</h2>
-        <p class="font-bold text-indigo-700 uppercase mt-1">${data.mapel ? data.mapel.toUpperCase() : ''} | ${data.fase ? data.fase.toUpperCase() : ''}</p>
+        <p class="font-bold text-indigo-700 uppercase mt-1">${data.mapel.toUpperCase()} - ${data.fase.toUpperCase()}</p>
       </div>
       <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">5. ASESMEN & RUBRIK PENILAIAN</div>
-      <div class="space-y-1 text-xs">
+      <div class="space-y-3 text-xs">
         <p><strong>Mata Pelajaran:</strong> ${data.mapel}</p>
         <p><strong>Materi Evaluasi:</strong> ${data.bab}</p>
         <p><strong>Alokasi Waktu Evaluasi:</strong> ${data.waktu}</p>
-      </div>
-    `;
+      </div>`;
   }
 }
+
+
     
     // Function Form Submit
 function generateModulAjar(e) {
