@@ -711,23 +711,28 @@ function updateKelasDropdowns() {
 
     if (Array.isArray(dataKelas) && dataKelas.length > 0) {
       dataKelas.forEach(k => {
-        let nama = typeof k === 'string' ? k : (k.namaKelas || k.nama || k.kelas || k.nama_kelas || k.tingkat || '');
-        let tingkat = k.tingkat || k.tingkatKelas || nama;
+        let namaRaw = typeof k === 'string' ? k : (k.namaKelas || k.nama || k.kelas || k.nama_kelas || k.tingkat || '');
+        let tingkatRaw = k.tingkat || k.tingkatKelas || namaRaw;
         let fase = k.fase || '';
 
+        // Bersihkan teks kata "Kelas" berulang
+        let namaClean = String(namaRaw).replace(/^kelas\s+/i, '').trim();
+        let tingkatClean = String(tingkatRaw).replace(/^kelas\s+/i, '').trim();
+
+        // Penentuan Fase Presisi (Kelas 1 - 12)
         if (!fase) {
-          let t = String(tingkat || nama).toUpperCase().trim();
-          if (['I', 'II', '1', '2'].some(x => t === x || t.startsWith(x + ' '))) fase = 'Fase A';
-          else if (['III', 'IV', '3', '4'].some(x => t === x || t.startsWith(x + ' '))) fase = 'Fase B';
-          else if (['V', 'VI', '5', '6'].some(x => t === x || t.startsWith(x + ' '))) fase = 'Fase C';
-          else if (['VII', 'VIII', 'IX', '7', '8', '9'].some(x => t === x || t.startsWith(x + ' '))) fase = 'Fase D';
-          else if (['X', '10'].some(x => t === x || t.startsWith(x + ' '))) fase = 'Fase E';
-          else if (['XI', 'XII', '11', '12'].some(x => t === x || t.startsWith(x + ' '))) fase = 'Fase F';
+          let t = tingkatClean.toUpperCase();
+          if (['I', 'II', '1', '2'].includes(t)) fase = 'Fase A';
+          else if (['III', 'IV', '3', '4'].includes(t)) fase = 'Fase B';
+          else if (['V', 'VI', '5', '6'].includes(t)) fase = 'Fase C';
+          else if (['VII', 'VIII', 'IX', '7', '8', '9'].includes(t)) fase = 'Fase D';
+          else if (['X', '10'].includes(t)) fase = 'Fase E';
+          else if (['XI', 'XII', '11', '12'].includes(t)) fase = 'Fase F';
           else fase = 'Fase A-F';
         }
 
-        if (nama) {
-          let label = `Kelas ${nama} (${fase})`;
+        if (namaClean) {
+          let label = `Kelas ${namaClean} (${fase})`;
           options += `<option value="${label}">${label}</option>`;
         }
       });
@@ -759,8 +764,10 @@ function updateKelasDropdowns() {
   }
 }
 
-// Panggil otomatis saat script dimuat
-updateKelasDropdowns(); 
+// Panggil otomatis
+updateKelasDropdowns();
+
+
     
     
     function updateGuruDropdowns() {
