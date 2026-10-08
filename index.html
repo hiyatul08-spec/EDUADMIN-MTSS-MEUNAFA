@@ -1082,26 +1082,26 @@ function switchTabModul(tabName) {
   const data = updatePreviewContent();
 
   if (tabName === 'modul') {
-    previewBox.innerHTML = 
-      '<div class="text-center border-b-2 border-slate-800 pb-3 mb-4">' +
-        '<h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>' +
-        '<p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: <span id="prev-header-mapel">' + (data.mapel ? data.mapel.toUpperCase() : '') + '</span> | <span id="prev-header-fase">' + (data.fase ? data.fase.toUpperCase() : '') + '</span></p>' +
-        '<p class="text-slate-600 italic text-xs mt-0.5">Bab / Topik Utama: ' + (data.bab ? data.bab.toUpperCase() : '') + ' | Alokasi Waktu: ' + data.waktu + '</p>' +
-      '</div>' +
-      '<div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">1. MODUL AJAR (RPP PLUS STANDAR RESMI)</div>' +
-      '<div class="border rounded-lg p-3 bg-slate-50/50 space-y-2 text-xs mb-4">' +
-        '<h4 class="font-bold text-slate-900 border-b pb-1">I. INFORMASI UMUM</h4>' +
-        '<div class="grid grid-cols-2 gap-2">' +
-          '<div><p><strong>Nama Penyusun:</strong> ' + data.guru + '</p></div>' +
-          '<div><p><strong>Satuan Pendidikan:</strong> ' + data.satuan + '</p></div>' +
-          '<div><p><strong>Mata Pelajaran:</strong> <span id="prev-mapel">' + data.mapel + '</span></p></div>' +
-          '<div><p><strong>Jenjang / Kelas:</strong> <span id="prev-fase">' + data.fase + '</span></p></div>' +
-          '<div><p><strong>Model Learning:</strong> ' + data.model + '</p></div>' +
-          '<div><p><strong>Alokasi Waktu:</strong> ' + data.waktu + '</p></div>' +
-        '</div>' +
-      '</div>';
-  }
-    
+    previewBox.innerHTML = `
+      <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+        <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>
+        <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${data.mapel.toUpperCase()} | ${data.fase.toUpperCase()}</p>
+        <p class="text-slate-600 italic text-xs mt-0.5">Bab / Topik Utama: ${data.bab.toUpperCase()} | Alokasi Waktu: ${data.waktu}</p>
+      </div>
+      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">1. MODUL AJAR (RPP PLUS STANDAR RESMI)</div>
+      
+      <div class="border rounded-lg p-3 bg-slate-50/50 space-y-2 text-xs mb-4">
+        <h4 class="font-bold text-slate-900 border-b pb-1">I. INFORMASI UMUM</h4>
+        <div class="grid grid-cols-2 gap-2">
+          <div><p><strong>Nama Penyusun:</strong> ${data.guru}</p></div>
+          <div><p><strong>Satuan Pendidikan:</strong> ${data.satuan}</p></div>
+          <div><p><strong>Mata Pelajaran:</strong> ${data.mapel}</p></div>
+          <div><p><strong>Jenjang / Kelas:</strong> ${data.fase}</p></div>
+          <div><p><strong>Model Learning:</strong> ${data.model}</p></div>
+          <div><p><strong>Alokasi Waktu:</strong> ${data.waktu}</p></div>
+        </div>
+      </div>
+
       <div class="space-y-3 text-xs">
         <h4 class="font-bold text-slate-900 border-b pb-1">II. KOMPONEN INTI</h4>
         <div>
@@ -1247,14 +1247,12 @@ function updatePreviewLive() {
   const selectKelas = document.getElementById('modul-jenjang');
   const selectMapel = document.getElementById('modul-mapel');
   
-  if (!selectKelas) return;
-
-  const rawKelas = selectKelas.value || selectKelas.options[selectKelas.selectedIndex]?.text || '';
+  const rawKelas = selectKelas ? (selectKelas.options[selectKelas.selectedIndex]?.text || selectKelas.value) : '';
   const rawMapel = selectMapel ? (selectMapel.options[selectMapel.selectedIndex]?.text || selectMapel.value) : '';
 
-  if (!rawKelas) return;
+  if (!rawKelas && !rawMapel) return;
 
-  // 1. Logika Jenjang & Fase
+  // 1. Tentukan Jenjang & Fase Otomatis
   let jenjangPrefix = 'SMP / MTs';
   let faseText = 'Fase D';
 
@@ -1269,49 +1267,36 @@ function updatePreviewLive() {
     else faseText = 'Fase F';
   }
 
-  const cleanKelas = rawKelas.replace(/Kelas\s*/i, '').trim();
-  const labelKelasLengkap = `${jenjangPrefix} - Kelas ${cleanKelas} (${faseText})`;
-  const labelHeaderKelas = `${jenjangPrefix} - KELAS ${cleanKelas} (${faseText.toUpperCase()})`;
+  const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - Kelas ${rawKelas.replace(/Kelas\s*/i, '')} (${faseText})` : 'SMP / MTs - Kelas 7 (Fase D)';
+  const labelHeaderKelas = rawKelas ? `${jenjangPrefix} - KELAS ${rawKelas.replace(/Kelas\s*/i, '')} (${faseText.toUpperCase()})` : 'SMP / MTS - KELAS 7 (FASE D)';
   const labelMapel = rawMapel || 'AL-QUR\'AN HADIS';
 
-  // 2. Jika elemen id="prev-fase" masih ada (Sebelum Generate)
-  const elFase = document.getElementById('prev-fase');
-  const elMapel = document.getElementById('prev-mapel');
-  if (elFase) elFase.innerText = labelKelasLengkap;
+  // 2. Cari area preview dokumen di sebelah kanan
+  const previewArea = document.querySelector('.lg\\:col-span-8') || document.body;
+
+  // 3. Update ID spesifik jika ada
+  const elHeader = document.getElementById('preview-header-kelas');
+  const elJenjang = document.getElementById('preview-jenjang-kelas');
+  const elMapel = document.getElementById('preview-mapel-nama');
+
+  if (elHeader) elHeader.innerText = labelHeaderKelas;
+  if (elJenjang) elJenjang.innerText = labelKelasLengkap;
   if (elMapel) elMapel.innerText = labelMapel;
 
-  // 3. Jika elemen ID sudah hilang diganti HTML baru (Setelah Generate)
-  document.querySelectorAll('div, p, span, td').forEach(el => {
-    // Cari elemen yang berisi teks 'Jenjang / Kelas:'
-    if (el.children.length <= 1 && el.innerText && el.innerText.includes('Jenjang / Kelas:')) {
-      el.innerHTML = `<strong>Jenjang / Kelas:</strong> ${labelKelasLengkap}`;
-    }
-    // Cari elemen yang berisi teks 'Mata Pelajaran:' di area Informasi Umum
-    if (el.children.length <= 1 && el.innerText && el.innerText.includes('Mata Pelajaran:') && !el.innerText.includes('MATA PELAJARAN:')) {
-      el.innerHTML = `<strong>Mata Pelajaran:</strong> ${labelMapel}`;
-    }
-    // Update Header Biru Atas
-    if (el.children.length === 0 && el.innerText && (el.innerText.includes('MATA PELAJARAN:') || el.innerText.includes('FASE'))) {
-      el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
+  // 4. Fallback: Ubah langsung teks di dalam elemen-elemen kecil area preview
+  previewArea.querySelectorAll('p, div, span, h2, h3, td').forEach(el => {
+    if (el.children.length === 0 && el.innerText) {
+      if (el.innerText.includes('MATA PELAJARAN:') || el.innerText.includes('SMP / MTS - KELAS 7')) {
+        el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
+      } else if (el.innerText.includes('Jenjang / Kelas:')) {
+        el.innerHTML = `<strong>Jenjang / Kelas:</strong> ${labelKelasLengkap}`;
+      } else if (el.innerText.includes('Mata Pelajaran:') && !el.innerText.includes('MATA PELAJARAN:')) {
+        el.innerHTML = `<strong>Mata Pelajaran:</strong> ${labelMapel}`;
+      }
     }
   });
 }
 
-// 4. Jalankan Otomatis saat Ada Perubahan DOM / Tab Switch
-const observer = new MutationObserver(() => {
-  updatePreviewLive();
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-  const selectKelas = document.getElementById('modul-jenjang');
-  const selectMapel = document.getElementById('modul-mapel');
-
-  if (selectKelas) selectKelas.addEventListener('change', updatePreviewLive);
-  if (selectMapel) selectMapel.addEventListener('change', updatePreviewLive);
-
-  observer.observe(document.body, { childList: true, subtree: true });
-  setTimeout(updatePreviewLive, 300);
-});
 function generateModulAjar(e) {
   if (e) e.preventDefault();
   if (typeof switchTabModul === 'function') switchTabModul('modul');
