@@ -699,58 +699,77 @@ function updateKelasDropdowns() {
   const selectJenjang = document.getElementById('modul-jenjang');
   if (!selectJenjang) return;
 
-  let combinedRaw = [];
+  let listKelasMurni = [];
 
-  // 1. Gabungkan data dari window.appData.kelas dan localStorage agar tidak ada yang terlewat
+  // 1. Ambil data dari window.appData.kelas
   if (window.appData && Array.isArray(window.appData.kelas)) {
-    combinedRaw = combinedRaw.concat(window.appData.kelas);
+    window.appData.kelas.forEach(item => {
+      if (typeof item === 'object' && item !== null) {
+        if (item.namaKelas) listKelasMurni.push(item.namaKelas);
+        if (item.tingkat) listKelasMurni.push(item.tingkat);
+      } else if (typeof item === 'string') {
+        listKelasMurni.push(item);
+      }
+    });
   }
+
+  // 2. Ambil data dari localStorage 'app_kelas'
   try {
     const saved = localStorage.getItem('app_kelas');
     if (saved) {
       const parsed = JSON.parse(saved);
       if (Array.isArray(parsed)) {
-        combinedRaw = combinedRaw.concat(parsed);
+        parsed.forEach(item => {
+          if (typeof item === 'object' && item !== null) {
+            if (item.namaKelas) listKelasMurni.push(item.namaKelas);
+            if (item.tingkat) listKelasMurni.push(item.tingkat);
+          } else if (typeof item === 'string') {
+            listKelasMurni.push(item);
+          }
+        });
       }
     }
   } catch (e) {}
 
-  // 2. Ambil KEDUA nilai (tingkat & namaKelas) lalu saring
-  let listKelasMurni = [];
-  combinedRaw.forEach(item => {
-    let nilaiDiambil = [];
-    
-    if (typeof item === 'object' && item !== null) {
-      // Ambil tingkat (seperti VIII, IX) DAN namaKelas (seperti VIII A, IX A)
-      if (item.tingkat) nilaiDiambil.push(item.tingkat);
-      if (item.namaKelas) nilaiDiambil.push(item.namaKelas);
-      if (item.nama) nilaiDiambil.push(item.nama);
-    } else if (typeof item === 'string') {
-      nilaiDiambil.push(item);
+  // 3. Jaring Pengaman Tambahan: Jika memori/storage kosong, ambil langsung dari teks tabel Data Kelas di DOM
+  const rowsKelas = document.querySelectorAll('#table-kelas tbody tr, .table-kelas tbody tr');
+  rowsKelas.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    if (tds.length >= 1) {
+      const namaKls = tds[0].textContent.trim();
+      if (namaKls) listKelasMurni.push(namaKls);
     }
-
-    nilaiDiambil.forEach(str => {
-      const nama = str.toString().trim();
-      const isPureNumber = /^\d+$/.test(nama);
-
-      // Hanya masukkan jika bukan angka acak, tidak ada tanda hubung, dan belum ada di daftar
-      if (nama && !isPureNumber && !nama.includes('-') && !listKelasMurni.includes(nama)) {
-        listKelasMurni.push(nama);
-      }
-    });
   });
 
-  // Jika data kosong, beri fallback standar
-  if (listKelasMurni.length === 0) return;
+  // 4. Saring data (buang duplikat, NIP, angka acak murni, kode)
+  let cleanedList = [];
+  listKelasMurni.forEach(str => {
+    const nama = str.toString().trim();
+    const isPureNumber = /^\d+$/.test(nama);
 
-  // Cek jika tidak ada perubahan data agar tidak merestart dropdown
-  const currentKey = JSON.stringify(listKelasMurni);
+    if (nama && !isPureNumber && !nama.includes('-') && !cleanedList.includes(nama)) {
+      cleanedList.push(nama);
+    }
+  });
+
+  // Jika tetap kosong, kembalikan ke default standar
+  if (cleanedList.length === 0) {
+    cleanedList = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+  }
+
+  // Simpan hasil murni
+  try {
+    localStorage.setItem('app_kelas', JSON.stringify(cleanedList));
+  } catch (e) {}
+
+  // Hindari re-render berulang
+  const currentKey = JSON.stringify(cleanedList);
   if (selectJenjang.dataset.lastKey === currentKey) return;
   selectJenjang.dataset.lastKey = currentKey;
 
-  // 3. Render ulang opsi dropdown secara bersih
+  // 5. Render dropdown
   selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
-  listKelasMurni.forEach(kelas => {
+  cleanedList.forEach(kelas => {
     const option = document.createElement('option');
     option.value = kelas;
     option.textContent = kelas;
@@ -758,12 +777,12 @@ function updateKelasDropdowns() {
   });
 }
 
-// Eksekusi otomatis
+// Jalankan otomatis
 document.addEventListener('DOMContentLoaded', updateKelasDropdowns);
 document.addEventListener('click', function() {
-  setTimeout(updateKelasDropdowns, 150);
+  setTimeout(updateKelasDropdowns, 200);
 });
-setInterval(updateKelasDropdowns, 800);    
+setInterval(updateKelasDropdowns, 1000);    
     
 
 
