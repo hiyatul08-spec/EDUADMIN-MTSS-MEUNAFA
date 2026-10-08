@@ -699,39 +699,76 @@ function updateKelasDropdowns() {
   const modulKelas = document.getElementById('modul-jenjang');
   const modulMapel = document.getElementById('modul-mapel');
 
-  // 1. SINKRONISASI DROPDOWN KELAS (Murni membaca localStorage)
+  // 1. SINKRONISASI DROPDOWN KELAS
   if (modulKelas) {
-    const dataKelas = JSON.parse(localStorage.getItem('dataKelas')) || [];
+    let dataKelas = [];
+    try {
+      dataKelas = JSON.parse(localStorage.getItem('dataKelas')) || [];
+    } catch(e) { console.error(e); }
+
     let options = '<option value="">-- Pilih Jenjang / Kelas --</option>';
 
-    dataKelas.forEach(k => {
-      let nama = k.namaKelas || k.nama || k.kelas || '';
-      let fase = k.fase || '';
-      
-      if (!fase) {
-        let t = String(k.tingkat || nama).toUpperCase();
-        if (['VII', 'VIII', 'IX'].some(x => t.includes(x))) fase = 'Fase D';
-        else if (['X', 'XI', 'XII'].some(x => t.includes(x))) fase = 'Fase E/F';
-        else fase = 'Fase A/B/C';
-      }
+    if (dataKelas.length > 0) {
+      dataKelas.forEach(k => {
+        let nama = k.namaKelas || k.nama || k.kelas || k.nama_kelas || '';
+        let tingkat = k.tingkat || k.tingkatKelas || nama;
+        let fase = k.fase || '';
 
-      let label = `SMP / MTs - Kelas ${nama} (${fase})`;
-      options += `<option value="${label}">${label}</option>`;
-    });
+        // Deteksi Fase otomatis jika tidak ada di objek
+        if (!fase) {
+          let t = String(tingkat).toUpperCase();
+          if (['I', 'II', '1', '2'].includes(t)) fase = 'Fase A';
+          else if (['III', 'IV', '3', '4'].includes(t)) fase = 'Fase B';
+          else if (['V', 'VI', '5', '6'].includes(t)) fase = 'Fase C';
+          else if (['VII', 'VIII', 'IX', '7', '8', '9'].includes(t)) fase = 'Fase D';
+          else if (['X', '10'].includes(t)) fase = 'Fase E';
+          else if (['XI', 'XII', '11', '12'].includes(t)) fase = 'Fase F';
+          else fase = 'Fase A-F';
+        }
+
+        if (nama) {
+          let label = `Kelas ${nama} (${fase})`;
+          options += `<option value="${label}">${label}</option>`;
+        }
+      });
+    }
 
     modulKelas.innerHTML = options;
   }
 
-  // 2. SINKRONISASI DROPDOWN MATA PELAJARAN
+  // 2. SINKRONISASI DROPDOWN MATA PELAJARAN (Dengan Fallback Default)
   if (modulMapel) {
-    const dataMapel = JSON.parse(localStorage.getItem('dataMapel')) || [];
+    let dataMapel = [];
+    try {
+      dataMapel = JSON.parse(localStorage.getItem('dataMapel')) || [];
+    } catch(e) { console.error(e); }
+
+    // Jika localStorage kosong, pakai daftar mapel default ini
+    let daftarMapel = [];
+    if (dataMapel.length > 0) {
+      dataMapel.forEach(m => {
+        let namaMapel = typeof m === 'string' ? m : (m.namaMapel || m.nama || m.mapel || m.mataPelajaran || m.nama_mapel || '');
+        if (namaMapel) daftarMapel.push(namaMapel);
+      });
+    } else {
+      daftarMapel = [
+        'Pendidikan Pancasila',
+        'Bahasa Indonesia',
+        'Matematika',
+        'IPAS',
+        'IPA',
+        'IPS',
+        'Bahasa Inggris',
+        'PJOK',
+        'Seni Budaya',
+        'Pendidikan Agama Islam',
+        'Informatika'
+      ];
+    }
+
     let optionsMapel = '<option value="">-- Pilih Mata Pelajaran --</option>';
-    
-    dataMapel.forEach(m => {
-      let namaMapel = m.namaMapel || m.nama || m.mapel || m.mataPelajaran || '';
-      if (namaMapel) {
-        optionsMapel += `<option value="${namaMapel}">${namaMapel}</option>`;
-      }
+    daftarMapel.forEach(mapel => {
+      optionsMapel += `<option value="${mapel}">${mapel}</option>`;
     });
 
     modulMapel.innerHTML = optionsMapel;
