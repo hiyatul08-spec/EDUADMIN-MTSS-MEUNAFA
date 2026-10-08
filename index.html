@@ -699,31 +699,33 @@ function updateKelasDropdowns() {
   const modulKelas = document.getElementById('modul-jenjang');
   const modulMapel = document.getElementById('modul-mapel');
 
-  // 1. DROPDOWN KELAS (Membaca dataKelas dari localStorage)
+  // 1. DROPDOWN KELAS
   if (modulKelas) {
     let dataKelas = [];
     try {
-      dataKelas = JSON.parse(localStorage.getItem('dataKelas')) || [];
-    } catch(e) { console.error(e); }
+      const raw = localStorage.getItem('dataKelas');
+      dataKelas = raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      console.error(e);
+    }
 
     let options = '<option value="">-- Pilih Jenjang / Kelas --</option>';
 
     if (Array.isArray(dataKelas) && dataKelas.length > 0) {
       dataKelas.forEach(k => {
-        // Mengambil nama kelas & tingkat dari berbagai kemungkinan properti
-        let nama = k.namaKelas || k.nama || k.kelas || k.nama_kelas || '';
+        // Ambil nama kelas dari string langsung atau nilai properti object
+        let nama = typeof k === 'string' ? k : (k.namaKelas || k.nama || k.kelas || k.nama_kelas || k.tingkat || '');
         let tingkat = k.tingkat || k.tingkatKelas || nama;
         let fase = k.fase || '';
 
-        // Penentuan Fase Otomatis
         if (!fase) {
           let t = String(tingkat || nama).toUpperCase().trim();
-          if (['I', 'II', '1', '2'].includes(t)) fase = 'Fase A';
-          else if (['III', 'IV', '3', '4'].includes(t)) fase = 'Fase B';
-          else if (['V', 'VI', '5', '6'].includes(t)) fase = 'Fase C';
-          else if (['VII', 'VIII', 'IX', '7', '8', '9'].includes(t)) fase = 'Fase D';
-          else if (['X', '10'].includes(t)) fase = 'Fase E';
-          else if (['XI', 'XII', '11', '12'].includes(t)) fase = 'Fase F';
+          if (['I', 'II', '1', '2'].some(x => t === x || t.startsWith(x + ' '))) fase = 'Fase A';
+          else if (['III', 'IV', '3', '4'].some(x => t === x || t.startsWith(x + ' '))) fase = 'Fase B';
+          else if (['V', 'VI', '5', '6'].some(x => t === x || t.startsWith(x + ' '))) fase = 'Fase C';
+          else if (['VII', 'VIII', 'IX', '7', '8', '9'].some(x => t === x || t.startsWith(x + ' '))) fase = 'Fase D';
+          else if (['X', '10'].some(x => t === x || t.startsWith(x + ' '))) fase = 'Fase E';
+          else if (['XI', 'XII', '11', '12'].some(x => t === x || t.startsWith(x + ' '))) fase = 'Fase F';
           else fase = 'Fase A-F';
         }
 
@@ -737,12 +739,15 @@ function updateKelasDropdowns() {
     modulKelas.innerHTML = options;
   }
 
-  // 2. DROPDOWN MATA PELAJARAN (Membaca dataMapel dari localStorage)
+  // 2. DROPDOWN MATA PELAJARAN
   if (modulMapel) {
     let dataMapel = [];
     try {
-      dataMapel = JSON.parse(localStorage.getItem('dataMapel')) || [];
-    } catch(e) { console.error(e); }
+      const rawMapel = localStorage.getItem('dataMapel');
+      dataMapel = rawMapel ? JSON.parse(rawMapel) : [];
+    } catch (e) {
+      console.error(e);
+    }
 
     let optionsMapel = '<option value="">-- Pilih Mata Pelajaran --</option>';
 
@@ -754,7 +759,6 @@ function updateKelasDropdowns() {
         }
       });
     } else {
-      // Fallback jika localStorage kosong
       const defaultMapel = ['Al-Qur\'an Hadis', 'Akidah Akhlak', 'Fikih', 'Sejarah Kebudayaan Islam (SKI)', 'Bahasa Arab', 'Pendidikan Pancasila', 'Bahasa Indonesia', 'Matematika', 'IPA', 'IPS', 'Bahasa Inggris', 'PJOK', 'Informatika', 'Seni Budaya'];
       defaultMapel.forEach(mapel => {
         optionsMapel += `<option value="${mapel}">${mapel}</option>`;
@@ -763,7 +767,11 @@ function updateKelasDropdowns() {
 
     modulMapel.innerHTML = optionsMapel;
   }
-}  
+}
+
+// Panggil otomatis saat script dimuat dan saat halaman selesai load
+updateKelasDropdowns();
+document.addEventListener('DOMContentLoaded', updateKelasDropdowns);  
     
     
     function updateGuruDropdowns() {
