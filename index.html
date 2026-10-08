@@ -696,13 +696,15 @@ function toggleModal(modalId, show) {
 
 // Dynamic Dropdown Helpers
 function updateKelasDropdowns() {
-  // Ambil elemen dropdown di Modul Ajar dan di Modal Tambah Siswa
+  // 1. Target spesifik dropdown Jenjang di Modul Ajar dan dropdown Kelas di Modal Siswa
   const selectJenjang = document.getElementById('modul-jenjang');
-  const selectSiswaKelas = document.querySelector('#modal-siswa select[name="kelas"], #modal-siswa select, #siswa-kelas');
+  const selectSiswaKelas = document.getElementById('siswa-kelas') || 
+                           document.querySelector('#modal-siswa select[name="kelas"]') || 
+                           document.querySelectorAll('#modal-siswa select')[1]; // Khusus pilih select KEDUA (Kelas)
 
   let rawList = [];
 
-  // 1. Ambil data kelas langsung dari tabel DOM (#table-kelas)
+  // 2. Ambil data kelas langsung dari tabel DOM (#table-kelas)
   const rowsKelas = document.querySelectorAll('#table-kelas tr');
   rowsKelas.forEach(tr => {
     const tds = tr.querySelectorAll('td');
@@ -717,7 +719,7 @@ function updateKelasDropdowns() {
     }
   });
 
-  // 2. Cadangan jika tabel DOM belum ter-render
+  // 3. Cadangan dari appData jika tabel belum ter-render
   if (rawList.length === 0) {
     try {
       if (typeof appData !== 'undefined' && appData && Array.isArray(appData.kelas)) {
@@ -729,7 +731,7 @@ function updateKelasDropdowns() {
     } catch (e) {}
   }
 
-  // 3. Ambil data MURNI & Unik
+  // 4. Bersihkan data ganda
   let cleanedList = [];
   rawList.forEach(text => {
     if (text && !cleanedList.includes(text)) {
@@ -737,10 +739,10 @@ function updateKelasDropdowns() {
     }
   });
 
-  // Urutkan secara alami
+  // Urutkan kelas
   cleanedList.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
 
-  // Helper function untuk memasukkan opsi ke dropdown
+  // Helper untuk render ke dropdown kelas
   const fillSelect = (selectElem) => {
     if (!selectElem) return;
     const currentVal = selectElem.value;
@@ -754,7 +756,7 @@ function updateKelasDropdowns() {
     });
   };
 
-  // 4. Render ke dropdown Modul Ajar dan modal Tambah Siswa
+  // Render HANYA ke dropdown kelas yang tepat
   fillSelect(selectJenjang);
   fillSelect(selectSiswaKelas);
 }
