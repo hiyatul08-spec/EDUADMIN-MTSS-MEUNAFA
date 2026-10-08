@@ -699,21 +699,18 @@ function updateKelasDropdowns() {
   const modulKelas = document.getElementById('modul-jenjang');
   const modulMapel = document.getElementById('modul-mapel');
 
-  // 1. DROPDOWN KELAS
+  // 1. DROPDOWN KELAS (Membaca dari app_kelas)
   if (modulKelas) {
     let dataKelas = [];
     try {
-      const raw = localStorage.getItem('dataKelas');
+      const raw = localStorage.getItem('app_kelas') || localStorage.getItem('dataKelas');
       dataKelas = raw ? JSON.parse(raw) : [];
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) { console.error(e); }
 
     let options = '<option value="">-- Pilih Jenjang / Kelas --</option>';
 
     if (Array.isArray(dataKelas) && dataKelas.length > 0) {
       dataKelas.forEach(k => {
-        // Ambil nama kelas dari string langsung atau nilai properti object
         let nama = typeof k === 'string' ? k : (k.namaKelas || k.nama || k.kelas || k.nama_kelas || k.tingkat || '');
         let tingkat = k.tingkat || k.tingkatKelas || nama;
         let fase = k.fase || '';
@@ -739,15 +736,13 @@ function updateKelasDropdowns() {
     modulKelas.innerHTML = options;
   }
 
-  // 2. DROPDOWN MATA PELAJARAN
+  // 2. DROPDOWN MATA PELAJARAN (Membaca dari app_mapel)
   if (modulMapel) {
     let dataMapel = [];
     try {
-      const rawMapel = localStorage.getItem('dataMapel');
+      const rawMapel = localStorage.getItem('app_mapel') || localStorage.getItem('dataMapel');
       dataMapel = rawMapel ? JSON.parse(rawMapel) : [];
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) { console.error(e); }
 
     let optionsMapel = '<option value="">-- Pilih Mata Pelajaran --</option>';
 
@@ -758,20 +753,14 @@ function updateKelasDropdowns() {
           optionsMapel += `<option value="${namaMapel}">${namaMapel}</option>`;
         }
       });
-    } else {
-      const defaultMapel = ['Al-Qur\'an Hadis', 'Akidah Akhlak', 'Fikih', 'Sejarah Kebudayaan Islam (SKI)', 'Bahasa Arab', 'Pendidikan Pancasila', 'Bahasa Indonesia', 'Matematika', 'IPA', 'IPS', 'Bahasa Inggris', 'PJOK', 'Informatika', 'Seni Budaya'];
-      defaultMapel.forEach(mapel => {
-        optionsMapel += `<option value="${mapel}">${mapel}</option>`;
-      });
     }
 
     modulMapel.innerHTML = optionsMapel;
   }
 }
 
-// Panggil otomatis saat script dimuat dan saat halaman selesai load
-updateKelasDropdowns();
-document.addEventListener('DOMContentLoaded', updateKelasDropdowns);  
+// Panggil otomatis saat script dimuat
+updateKelasDropdowns(); 
     
     
     function updateGuruDropdowns() {
