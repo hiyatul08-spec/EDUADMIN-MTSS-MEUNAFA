@@ -772,23 +772,70 @@ document.addEventListener('click', function() {
 
     
     function updateGuruDropdowns() {
-  const dropdowns = document.querySelectorAll('.select-guru-dropdown');
-  dropdowns.forEach(select => {
-    const currentValue = select.value;
-    const defaultText = select.id === 'kelas-f2' ? '-- Pilih Wali Kelas --' : '-- Pilih Guru Pengajar --';
-    select.innerHTML = `<option value="">${defaultText}</option>`;
-    if (appData.guru && appData.guru.length > 0) {
-      appData.guru.forEach(g => {
-        const opt = document.createElement('option');
-        opt.value = g.f2;
-        opt.textContent = `${g.f2} (${g.f3})`;
-        select.appendChild(opt);
-      });
+  const selectModulGuru = document.getElementById('modul-guru') || document.querySelector('select[name="guru"]');
+  let rawList = [];
+
+  // 1. Ambil HANYA kolom Nama Guru (index ke-1) dari tabel DOM (#table-guru)
+  const rowsGuru = document.querySelectorAll('#table-guru tr');
+  rowsGuru.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    if (tds.length >= 2) {
+      // Ambil teks dari kolom Nama Guru saja
+      let namaGuru = tds[1] ? tds[1].textContent.trim() : '';
+      
+      // Bersihkan jika ada sisa tanda kurung atau teks bawaan
+      if (namaGuru.includes('(')) {
+        namaGuru = namaGuru.split('(')[0].trim();
+      }
+
+      if (namaGuru && !namaGuru.includes('Tidak ada') && !namaGuru.includes('Belum ada')) {
+        rawList.push(namaGuru);
+      }
     }
-    if (currentValue) select.value = currentValue;
   });
+
+  // 2. Cadangan dari appData jika tabel DOM belum ter-render
+  if (rawList.length === 0) {
+    try {
+      if (typeof appData !== 'undefined' && appData && Array.isArray(appData.guru)) {
+        appData.guru.forEach(item => {
+          let val = (typeof item === 'object' && item !== null) ? (item.namaGuru || item.nama || '') : item;
+          if (val) {
+            let cleanVal = val.toString().trim();
+            if (cleanVal.includes('(')) cleanVal = cleanVal.split('(')[0].trim();
+            rawList.push(cleanVal);
+          }
+        });
+      }
+    } catch (e) {}
+  }
+
+  // 3. Filter data murni & unik
+  let cleanedList = [];
+  rawList.forEach(text => {
+    if (text && !cleanedList.includes(text)) {
+      cleanedList.push(text);
+    }
+  });
+
+  // 4. Render ke dropdown Nama Guru
+  if (selectModulGuru) {
+    const currentValue = selectModulGuru.value;
+    selectModulGuru.innerHTML = '<option value="">-- Pilih Guru Pengajar --</option>';
+    cleanedList.forEach(guru => {
+      const opt = document.createElement('option');
+      opt.value = guru;
+      opt.textContent = guru; // Tampilan murni nama saja
+      if (guru === currentValue) opt.selected = true;
+      selectModulGuru.appendChild(opt);
+    });
+  }
 }
 
+// PEMICU SINKRONISASI REAL-TIME
+document.addEventListener('click', function() {
+  setTimeout(updateGuruDropdowns, 150);
+});
 
     
     
