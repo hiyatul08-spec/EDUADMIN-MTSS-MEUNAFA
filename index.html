@@ -696,40 +696,40 @@ function toggleModal(modalId, show) {
 
 // Dynamic Dropdown Helpers
 function updateKelasDropdowns() {
+  // Ambil elemen dropdown di Modul Ajar dan di Modal Tambah Siswa
   const selectJenjang = document.getElementById('modul-jenjang');
-  if (!selectJenjang) return;
+  const selectSiswaKelas = document.querySelector('#modal-siswa select[name="kelas"], #modal-siswa select, #siswa-kelas');
 
   let rawList = [];
 
-  // 1. UTAMA: Ambil data kelas langsung dari baris tabel #table-kelas di DOM
+  // 1. Ambil data kelas langsung dari tabel DOM (#table-kelas)
   const rowsKelas = document.querySelectorAll('#table-kelas tr');
   rowsKelas.forEach(tr => {
     const tds = tr.querySelectorAll('td');
     if (tds.length >= 1) {
-      // Ambil kolom nama kelas/tingkat (biasanya kolom ke-1 atau ke-3)
       let namaKls = tds[0] ? tds[0].textContent.trim() : '';
       let tingkatKls = tds[2] ? tds[2].textContent.trim() : '';
       
       let val = tingkatKls || namaKls;
-      if (val && val !== 'Tidak ada data' && val !== 'Belum ada data') {
+      if (val && !val.includes('Tidak ada') && !val.includes('Belum ada')) {
         rawList.push(val);
       }
     }
   });
 
-  // 2. CADANGAN: Ambil dari appData/localStorage jika tabel DOM belum sempat ter-render
+  // 2. Cadangan jika tabel DOM belum ter-render
   if (rawList.length === 0) {
     try {
       if (typeof appData !== 'undefined' && appData && Array.isArray(appData.kelas)) {
         appData.kelas.forEach(item => {
-          let val = (typeof item === 'object' && item !== null) ? (item.tingkat || item.namaKelas || '') : item;
+          let val = (typeof item === 'object' && item !== null) ? (item.tingkat || item.namaKelas || item.nama || '') : item;
           if (val) rawList.push(val.toString().trim());
         });
       }
     } catch (e) {}
   }
 
-  // 3. Ambil nilai MURNI & Unik (apa adanya tanpa filter ketat)
+  // 3. Ambil data MURNI & Unik
   let cleanedList = [];
   rawList.forEach(text => {
     if (text && !cleanedList.includes(text)) {
@@ -737,25 +737,29 @@ function updateKelasDropdowns() {
     }
   });
 
-  // Urutkan secara alami (misal: 1, 2, 3 atau I, II, III)
+  // Urutkan secara alami
   cleanedList.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
 
-  // Simpan nilai pilihan user agar tidak ter-reset
-  const currentValue = selectJenjang.value;
+  // Helper function untuk memasukkan opsi ke dropdown
+  const fillSelect = (selectElem) => {
+    if (!selectElem) return;
+    const currentVal = selectElem.value;
+    selectElem.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+    cleanedList.forEach(kelas => {
+      const opt = document.createElement('option');
+      opt.value = kelas;
+      opt.textContent = kelas;
+      if (kelas === currentVal) opt.selected = true;
+      selectElem.appendChild(opt);
+    });
+  };
 
-  // 4. Render ke Dropdown Modul Ajar
-  selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
-  cleanedList.forEach(kelas => {
-    const opt = document.createElement('option');
-    opt.value = kelas;
-    opt.textContent = kelas;
-    if (kelas === currentValue) opt.selected = true;
-    selectJenjang.appendChild(opt);
-  });
+  // 4. Render ke dropdown Modul Ajar dan modal Tambah Siswa
+  fillSelect(selectJenjang);
+  fillSelect(selectSiswaKelas);
 }
 
-// PEMICU SINKRONISASI REAL-TIME:
-// Kapan pun ada interaksi klik (tambah/hapus/pindah menu), dropdown otomatis ter-update
+// PEMICU SINKRONISASI REAL-TIME
 document.addEventListener('click', function() {
   setTimeout(updateKelasDropdowns, 150);
 });
