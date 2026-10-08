@@ -699,71 +699,68 @@ function updateKelasDropdowns() {
   const selectJenjang = document.getElementById('modul-jenjang');
   if (!selectJenjang) return;
 
-  let rawData = [];
+  let rawKelas = [];
 
-  // 1. Ambil data utama dari window.appData.kelas
+  // 1. Ambil data kelas langsung dari window.appData.kelas
   if (window.appData && Array.isArray(window.appData.kelas) && window.appData.kelas.length > 0) {
-    rawData = window.appData.kelas;
+    rawKelas = window.appData.kelas;
   } else {
-    // 2. Ambil dari localStorage jika appData belum siap
+    // 2. Jika appData belum siap, ambil dari localStorage 'app_kelas'
     try {
       const saved = localStorage.getItem('app_kelas');
-      if (saved) rawData = JSON.parse(saved);
+      if (saved) rawKelas = JSON.parse(saved);
     } catch (e) {}
   }
 
-  // Extract nama kelas murni & buang duplikat/NIP/angka acak
-  let listKelas = [];
-  if (Array.isArray(rawData)) {
-    rawData.forEach(item => {
+  // Filter ketat: HANYA ambil properti 'namaKelas' / 'tingkat' murni
+  let listKelasMurni = [];
+  if (Array.isArray(rawKelas)) {
+    rawKelas.forEach(item => {
       let nama = '';
       if (typeof item === 'object' && item !== null) {
-        nama = item.namaKelas || item.tingkat || item.nama || '';
+        // Ambil khusus namaKelas atau tingkat, abaikan field lain seperti NIP/kode
+        nama = item.namaKelas || item.tingkat || '';
       } else if (typeof item === 'string') {
-        nama = item;
+        // Cek jika string murni bukan NIP (panjang NIP biasanya > 10 atau ada tanda hubung kode)
+        if (!item.includes('-') && item.length < 10) {
+          nama = item;
+        }
       }
-      
+
       nama = nama.toString().trim();
-      
-      // Validasi: pastikan bukan angka NIP panjang / kode acak
-      if (nama && nama.length <= 15 && !listKelas.includes(nama)) {
-        listKelas.push(nama);
+
+      // Filter: Hanya terima nama kelas yang valid (misal: I, II, VII, VII A, dsb.)
+      if (nama && !listKelasMurni.includes(nama) && !/^\d{8,}/.test(nama)) {
+        listKelasMurni.push(nama);
       }
     });
   }
 
-  // Jika dapat data valid, sinkronkan ke localStorage
-  if (listKelas.length > 0) {
+  // Jika daftar kelas murni ditemukan, timpa localStorage yang kotor tadi
+  if (listKelasMurni.length > 0) {
     try {
-      localStorage.setItem('app_kelas', JSON.stringify(rawData));
+      localStorage.setItem('app_kelas', JSON.stringify(listKelasMurni));
     } catch (e) {}
   }
 
-  // Hindari re-render jika data tidak berubah
-  const currentKey = JSON.stringify(listKelas);
-  if (selectJenjang.dataset.lastKey === currentKey) return;
-  selectJenjang.dataset.lastKey = currentKey;
-
-  // Render dropdown secara bersih
+  // Render ulang isi dropdown secara bersih
   selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
-  listKelas.forEach(kelas => {
-    const option = document.createElement('option');
-    option.value = kelas;
-    option.textContent = kelas;
-    selectJenjang.appendChild(option);
-  });
+  
+  if (listKelasMurni.length > 0) {
+    listKelasMurni.forEach(kelas => {
+      const option = document.createElement('option');
+      option.value = kelas;
+      option.textContent = kelas;
+      selectJenjang.appendChild(option);
+    });
+  }
 }
 
-// Pantau setiap ada interaksi klik/submit di aplikasi
-document.addEventListener('click', function() {
-  setTimeout(updateKelasDropdowns, 300);
-});
-document.addEventListener('submit', function() {
-  setTimeout(updateKelasDropdowns, 300);
-});
-
-// Jalankan saat load & pantau tiap detik
+// Jalankan saat halaman dibuka & setiap ada interaksi klik/pindah menu
 document.addEventListener('DOMContentLoaded', updateKelasDropdowns);
+document.addEventListener('click', function() {
+  setTimeout(updateKelasDropdowns, 200);
+});
 setInterval(updateKelasDropdowns, 1000);    
     
 
