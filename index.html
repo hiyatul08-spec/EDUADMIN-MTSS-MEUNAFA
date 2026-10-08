@@ -1244,12 +1244,15 @@ function generateModulAjar(e) {
     
 // Function untuk sync live preview
 function updatePreviewLive() {
-  const rawKelas = document.getElementById('modul-jenjang')?.value || '';
-  const rawMapel = document.getElementById('modul-mapel')?.value || '';
+  const selectKelas = document.getElementById('modul-jenjang');
+  const selectMapel = document.getElementById('modul-mapel');
+  
+  const rawKelas = selectKelas ? (selectKelas.options[selectKelas.selectedIndex]?.text || selectKelas.value) : '';
+  const rawMapel = selectMapel ? (selectMapel.options[selectMapel.selectedIndex]?.text || selectMapel.value) : '';
 
   if (!rawKelas && !rawMapel) return;
 
-  // 1. Tentukan Jenjang Sekolah & Fase secara akurat
+  // 1. Tentukan Jenjang & Fase Otomatis
   let jenjangPrefix = 'SMP / MTs';
   let faseText = 'Fase D';
 
@@ -1260,37 +1263,47 @@ function updatePreviewLive() {
     else faseText = 'Fase C';
   } else if (rawKelas.match(/X|XI|XII|10|11|12/i)) {
     jenjangPrefix = 'SMA / MA';
-    if (rawKelas.match(/X|10/i) && !rawKelas.match(/XI|XII|11|12/i)) {
-      faseText = 'Fase E';
-    } else {
-      faseText = 'Fase F'; // Kelas XI dan XII adalah Fase F
-    }
+    if (rawKelas.match(/X|10/i) && !rawKelas.match(/XI|XII|11|12/i)) faseText = 'Fase E';
+    else faseText = 'Fase F';
   }
 
-  const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - Kelas ${rawKelas} (${faseText})` : 'SMP / MTs - Kelas 7 (Fase D)';
-  const labelHeaderKelas = rawKelas ? `${jenjangPrefix} - KELAS ${rawKelas} (${faseText.toUpperCase()})` : 'SMP / MTS - KELAS 7 (FASE D)';
+  const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - Kelas ${rawKelas.replace(/Kelas\s*/i, '')} (${faseText})` : 'SMP / MTs - Kelas 7 (Fase D)';
+  const labelHeaderKelas = rawKelas ? `${jenjangPrefix} - KELAS ${rawKelas.replace(/Kelas\s*/i, '')} (${faseText.toUpperCase()})` : 'SMP / MTS - KELAS 7 (FASE D)';
   const labelMapel = rawMapel || 'AL-QUR\'AN HADIS';
 
-  // 2. Update Header Atas (Biru)
-  document.querySelectorAll('.preview-header-mapel, h3, h2').forEach(el => {
-    if (el.children.length === 0 && el.innerText && el.innerText.includes('MATA PELAJARAN:')) {
-      el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
-    }
-  });
+  // 2. Cari area preview dokumen di sebelah kanan
+  const previewArea = document.querySelector('.lg\\:col-span-8') || document.body;
 
-  // 3. Target HANYA elemen teks spesifik tanpa menimpa elemen kontainer
-  document.querySelectorAll('td, p, span, li').forEach(el => {
-    // Pastikan elemen tidak punya anak elemen lain agar struktur HTML tidak rusak
+  // 3. Update ID spesifik jika ada
+  const elHeader = document.getElementById('preview-header-kelas');
+  const elJenjang = document.getElementById('preview-jenjang-kelas');
+  const elMapel = document.getElementById('preview-mapel-nama');
+
+  if (elHeader) elHeader.innerText = labelHeaderKelas;
+  if (elJenjang) elJenjang.innerText = labelKelasLengkap;
+  if (elMapel) elMapel.innerText = labelMapel;
+
+  // 4. Fallback: Ubah langsung teks di dalam elemen-elemen kecil area preview
+  previewArea.querySelectorAll('p, div, span, h2, h3, td').forEach(el => {
     if (el.children.length === 0 && el.innerText) {
-      if (el.innerText.startsWith('Jenjang / Kelas:')) {
+      if (el.innerText.includes('MATA PELAJARAN:') || el.innerText.includes('SMP / MTS - KELAS 7')) {
+        el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
+      } else if (el.innerText.includes('Jenjang / Kelas:')) {
         el.innerHTML = `<strong>Jenjang / Kelas:</strong> ${labelKelasLengkap}`;
-      }
-      if (el.innerText.startsWith('Mata Pelajaran:') && !el.innerText.includes('MATA PELAJARAN:')) {
+      } else if (el.innerText.includes('Mata Pelajaran:') && !el.innerText.includes('MATA PELAJARAN:')) {
         el.innerHTML = `<strong>Mata Pelajaran:</strong> ${labelMapel}`;
       }
     }
   });
 }
+
+function generateModulAjar(e) {
+  if (e) e.preventDefault();
+  if (typeof switchTabModul === 'function') switchTabModul('modul');
+  setTimeout(updatePreviewLive, 50);
+}
+
+
 
     
 // Event listener otomatis saat halaman terbuka
