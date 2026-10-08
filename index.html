@@ -696,43 +696,46 @@ function toggleModal(modalId, show) {
 
 // Dynamic Dropdown Helpers
 function updateKelasDropdowns() {
-  const faseSelect = document.getElementById('modul-jenjang');
-  if (!faseSelect) return;
+  const selectJenjang = document.getElementById('modul-jenjang');
+  if (!selectJenjang) return;
 
-  // 1. Ambil data kelas dari localStorage
-  let dataKelas = JSON.parse(localStorage.getItem('dataKelas')) || [];
+  const currentValue = selectJenjang.value;
+  // Kosongkan opsi lama
+  selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
 
-  // 2. Jika data di localStorage kosong, gunakan default kelas MTs Meunafa
-  if (dataKelas.length === 0) {
-    dataKelas = [
-      { nama: 'VII A', tingkat: 'VII', fase: 'Fase D' },
-      { nama: 'VIII A', tingkat: 'VIII', fase: 'Fase D' },
-      { nama: 'IX A', tingkat: 'IX', fase: 'Fase D' },
-      { nama: 'I_A', tingkat: 'I', fase: 'Fase A' },
-      { nama: 'II-A', tingkat: 'II', fase: 'Fase A' }
-    ];
-  }
+  try {
+    let dataKelas = [];
 
-  // 3. Susun opsi dropdown secara dinamis untuk SELURUH data kelas yang ada
-  let options = '<option value="">-- Pilih Jenjang / Kelas --</option>';
-  dataKelas.forEach(k => {
-    let fase = k.fase;
-    if (!fase) {
-      const t = String(k.tingkat || k.nama).toUpperCase();
-      if (t.includes('VII') || t.includes('VIII') || t.includes('IX') || ['7','8','9'].some(x => t.includes(x))) {
-        fase = 'Fase D';
-      } else {
-        fase = 'Fase A/B/C';
-      }
+    // Prioritaskan data terbaru dari localStorage 'app_kelas'
+    const saved = localStorage.getItem('app_kelas');
+    if (saved) {
+      dataKelas = JSON.parse(saved);
+    } else if (window.appData && Array.isArray(window.appData.kelas)) {
+      dataKelas = window.appData.kelas;
     }
-    
-    const label = `SMP / MTs - Kelas ${k.nama} (${fase})`;
-    options += `<option value="${label}">${label}</option>`;
-  });
 
-  faseSelect.innerHTML = options;
+    if (Array.isArray(dataKelas) && dataKelas.length > 0) {
+      dataKelas.forEach(item => {
+        const option = document.createElement('option');
+        // Ambil nama kelas dari properti namaKelas, nama, atau item langsung
+        const nama = typeof item === 'object' ? (item.namaKelas || item.nama || item.tingkat) : item;
+        
+        if (nama) {
+          option.value = nama;
+          option.textContent = nama;
+          selectJenjang.appendChild(option);
+        }
+      });
+    }
+
+    if (currentValue) selectJenjang.value = currentValue;
+  } catch (err) {
+    console.error("Error updating kelas dropdown:", err);
+  }
 }    
     
+
+
     
     function updateGuruDropdowns() {
   const dropdowns = document.querySelectorAll('.select-guru-dropdown');
