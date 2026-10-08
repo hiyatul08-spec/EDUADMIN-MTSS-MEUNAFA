@@ -1190,11 +1190,15 @@ function switchTabModul(tabName) {
 function generateModulAjar(e) {
   if (e) e.preventDefault();
 
-  // 1. Ambil nilai dari input/dropdown
+  // 1. Ambil nilai langsung dari seluruh input/dropdown
   const rawKelas = document.getElementById('modul-jenjang')?.value || '';
   const rawMapel = document.getElementById('modul-mapel')?.value || '';
+  const rawBab   = document.getElementById('modul-bab')?.value || '';
+  const rawWaktu = document.getElementById('modul-waktu')?.value || '';
+  const rawModel = document.getElementById('modul-model')?.value || '';
+  const rawGuru  = document.getElementById('modul-guru')?.value || '';
 
-  // 2. Tentukan Jenjang Sekolah secara otomatis dari Pilihan Kelas
+  // 2. Deteksi Jenjang Sekolah secara otomatis
   let jenjangPrefix = 'SMP / MTs';
   if (rawKelas.match(/I|II|III|IV|V|VI|1|2|3|4|5|6/i) && !rawKelas.match(/VII|VIII|IX|X|XI|XII|7|8|9|10|11|12/i)) {
     jenjangPrefix = 'SD / MI';
@@ -1202,29 +1206,39 @@ function generateModulAjar(e) {
     jenjangPrefix = 'SMA / MA';
   }
 
-  // Gabungkan Jenjang dan Kelas
   const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - ${rawKelas}` : 'SMP / MTs - Kelas 7 (Fase D)';
 
-  // 3. Update objek data global jika ada
+  // 3. Update Objek Data Global (Penting agar tidak tertimpa saat render tab)
   if (typeof data !== 'undefined') {
     data.kelas = labelKelasLengkap;
     data.mapel = rawMapel || data.mapel;
+    if (rawBab) data.bab = rawBab;
+    if (rawWaktu) data.waktu = rawWaktu;
+    if (rawModel) data.model = rawModel;
+    if (rawGuru) data.guru = rawGuru;
   }
 
-  // 4. Update teks di tampilan preview kanan secara langsung
-  document.querySelectorAll('.preview-header-mapel').forEach(el => {
-    el.innerText = `MATA PELAJARAN: ${(rawMapel || '').toUpperCase()} | ${labelKelasLengkap.toUpperCase()}`;
-  });
+  // 4. Pindah/Render Tab Preview Modul
+  if (typeof switchTabModul === 'function') {
+    switchTabModul('modul');
+  }
 
-  const elPreviewMapel = document.getElementById('preview-mapel');
-  const elPreviewKelas = document.getElementById('preview-kelas');
-  if (elPreviewMapel && rawMapel) elPreviewMapel.innerText = rawMapel;
-  if (elPreviewKelas && rawKelas) elPreviewKelas.innerText = labelKelasLengkap;
-
-  // 5. Tampilkan tab preview modul
-  switchTabModul('modul');
+  // 5. Paksa pembaruan teks preview setelah tab selesai dirender (menggunakan delay tipis)
+  setTimeout(() => {
+    if (typeof updatePreviewLive === 'function') {
+      updatePreviewLive();
+    } else {
+      // Fallback manual jika fungsi updatePreviewLive belum dipanggil
+      document.querySelectorAll('.preview-header-mapel, h3, h2').forEach(el => {
+        if (el.innerText && el.innerText.includes('MATA PELAJARAN:')) {
+          el.innerText = `MATA PELAJARAN: ${(rawMapel || '').toUpperCase()} | ${labelKelasLengkap.toUpperCase()}`;
+        }
+      });
+      const previewKelas = document.getElementById('preview-kelas');
+      if (previewKelas) previewKelas.innerText = labelKelasLengkap;
+    }
+  }, 100);
 }
-
 
 
     
