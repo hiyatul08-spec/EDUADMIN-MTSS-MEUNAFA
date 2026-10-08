@@ -1268,38 +1268,25 @@ function updatePreviewLive() {
     else faseText = 'Fase F';
   }
 
-  const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - Kelas ${rawKelas.replace(/Kelas\s*/i, '')} (${faseText})` : 'SMP / MTs - Kelas 7 (Fase D)';
-  const labelHeaderKelas = rawKelas ? `${jenjangPrefix} - KELAS ${rawKelas.replace(/Kelas\s*/i, '')} (${faseText.toUpperCase()})` : 'SMP / MTS - KELAS 7 (FASE D)';
+  const cleanKelas = rawKelas.replace(/Kelas\s*/i, '').trim();
+  const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - Kelas ${cleanKelas} (${faseText})` : 'SMP / MTs - Kelas 7 (Fase D)';
+  const labelHeaderKelas = rawKelas ? `${jenjangPrefix} - KELAS ${cleanKelas} (${faseText.toUpperCase()})` : 'SMP / MTS - KELAS 7 (FASE D)';
   const labelMapel = rawMapel || 'AL-QUR\'AN HADIS';
 
-  // 2. Pemindaian Elemen Teks (Leaf Node Only)
-  const allElements = document.querySelectorAll('p, td, div, span, li, h2, h3');
-  
-  allElements.forEach(el => {
-    // Hanya proses elemen yang tidak punya child HTML lagi (daun struktur DOM)
-    if (el.children.length === 0) {
-      const txt = (el.innerText || el.textContent || '').trim();
+  // 2. Direct Update lewat ID bawaan HTML
+  const elFase = document.getElementById('prev-fase');
+  const elMapel = document.getElementById('prev-mapel');
 
-      // Update Header Biru
-      if (txt.includes('MATA PELAJARAN:') || txt.includes('SMP / MTS - KELAS 7')) {
-        el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
-      }
+  if (elFase) elFase.innerText = labelKelasLengkap;
+  if (elMapel) elMapel.innerText = labelMapel;
 
-      // Update Label Jenjang/Kelas di Informasi Umum
-      if (txt.includes('Jenjang / Kelas:') || txt.includes('SMP / MTs - Kelas 7 (Fase D)')) {
-        if (!txt.includes('MATA PELAJARAN:')) {
-          el.innerHTML = `<strong>Jenjang / Kelas:</strong> ${labelKelasLengkap}`;
-        }
-      }
-
-      // Update Label Mata Pelajaran di Informasi Umum
-      if (txt.includes('Mata Pelajaran:') && !txt.includes('MATA PELAJARAN:')) {
-        el.innerHTML = `<strong>Mata Pelajaran:</strong> ${labelMapel}`;
-      }
+  // 3. Update Header Biru di atas
+  document.querySelectorAll('p, h2, h3, div').forEach(el => {
+    if (el.children.length === 0 && el.innerText && (el.innerText.includes('MATA PELAJARAN:') || el.innerText.includes('SMP / MTS - KELAS 7'))) {
+      el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
     }
   });
-}
-    
+}    
     
     
     
