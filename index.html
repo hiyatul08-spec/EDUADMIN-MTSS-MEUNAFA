@@ -1241,6 +1241,7 @@ function generateModulAjar(e) {
 }
 
 
+
     
 // Function untuk sync live preview
 function updatePreviewLive() {
@@ -1271,33 +1272,29 @@ function updatePreviewLive() {
   const labelHeaderKelas = rawKelas ? `${jenjangPrefix} - KELAS ${rawKelas.replace(/Kelas\s*/i, '')} (${faseText.toUpperCase()})` : 'SMP / MTS - KELAS 7 (FASE D)';
   const labelMapel = rawMapel || 'AL-QUR\'AN HADIS';
 
-  // 2. Cari area preview dokumen di sebelah kanan
-  const previewArea = document.querySelector('.lg\\:col-span-8') || document.body;
+  // 2. Update Header Atas (Biru)
+  document.querySelectorAll('h2, h3, div, p').forEach(el => {
+    if (el.children.length === 0 && el.innerText && (el.innerText.includes('MATA PELAJARAN:') || el.innerText.includes('SMP / MTS - KELAS 7'))) {
+      el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
+    }
+  });
 
-  // 3. Update ID spesifik jika ada
-  const elHeader = document.getElementById('preview-header-kelas');
-  const elJenjang = document.getElementById('preview-jenjang-kelas');
-  const elMapel = document.getElementById('preview-mapel-nama');
-
-  if (elHeader) elHeader.innerText = labelHeaderKelas;
-  if (elJenjang) elJenjang.innerText = labelKelasLengkap;
-  if (elMapel) elMapel.innerText = labelMapel;
-
-  // 4. Fallback: Ubah langsung teks di dalam elemen-elemen kecil area preview
-  previewArea.querySelectorAll('p, div, span, h2, h3, td').forEach(el => {
-    if (el.children.length === 0 && el.innerText) {
-      if (el.innerText.includes('MATA PELAJARAN:') || el.innerText.includes('SMP / MTS - KELAS 7')) {
-        el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
-      } else if (el.innerText.includes('Jenjang / Kelas:')) {
-        el.innerHTML = `<strong>Jenjang / Kelas:</strong> ${labelKelasLengkap}`;
-      } else if (el.innerText.includes('Mata Pelajaran:') && !el.innerText.includes('MATA PELAJARAN:')) {
-        el.innerHTML = `<strong>Mata Pelajaran:</strong> ${labelMapel}`;
-      }
+  // 3. Update Baris "Jenjang / Kelas" dan "Mata Pelajaran" di Tabel Informasi Umum
+  document.querySelectorAll('td').forEach(td => {
+    const text = td.innerText || td.textContent;
+    if (text.includes('Jenjang / Kelas')) {
+      td.innerHTML = `<strong>Jenjang / Kelas:</strong> ${labelKelasLengkap}`;
+    } else if (text.includes('Mata Pelajaran:') && !text.includes('MATA PELAJARAN:')) {
+      td.innerHTML = `<strong>Mata Pelajaran:</strong> ${labelMapel}`;
     }
   });
 }
 
-function generateModulAjar(e) {
+    
+    
+    
+    
+    function generateModulAjar(e) {
   if (e) e.preventDefault();
   if (typeof switchTabModul === 'function') switchTabModul('modul');
   setTimeout(updatePreviewLive, 50);
