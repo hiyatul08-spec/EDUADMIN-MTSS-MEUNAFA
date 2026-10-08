@@ -1251,8 +1251,10 @@ function generateModulAjar(e) {
   
   if (!selectKelas) return;
 
-  const rawKelas = selectKelas.options[selectKelas.selectedIndex]?.text || selectKelas.value || '';
+  const rawKelas = selectKelas.value || selectKelas.options[selectKelas.selectedIndex]?.text || '';
   const rawMapel = selectMapel ? (selectMapel.options[selectMapel.selectedIndex]?.text || selectMapel.value) : '';
+
+  if (!rawKelas) return;
 
   // 1. Logika Jenjang & Fase
   let jenjangPrefix = 'SMP / MTs';
@@ -1270,35 +1272,34 @@ function generateModulAjar(e) {
   }
 
   const cleanKelas = rawKelas.replace(/Kelas\s*/i, '').trim();
-  const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - Kelas ${cleanKelas} (${faseText})` : 'SMP / MTs - Kelas 7 (Fase D)';
-  const labelHeaderKelas = rawKelas ? `${jenjangPrefix} - KELAS ${cleanKelas} (${faseText.toUpperCase()})` : 'SMP / MTS - KELAS 7 (FASE D)';
+  const labelKelasLengkap = `${jenjangPrefix} - Kelas ${cleanKelas} (${faseText})`;
+  const labelHeaderKelas = `${jenjangPrefix} - KELAS ${cleanKelas} (${faseText.toUpperCase()})`;
   const labelMapel = rawMapel || 'AL-QUR\'AN HADIS';
 
-  // 2. Tembak ID spesifik jika ada
+  // 2. Jika elemen id="prev-fase" masih ada (Sebelum Generate)
   const elFase = document.getElementById('prev-fase');
   const elMapel = document.getElementById('prev-mapel');
   if (elFase) elFase.innerText = labelKelasLengkap;
   if (elMapel) elMapel.innerText = labelMapel;
 
-  // 3. Sapu bersih seluruh elemen teks yang masih tertahan di teks default
-  document.querySelectorAll('p, td, div, span, li, h2, h3').forEach(el => {
-    if (el.children.length === 0 && el.innerText) {
-      const txt = el.innerText.trim();
-
-      // Header Biru
-      if (txt.includes('MATA PELAJARAN:') || txt.includes('SMP / MTS - KELAS 7')) {
-        el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
-      }
-
-      // Baris Jenjang / Kelas di Informasi Umum
-      if (txt.includes('SMP / MTs - Kelas 7 (Fase D)') || (txt.includes('Jenjang / Kelas:') && !txt.includes(labelKelasLengkap))) {
-        el.innerText = labelKelasLengkap;
-      }
+  // 3. Jika elemen ID sudah hilang diganti HTML baru (Setelah Generate)
+  document.querySelectorAll('div, p, span, td').forEach(el => {
+    // Cari elemen yang berisi teks 'Jenjang / Kelas:'
+    if (el.children.length <= 1 && el.innerText && el.innerText.includes('Jenjang / Kelas:')) {
+      el.innerHTML = `<strong>Jenjang / Kelas:</strong> ${labelKelasLengkap}`;
+    }
+    // Cari elemen yang berisi teks 'Mata Pelajaran:' di area Informasi Umum
+    if (el.children.length <= 1 && el.innerText && el.innerText.includes('Mata Pelajaran:') && !el.innerText.includes('MATA PELAJARAN:')) {
+      el.innerHTML = `<strong>Mata Pelajaran:</strong> ${labelMapel}`;
+    }
+    // Update Header Biru Atas
+    if (el.children.length === 0 && el.innerText && (el.innerText.includes('MATA PELAJARAN:') || el.innerText.includes('FASE'))) {
+      el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
     }
   });
 }
 
-// Pantau perubahan DOM secara otomatis menggunakan Observer
+// 4. Jalankan Otomatis saat Ada Perubahan DOM / Tab Switch
 const observer = new MutationObserver(() => {
   updatePreviewLive();
 });
@@ -1310,9 +1311,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (selectKelas) selectKelas.addEventListener('change', updatePreviewLive);
   if (selectMapel) selectMapel.addEventListener('change', updatePreviewLive);
 
-  // Aktifkan pemantau di area dokumen preview
-  const container = document.body;
-  observer.observe(container, { childList: true, subtree: true });
+  observer.observe(document.body, { childList: true, subtree: true });
+  setTimeout(updatePreviewLive, 300);
 });
     
     
