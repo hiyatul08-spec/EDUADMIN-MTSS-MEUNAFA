@@ -1243,9 +1243,9 @@ function generateModulAjar(e) {
 
 
     
-// Function untuk sync live preview
+
 // 1. Fungsi Utama Update Preview
-function updatePreviewLive() {
+    function updatePreviewLive() {
   const selectKelas = document.getElementById('modul-jenjang');
   const selectMapel = document.getElementById('modul-mapel');
   
@@ -1254,7 +1254,7 @@ function updatePreviewLive() {
   const rawKelas = selectKelas.options[selectKelas.selectedIndex]?.text || selectKelas.value || '';
   const rawMapel = selectMapel ? (selectMapel.options[selectMapel.selectedIndex]?.text || selectMapel.value) : '';
 
-  // Penentuan Jenjang & Fase
+  // 1. Logika Jenjang & Fase
   let jenjangPrefix = 'SMP / MTs';
   let faseText = 'Fase D';
 
@@ -1274,40 +1274,46 @@ function updatePreviewLive() {
   const labelHeaderKelas = rawKelas ? `${jenjangPrefix} - KELAS ${cleanKelas} (${faseText.toUpperCase()})` : 'SMP / MTS - KELAS 7 (FASE D)';
   const labelMapel = rawMapel || 'AL-QUR\'AN HADIS';
 
-  // Tembak ID spesifik sesuai HTML
+  // 2. Tembak ID spesifik jika ada
   const elFase = document.getElementById('prev-fase');
   const elMapel = document.getElementById('prev-mapel');
-
   if (elFase) elFase.innerText = labelKelasLengkap;
   if (elMapel) elMapel.innerText = labelMapel;
 
-  // Update Header Atas
-  document.querySelectorAll('p, h2, h3, div').forEach(el => {
-    if (el.children.length === 0 && el.innerText && (el.innerText.includes('MATA PELAJARAN:') || el.innerText.includes('SMP / MTS - KELAS 7'))) {
-      el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
+  // 3. Sapu bersih seluruh elemen teks yang masih tertahan di teks default
+  document.querySelectorAll('p, td, div, span, li, h2, h3').forEach(el => {
+    if (el.children.length === 0 && el.innerText) {
+      const txt = el.innerText.trim();
+
+      // Header Biru
+      if (txt.includes('MATA PELAJARAN:') || txt.includes('SMP / MTS - KELAS 7')) {
+        el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
+      }
+
+      // Baris Jenjang / Kelas di Informasi Umum
+      if (txt.includes('SMP / MTs - Kelas 7 (Fase D)') || (txt.includes('Jenjang / Kelas:') && !txt.includes(labelKelasLengkap))) {
+        el.innerText = labelKelasLengkap;
+      }
     }
   });
 }
 
-// 2. Hubungkan Listener saat Dropdown Berubah (Live Update)
+// Pantau perubahan DOM secara otomatis menggunakan Observer
+const observer = new MutationObserver(() => {
+  updatePreviewLive();
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   const selectKelas = document.getElementById('modul-jenjang');
   const selectMapel = document.getElementById('modul-mapel');
 
   if (selectKelas) selectKelas.addEventListener('change', updatePreviewLive);
   if (selectMapel) selectMapel.addEventListener('change', updatePreviewLive);
-});
 
-// 3. Override Fungsi Generate agar Sync Setelah Tab Rendat
-const originalGenerateModulAjar = window.generateModulAjar;
-window.generateModulAjar = function(e) {
-  if (typeof originalGenerateModulAjar === 'function') {
-    originalGenerateModulAjar(e);
-  }
-  // Jalankan update preview setelah penundaan singkat untuk menunggu DOM tab selesai dirender
-  setTimeout(updatePreviewLive, 100);
-  setTimeout(updatePreviewLive, 300);
-};    
+  // Aktifkan pemantau di area dokumen preview
+  const container = document.body;
+  observer.observe(container, { childList: true, subtree: true });
+});
     
     
     
