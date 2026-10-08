@@ -789,29 +789,29 @@ document.addEventListener('click', function() {
   });
 }
 
+
     
     
 function updateMapelDropdowns() {
-  const selectMapel = document.getElementById('modul-mapel');
-  if (!selectMapel) return;
+  // Target dropdown mapel di Modul Ajar dan di Modal Input Nilai Siswa
+  const selectModulMapel = document.getElementById('modul-mapel');
+  const selectNilaiMapel = document.querySelector('#modal-nilai select[name="mapel"], #modal-nilai select:nth-of-type(2)');
 
   let rawList = [];
 
-  // 1. Ambil Nama Mata Pelajaran langsung dari baris tabel DOM (#table-mapel)
+  // 1. Ambil nama mapel langsung dari baris tabel DOM (#table-mapel)
   const rowsMapel = document.querySelectorAll('#table-mapel tr');
   rowsMapel.forEach(tr => {
     const tds = tr.querySelectorAll('td');
-    // Memastikan ada kolom yang dibaca (Nama Mapel di kolom ke-2 / index 1)
     if (tds.length >= 2) {
       let namaMapel = tds[1] ? tds[1].textContent.trim() : '';
-      
       if (namaMapel && !namaMapel.includes('Tidak ada') && !namaMapel.includes('Belum ada')) {
         rawList.push(namaMapel);
       }
     }
   });
 
-  // 2. Cadangan jika tabel DOM belum ter-render
+  // 2. Cadangan dari appData jika tabel belum ter-render
   if (rawList.length === 0) {
     try {
       if (typeof appData !== 'undefined' && appData && Array.isArray(appData.mapel)) {
@@ -823,7 +823,7 @@ function updateMapelDropdowns() {
     } catch (e) {}
   }
 
-  // 3. Ambil data MURNI & Unik tanpa dibuang
+  // 3. Bersihkan data ganda
   let cleanedList = [];
   rawList.forEach(text => {
     if (text && !cleanedList.includes(text)) {
@@ -831,17 +831,23 @@ function updateMapelDropdowns() {
     }
   });
 
-  const currentValue = selectMapel.value;
+  // Helper untuk mengisi elemen select
+  const fillSelect = (selectElem) => {
+    if (!selectElem) return;
+    const currentValue = selectElem.value;
+    selectElem.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
+    cleanedList.forEach(mapel => {
+      const opt = document.createElement('option');
+      opt.value = mapel;
+      opt.textContent = mapel;
+      if (mapel === currentValue) opt.selected = true;
+      selectElem.appendChild(opt);
+    });
+  };
 
-  // 4. Render ke Dropdown Modul Ajar
-  selectMapel.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
-  cleanedList.forEach(mapel => {
-    const opt = document.createElement('option');
-    opt.value = mapel;
-    opt.textContent = mapel;
-    if (mapel === currentValue) opt.selected = true;
-    selectMapel.appendChild(opt);
-  });
+  // 4. Render ke kedua dropdown
+  fillSelect(selectModulMapel);
+  fillSelect(selectNilaiMapel);
 }
 
 // PEMICU SINKRONISASI REAL-TIME
