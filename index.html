@@ -699,71 +699,61 @@ function updateKelasDropdowns() {
   const selectJenjang = document.getElementById('modul-jenjang');
   if (!selectJenjang) return;
 
-  let listKelasMurni = [];
+  let rawList = [];
 
-  // 1. Ambil khusus dari tabel kelas jika sedang berada di DOM
-  const rowsKelas = document.querySelectorAll('#table-kelas tbody tr, .table-kelas tbody tr');
-  rowsKelas.forEach(tr => {
-    const tds = tr.querySelectorAll('td');
-    if (tds.length >= 1) {
-      let namaKls = tds[2] ? tds[2].textContent.trim() : tds[0].textContent.trim();
-      if (namaKls) listKelasMurni.push(namaKls);
-    }
-  });
-
-  // 2. Ambil dari window.appData.kelas jika memori DOM kosong
-  if (listKelasMurni.length === 0 && window.appData && Array.isArray(window.appData.kelas)) {
+  // 1. Ambil data kelas langsung dari appData
+  if (window.appData && Array.isArray(window.appData.kelas)) {
     window.appData.kelas.forEach(item => {
-      if (typeof item === 'object' && item !== null) {
-        if (item.tingkat) listKelasMurni.push(item.tingkat);
-        else if (item.namaKelas) listKelasMurni.push(item.namaKelas);
-      } else if (typeof item === 'string') {
-        listKelasMurni.push(item);
-      }
+      let val = (typeof item === 'object' && item !== null) ? (item.tingkat || item.namaKelas || '') : item;
+      if (val) rawList.push(val.toString().trim());
     });
   }
 
-  // 3. FILTER KETAT: Hanya izinkan format Angka Romawi Kelas (I - XII)
+  // Cadangan jika appData belum ter-load sempurna
+  if (rawList.length === 0) {
+    try {
+      const saved = localStorage.getItem('eduadmin_data');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && Array.isArray(parsed.kelas)) {
+          parsed.kelas.forEach(item => {
+            let val = (typeof item === 'object' && item !== null) ? (item.tingkat || item.namaKelas || '') : item;
+            if (val) rawList.push(val.toString().trim());
+          });
+        }
+      }
+    } catch (e) {}
+  }
+
+  // 2. Filter Romawi murni (I - XII) & Hilangkan Duplikat
   let cleanedList = [];
-  listKelasMurni.forEach(str => {
-    let nama = str.toString().trim();
-    
-    // Ambil bagian Romawinya saja (misal "VII A" jadi "VII")
-    const match = nama.match(/^(I|II|III|IV|V|VI|VII|VIII|IX|X|XI|XII)\b/i);
+  rawList.forEach(text => {
+    const match = text.match(/(XII|XI|X|IX|VIII|VII|VI|V|IV|III|II|I)/i);
     if (match) {
-      const romawiMurni = match[1].toUpperCase();
-      if (!cleanedList.includes(romawiMurni)) {
-        cleanedList.push(romawiMurni);
+      const romawi = match[1].toUpperCase();
+      if (!cleanedList.includes(romawi)) {
+        cleanedList.push(romawi);
       }
     }
   });
 
-  // Urutkan angka Romawi sesuai tingkatan
-  const urutanRomawi = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-  cleanedList.sort((a, b) => urutanRomawi.indexOf(a) - urutanRomawi.indexOf(b));
+  // Urutkan Romawi dari terkecil ke terbesar
+  const urutan = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+  cleanedList.sort((a, b) => urutan.indexOf(a) - urutan.indexOf(b));
 
-  // Simpan ke localStorage jika ada data murni
-  if (cleanedList.length > 0) {
-    try {
-      localStorage.setItem('app_kelas', JSON.stringify(cleanedList));
-    } catch (e) {}
-  }
+  // Simpan nilai dropdown yang sedang dipilih user agar tidak reset saat auto-update
+  const currentValue = selectJenjang.value;
 
-  // Hindari re-render berulang
-  const currentKey = JSON.stringify(cleanedList);
-  if (selectJenjang.dataset.lastKey === currentKey) return;
-  selectJenjang.dataset.lastKey = currentKey;
-
-  // 4. Render ulang dropdown
+  // 3. Render Ulang Option
   selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
   cleanedList.forEach(kelas => {
-    const option = document.createElement('option');
-    option.value = kelas;
-    option.textContent = kelas;
-    selectJenjang.appendChild(option);
+    const opt = document.createElement('option');
+    opt.value = kelas;
+    opt.textContent = kelas;
+    if (kelas === currentValue) opt.selected = true; // Pertahankan pilihan aktif
+    selectJenjang.appendChild(opt);
   });
 }
-
 
 
     
