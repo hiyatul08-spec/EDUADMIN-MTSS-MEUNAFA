@@ -699,46 +699,46 @@ function updateKelasDropdowns() {
   const selectJenjang = document.getElementById('modul-jenjang');
   if (!selectJenjang) return;
 
-  const currentValue = selectJenjang.value;
-  
-  try {
-    let dataKelas = [];
+  // Cek jika opsi sudah terisi (lebih dari 1 opsi)
+  if (selectJenjang.options.length > 1) return;
 
-    // 1. Ambil data dari localStorage 'app_kelas'
+  let listKelas = [];
+
+  // 1. Coba ambil dari localStorage app_kelas
+  try {
     const saved = localStorage.getItem('app_kelas');
     if (saved) {
-      dataKelas = JSON.parse(saved);
-    } else if (window.appData && Array.isArray(window.appData.kelas)) {
-      dataKelas = window.appData.kelas;
-    }
-
-    if (Array.isArray(dataKelas) && dataKelas.length > 0) {
-      // Hanya update jika isi opsi belum ada
-      if (selectJenjang.options.length <= 1) {
-        selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
-        dataKelas.forEach(item => {
-          const option = document.createElement('option');
-          // Ambil nama kelas dari properti namaKelas, nama, atau item
-          const nama = typeof item === 'object' ? (item.namaKelas || item.nama || item.tingkat) : item;
-          
-          if (nama) {
-            option.value = nama;
-            option.textContent = nama;
-            selectJenjang.appendChild(option);
-          }
-        });
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        listKelas = parsed;
       }
     }
+  } catch (e) {}
 
-    if (currentValue) selectJenjang.value = currentValue;
-  } catch (err) {
-    console.error("Error updating kelas dropdown:", err);
+  // 2. Jika kosong, coba ambil dari appData global
+  if (listKelas.length === 0 && window.appData && Array.isArray(window.appData.kelas)) {
+    listKelas = window.appData.kelas;
+  }
+
+  // Render opsi
+  if (listKelas.length > 0) {
+    selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
+    listKelas.forEach(item => {
+      const option = document.createElement('option');
+      const nama = typeof item === 'object' ? (item.namaKelas || item.nama || item.tingkat) : item;
+      if (nama) {
+        option.value = nama;
+        option.textContent = nama;
+        selectJenjang.appendChild(option);
+      }
+    });
   }
 }
 
-// Jalankan otomatis setiap ada perubahan/klik menu di aplikasi
+// Jalankan saat dokumen siap & setiap ada aktivitas di halaman
+document.addEventListener('DOMContentLoaded', updateKelasDropdowns);
 document.addEventListener('click', function() {
-  setTimeout(updateKelasDropdowns, 100);
+  setTimeout(updateKelasDropdowns, 200);
 });
 setInterval(updateKelasDropdowns, 1000);    
     
