@@ -699,51 +699,56 @@ function updateKelasDropdowns() {
   const selectJenjang = document.getElementById('modul-jenjang');
   if (!selectJenjang) return;
 
-  let rawKelas = [];
+  let combinedRaw = [];
 
-  // 1. Prioritaskan ambil dari window.appData.kelas jika ada
-  if (window.appData && Array.isArray(window.appData.kelas) && window.appData.kelas.length > 0) {
-    rawKelas = window.appData.kelas;
-  } else {
-    try {
-      const saved = localStorage.getItem('app_kelas');
-      if (saved) rawKelas = JSON.parse(saved);
-    } catch (e) {}
+  // 1. Gabungkan data dari window.appData.kelas dan localStorage agar tidak ada yang terlewat
+  if (window.appData && Array.isArray(window.appData.kelas)) {
+    combinedRaw = combinedRaw.concat(window.appData.kelas);
   }
-
-  // 2. Ekstrak nama kelas murni & saring sampah
-  let listKelasMurni = [];
-  if (Array.isArray(rawKelas)) {
-    rawKelas.forEach(item => {
-      let nama = '';
-      if (typeof item === 'object' && item !== null) {
-        nama = item.namaKelas || item.tingkat || item.nama || '';
-      } else if (typeof item === 'string') {
-        nama = item;
+  try {
+    const saved = localStorage.getItem('app_kelas');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) {
+        combinedRaw = combinedRaw.concat(parsed);
       }
+    }
+  } catch (e) {}
 
-      nama = nama.toString().trim();
+  // 2. Ambil KEDUA nilai (tingkat & namaKelas) lalu saring
+  let listKelasMurni = [];
+  combinedRaw.forEach(item => {
+    let nilaiDiambil = [];
+    
+    if (typeof item === 'object' && item !== null) {
+      // Ambil tingkat (seperti VIII, IX) DAN namaKelas (seperti VIII A, IX A)
+      if (item.tingkat) nilaiDiambil.push(item.tingkat);
+      if (item.namaKelas) nilaiDiambil.push(item.namaKelas);
+      if (item.nama) nilaiDiambil.push(item.nama);
+    } else if (typeof item === 'string') {
+      nilaiDiambil.push(item);
+    }
+
+    nilaiDiambil.forEach(str => {
+      const nama = str.toString().trim();
       const isPureNumber = /^\d+$/.test(nama);
 
+      // Hanya masukkan jika bukan angka acak, tidak ada tanda hubung, dan belum ada di daftar
       if (nama && !isPureNumber && !nama.includes('-') && !listKelasMurni.includes(nama)) {
         listKelasMurni.push(nama);
       }
     });
-  }
+  });
 
-  // 3. FIX UTAMA: Simpan 'listKelasMurni' yang SUDAH TERFILTER ke localStorage
-  if (listKelasMurni.length > 0) {
-    try {
-      localStorage.setItem('app_kelas', JSON.stringify(listKelasMurni));
-    } catch (e) {}
-  }
+  // Jika data kosong, beri fallback standar
+  if (listKelasMurni.length === 0) return;
 
-  // Cek jika tampilan tidak perlu update
+  // Cek jika tidak ada perubahan data agar tidak merestart dropdown
   const currentKey = JSON.stringify(listKelasMurni);
   if (selectJenjang.dataset.lastKey === currentKey) return;
   selectJenjang.dataset.lastKey = currentKey;
 
-  // 4. Render ulang dropdown
+  // 3. Render ulang opsi dropdown secara bersih
   selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
   listKelasMurni.forEach(kelas => {
     const option = document.createElement('option');
@@ -753,12 +758,12 @@ function updateKelasDropdowns() {
   });
 }
 
-// Panggil otomatis
+// Eksekusi otomatis
 document.addEventListener('DOMContentLoaded', updateKelasDropdowns);
 document.addEventListener('click', function() {
-  setTimeout(updateKelasDropdowns, 200);
+  setTimeout(updateKelasDropdowns, 150);
 });
-setInterval(updateKelasDropdowns, 1000);    
+setInterval(updateKelasDropdowns, 800);    
     
 
 
