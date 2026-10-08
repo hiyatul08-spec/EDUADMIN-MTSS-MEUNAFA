@@ -699,7 +699,7 @@ function updateKelasDropdowns() {
   const modulKelas = document.getElementById('modul-jenjang');
   const modulMapel = document.getElementById('modul-mapel');
 
-  // 1. SINKRONISASI DROPDOWN KELAS
+  // 1. DROPDOWN KELAS (Membaca dataKelas dari localStorage)
   if (modulKelas) {
     let dataKelas = [];
     try {
@@ -708,15 +708,16 @@ function updateKelasDropdowns() {
 
     let options = '<option value="">-- Pilih Jenjang / Kelas --</option>';
 
-    if (dataKelas.length > 0) {
+    if (Array.isArray(dataKelas) && dataKelas.length > 0) {
       dataKelas.forEach(k => {
+        // Mengambil nama kelas & tingkat dari berbagai kemungkinan properti
         let nama = k.namaKelas || k.nama || k.kelas || k.nama_kelas || '';
         let tingkat = k.tingkat || k.tingkatKelas || nama;
         let fase = k.fase || '';
 
-        // Deteksi Fase otomatis jika tidak ada di objek
+        // Penentuan Fase Otomatis
         if (!fase) {
-          let t = String(tingkat).toUpperCase();
+          let t = String(tingkat || nama).toUpperCase().trim();
           if (['I', 'II', '1', '2'].includes(t)) fase = 'Fase A';
           else if (['III', 'IV', '3', '4'].includes(t)) fase = 'Fase B';
           else if (['V', 'VI', '5', '6'].includes(t)) fase = 'Fase C';
@@ -736,40 +737,29 @@ function updateKelasDropdowns() {
     modulKelas.innerHTML = options;
   }
 
-  // 2. SINKRONISASI DROPDOWN MATA PELAJARAN (Dengan Fallback Default)
+  // 2. DROPDOWN MATA PELAJARAN (Membaca dataMapel dari localStorage)
   if (modulMapel) {
     let dataMapel = [];
     try {
       dataMapel = JSON.parse(localStorage.getItem('dataMapel')) || [];
     } catch(e) { console.error(e); }
 
-    // Jika localStorage kosong, pakai daftar mapel default ini
-    let daftarMapel = [];
-    if (dataMapel.length > 0) {
+    let optionsMapel = '<option value="">-- Pilih Mata Pelajaran --</option>';
+
+    if (Array.isArray(dataMapel) && dataMapel.length > 0) {
       dataMapel.forEach(m => {
-        let namaMapel = typeof m === 'string' ? m : (m.namaMapel || m.nama || m.mapel || m.mataPelajaran || m.nama_mapel || '');
-        if (namaMapel) daftarMapel.push(namaMapel);
+        let namaMapel = typeof m === 'string' ? m : (m.namaMataPelajaran || m.namaMapel || m.nama || m.mapel || m.mataPelajaran || m.nama_mapel || '');
+        if (namaMapel) {
+          optionsMapel += `<option value="${namaMapel}">${namaMapel}</option>`;
+        }
       });
     } else {
-      daftarMapel = [
-        'Pendidikan Pancasila',
-        'Bahasa Indonesia',
-        'Matematika',
-        'IPAS',
-        'IPA',
-        'IPS',
-        'Bahasa Inggris',
-        'PJOK',
-        'Seni Budaya',
-        'Pendidikan Agama Islam',
-        'Informatika'
-      ];
+      // Fallback jika localStorage kosong
+      const defaultMapel = ['Al-Qur\'an Hadis', 'Akidah Akhlak', 'Fikih', 'Sejarah Kebudayaan Islam (SKI)', 'Bahasa Arab', 'Pendidikan Pancasila', 'Bahasa Indonesia', 'Matematika', 'IPA', 'IPS', 'Bahasa Inggris', 'PJOK', 'Informatika', 'Seni Budaya'];
+      defaultMapel.forEach(mapel => {
+        optionsMapel += `<option value="${mapel}">${mapel}</option>`;
+      });
     }
-
-    let optionsMapel = '<option value="">-- Pilih Mata Pelajaran --</option>';
-    daftarMapel.forEach(mapel => {
-      optionsMapel += `<option value="${mapel}">${mapel}</option>`;
-    });
 
     modulMapel.innerHTML = optionsMapel;
   }
