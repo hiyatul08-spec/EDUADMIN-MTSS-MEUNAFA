@@ -701,33 +701,35 @@ function updateKelasDropdowns() {
 
   let rawList = [];
 
-  // 1. Ambil dari memori appData
-  try {
-    if (typeof appData !== 'undefined' && appData && Array.isArray(appData.kelas)) {
-      appData.kelas.forEach(item => {
-        let val = (typeof item === 'object' && item !== null) ? (item.tingkat || item.namaKelas || '') : item;
-        if (val) rawList.push(val.toString().trim());
-      });
+  // 1. UTAMA: Ambil data kelas langsung dari baris tabel #table-kelas di DOM
+  const rowsKelas = document.querySelectorAll('#table-kelas tr');
+  rowsKelas.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    if (tds.length >= 1) {
+      // Ambil kolom nama kelas/tingkat (biasanya kolom ke-1 atau ke-3)
+      let namaKls = tds[0] ? tds[0].textContent.trim() : '';
+      let tingkatKls = tds[2] ? tds[2].textContent.trim() : '';
+      
+      let val = tingkatKls || namaKls;
+      if (val && val !== 'Tidak ada data' && val !== 'Belum ada data') {
+        rawList.push(val);
+      }
     }
-  } catch (e) {}
+  });
 
-  // 2. Ambil dari localStorage jika memori belum terisi
+  // 2. CADANGAN: Ambil dari appData/localStorage jika tabel DOM belum sempat ter-render
   if (rawList.length === 0) {
     try {
-      const saved = localStorage.getItem('eduadmin_data');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && Array.isArray(parsed.kelas)) {
-          parsed.kelas.forEach(item => {
-            let val = (typeof item === 'object' && item !== null) ? (item.tingkat || item.namaKelas || '') : item;
-            if (val) rawList.push(val.toString().trim());
-          });
-        }
+      if (typeof appData !== 'undefined' && appData && Array.isArray(appData.kelas)) {
+        appData.kelas.forEach(item => {
+          let val = (typeof item === 'object' && item !== null) ? (item.tingkat || item.namaKelas || '') : item;
+          if (val) rawList.push(val.toString().trim());
+        });
       }
     } catch (e) {}
   }
 
-  // 3. Ambil MURNI semua data unik (tanpa filter/tanpa dibuang)
+  // 3. Ambil nilai MURNI & Unik (apa adanya tanpa filter ketat)
   let cleanedList = [];
   rawList.forEach(text => {
     if (text && !cleanedList.includes(text)) {
@@ -735,13 +737,13 @@ function updateKelasDropdowns() {
     }
   });
 
-  // Urutkan secara alami (1, 2, 3... atau A, B, C...)
+  // Urutkan secara alami (misal: 1, 2, 3 atau I, II, III)
   cleanedList.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
 
-  // Simpan nilai yang sedang dipilih user agar tidak kreset
+  // Simpan nilai pilihan user agar tidak ter-reset
   const currentValue = selectJenjang.value;
 
-  // 4. Render ke Dropdown
+  // 4. Render ke Dropdown Modul Ajar
   selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
   cleanedList.forEach(kelas => {
     const opt = document.createElement('option');
@@ -752,10 +754,10 @@ function updateKelasDropdowns() {
   });
 }
 
-// PEMICU SINKRONISASI OTOMATIS:
-// Begitu ada aktivitas klik di layar, dropdown otomatis cek & update data terbaru
+// PEMICU SINKRONISASI REAL-TIME:
+// Kapan pun ada interaksi klik (tambah/hapus/pindah menu), dropdown otomatis ter-update
 document.addEventListener('click', function() {
-  setTimeout(updateKelasDropdowns, 100);
+  setTimeout(updateKelasDropdowns, 150);
 });
     
    
