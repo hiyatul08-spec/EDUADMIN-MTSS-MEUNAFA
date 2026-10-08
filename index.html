@@ -1082,27 +1082,24 @@ function switchTabModul(tabName) {
   const data = updatePreviewContent();
 
   if (tabName === 'modul') {
-    previewBox.innerHTML = `
-      <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
-        <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>
-        <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: <span id="prev-header-mapel">${data.mapel.toUpperCase()}</span> | <span id="prev-header-fase">${data.fase.toUpperCase()}</span></p>
-        <p class="text-slate-600 italic text-xs mt-0.5">Bab / Topik Utama: ${data.bab.toUpperCase()} | Alokasi Waktu: ${data.waktu}</p>
-      </div>
-      
-      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">1. MODUL AJAR (RPP PLUS STANDAR RESMI)</div>
-      
-      <div class="border rounded-lg p-3 bg-slate-50/50 space-y-2 text-xs mb-4">
-        <h4 class="font-bold text-slate-900 border-b pb-1">I. INFORMASI UMUM</h4>
-        <div class="grid grid-cols-2 gap-2">
-          <div><p><strong>Nama Penyusun:</strong> ${data.guru}</p></div>
-          <div><p><strong>Satuan Pendidikan:</strong> ${data.satuan}</p></div>
-          <div><p><strong>Mata Pelajaran:</strong> <span id="prev-mapel">${data.mapel}</span></p></div>
-          <div><p><strong>Jenjang / Kelas:</strong> <span id="prev-fase">${data.fase}</span></p></div>
-          <div><p><strong>Model Learning:</strong> ${data.model}</p></div>
-          <div><p><strong>Alokasi Waktu:</strong> ${data.waktu}</p></div>
-        </div>
-      </div>
-    `;
+    previewBox.innerHTML = 
+      '<div class="text-center border-b-2 border-slate-800 pb-3 mb-4">' +
+        '<h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>' +
+        '<p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: <span id="prev-header-mapel">' + (data.mapel ? data.mapel.toUpperCase() : '') + '</span> | <span id="prev-header-fase">' + (data.fase ? data.fase.toUpperCase() : '') + '</span></p>' +
+        '<p class="text-slate-600 italic text-xs mt-0.5">Bab / Topik Utama: ' + (data.bab ? data.bab.toUpperCase() : '') + ' | Alokasi Waktu: ' + data.waktu + '</p>' +
+      '</div>' +
+      '<div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">1. MODUL AJAR (RPP PLUS STANDAR RESMI)</div>' +
+      '<div class="border rounded-lg p-3 bg-slate-50/50 space-y-2 text-xs mb-4">' +
+        '<h4 class="font-bold text-slate-900 border-b pb-1">I. INFORMASI UMUM</h4>' +
+        '<div class="grid grid-cols-2 gap-2">' +
+          '<div><p><strong>Nama Penyusun:</strong> ' + data.guru + '</p></div>' +
+          '<div><p><strong>Satuan Pendidikan:</strong> ' + data.satuan + '</p></div>' +
+          '<div><p><strong>Mata Pelajaran:</strong> <span id="prev-mapel">' + data.mapel + '</span></p></div>' +
+          '<div><p><strong>Jenjang / Kelas:</strong> <span id="prev-fase">' + data.fase + '</span></p></div>' +
+          '<div><p><strong>Model Learning:</strong> ' + data.model + '</p></div>' +
+          '<div><p><strong>Alokasi Waktu:</strong> ' + data.waktu + '</p></div>' +
+        '</div>' +
+      '</div>';
   }
     
       <div class="space-y-3 text-xs">
