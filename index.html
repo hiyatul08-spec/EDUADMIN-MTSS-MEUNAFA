@@ -700,13 +700,11 @@ function updateKelasDropdowns() {
   if (!selectJenjang) return;
 
   const currentValue = selectJenjang.value;
-  // Kosongkan opsi lama
-  selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
-
+  
   try {
     let dataKelas = [];
 
-    // Prioritaskan data terbaru dari localStorage 'app_kelas'
+    // 1. Ambil data dari localStorage 'app_kelas'
     const saved = localStorage.getItem('app_kelas');
     if (saved) {
       dataKelas = JSON.parse(saved);
@@ -715,24 +713,34 @@ function updateKelasDropdowns() {
     }
 
     if (Array.isArray(dataKelas) && dataKelas.length > 0) {
-      dataKelas.forEach(item => {
-        const option = document.createElement('option');
-        // Ambil nama kelas dari properti namaKelas, nama, atau item langsung
-        const nama = typeof item === 'object' ? (item.namaKelas || item.nama || item.tingkat) : item;
-        
-        if (nama) {
-          option.value = nama;
-          option.textContent = nama;
-          selectJenjang.appendChild(option);
-        }
-      });
+      // Hanya update jika isi opsi belum ada
+      if (selectJenjang.options.length <= 1) {
+        selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
+        dataKelas.forEach(item => {
+          const option = document.createElement('option');
+          // Ambil nama kelas dari properti namaKelas, nama, atau item
+          const nama = typeof item === 'object' ? (item.namaKelas || item.nama || item.tingkat) : item;
+          
+          if (nama) {
+            option.value = nama;
+            option.textContent = nama;
+            selectJenjang.appendChild(option);
+          }
+        });
+      }
     }
 
     if (currentValue) selectJenjang.value = currentValue;
   } catch (err) {
     console.error("Error updating kelas dropdown:", err);
   }
-}    
+}
+
+// Jalankan otomatis setiap ada perubahan/klik menu di aplikasi
+document.addEventListener('click', function() {
+  setTimeout(updateKelasDropdowns, 100);
+});
+setInterval(updateKelasDropdowns, 1000);    
     
 
 
