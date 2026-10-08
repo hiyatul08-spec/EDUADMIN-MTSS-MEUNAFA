@@ -696,42 +696,51 @@ function toggleModal(modalId, show) {
 
 // Dynamic Dropdown Helpers
 function updateKelasDropdowns() {
-  const faseSelect = document.getElementById('modul-jenjang');
-  if (!faseSelect) return;
+  const modulKelas = document.getElementById('modul-jenjang');
+  const modulMapel = document.getElementById('modul-mapel');
 
-  // 1. Ambil data kelas dari localStorage
-  let dataKelas = JSON.parse(localStorage.getItem('dataKelas')) || [];
+  // 1. SINKRONISASI DROPDOWN KELAS
+  if (modulKelas) {
+    let dataKelas = JSON.parse(localStorage.getItem('dataKelas')) || [];
+    if (dataKelas.length === 0) {
+      dataKelas = [
+        { nama: 'VII A', tingkat: 'VII', fase: 'Fase D' },
+        { nama: 'VIII A', tingkat: 'VIII', fase: 'Fase D' },
+        { nama: 'IX A', tingkat: 'IX', fase: 'Fase D' },
+        { nama: 'I_A', tingkat: 'I', fase: 'Fase A' },
+        { nama: 'II-A', tingkat: 'II', fase: 'Fase A' }
+      ];
+    }
 
-  // 2. Jika data di localStorage kosong, gunakan default kelas MTs Meunafa
-  if (dataKelas.length === 0) {
-    dataKelas = [
-      { nama: 'VII A', tingkat: 'VII', fase: 'Fase D' },
-      { nama: 'VIII A', tingkat: 'VIII', fase: 'Fase D' },
-      { nama: 'IX A', tingkat: 'IX', fase: 'Fase D' },
-      { nama: 'I_A', tingkat: 'I', fase: 'Fase A' },
-      { nama: 'II-A', tingkat: 'II', fase: 'Fase A' }
-    ];
+    let options = '<option value="">-- Pilih Jenjang / Kelas --</option>';
+    dataKelas.forEach(k => {
+      let nama = k.namaKelas || k.nama || k.kelas || '';
+      let fase = k.fase || '';
+      if (!fase) {
+        let t = String(k.tingkat || nama).toUpperCase();
+        if (['VII', 'VIII', 'IX'].some(x => t.includes(x))) fase = 'Fase D';
+        else fase = 'Fase A/B/C';
+      }
+      let label = `SMP / MTs - Kelas ${nama} (${fase})`;
+      options += `<option value="${label}">${label}</option>`;
+    });
+    modulKelas.innerHTML = options;
   }
 
-  // 3. Susun opsi dropdown secara dinamis untuk SELURUH data kelas yang ada
-  let options = '<option value="">-- Pilih Jenjang / Kelas --</option>';
-  dataKelas.forEach(k => {
-    let fase = k.fase;
-    if (!fase) {
-      const t = String(k.tingkat || k.nama).toUpperCase();
-      if (t.includes('VII') || t.includes('VIII') || t.includes('IX') || ['7','8','9'].some(x => t.includes(x))) {
-        fase = 'Fase D';
-      } else {
-        fase = 'Fase A/B/C';
-      }
-    }
+  // 2. SINKRONISASI DROPDOWN MATA PELAJARAN
+  if (modulMapel) {
+    let dataMapel = JSON.parse(localStorage.getItem('dataMapel')) || [];
+    let optionsMapel = '<option value="">-- Pilih Mata Pelajaran --</option>';
     
-    const label = `SMP / MTs - Kelas ${k.nama} (${fase})`;
-    options += `<option value="${label}">${label}</option>`;
-  });
-
-  faseSelect.innerHTML = options;
-}    
+    dataMapel.forEach(m => {
+      let namaMapel = m.namaMapel || m.nama || m.mapel || m.mataPelajaran || '';
+      if (namaMapel) {
+        optionsMapel += `<option value="${namaMapel}">${namaMapel}</option>`;
+      }
+    });
+    modulMapel.innerHTML = optionsMapel;
+  }
+}  
     
     
     function updateGuruDropdowns() {
