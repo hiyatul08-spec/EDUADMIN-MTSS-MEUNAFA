@@ -784,26 +784,28 @@ document.addEventListener('click', function() {
 }
 
     
+    
 function updateMapelDropdowns() {
-  const selectMapel = document.getElementById('modul-mapel'); // Sesuaikan ID dropdown mapel kamu
+  const selectMapel = document.getElementById('modul-mapel');
   if (!selectMapel) return;
 
   let rawList = [];
 
-  // 1. Ambil data mapel langsung dari baris tabel DOM (#table-mapel)
-  const rowsMapel = document.querySelectorAll('#table-mapel tr, .table-mapel tr');
+  // 1. Ambil Nama Mata Pelajaran langsung dari baris tabel DOM (#table-mapel)
+  const rowsMapel = document.querySelectorAll('#table-mapel tr');
   rowsMapel.forEach(tr => {
     const tds = tr.querySelectorAll('td');
+    // Memastikan ada kolom yang dibaca (Nama Mapel di kolom ke-2 / index 1)
     if (tds.length >= 2) {
-      // Ambil Nama Mata Pelajaran (biasanya di kolom ke-2 / index 1)
       let namaMapel = tds[1] ? tds[1].textContent.trim() : '';
+      
       if (namaMapel && !namaMapel.includes('Tidak ada') && !namaMapel.includes('Belum ada')) {
         rawList.push(namaMapel);
       }
     }
   });
 
-  // 2. Jika tabel DOM belum ter-render, cadangan dari appData / localStorage
+  // 2. Cadangan jika tabel DOM belum ter-render
   if (rawList.length === 0) {
     try {
       if (typeof appData !== 'undefined' && appData && Array.isArray(appData.mapel)) {
@@ -815,7 +817,7 @@ function updateMapelDropdowns() {
     } catch (e) {}
   }
 
-  // 3. Ambil data MURNI & Unik
+  // 3. Ambil data MURNI & Unik tanpa dibuang
   let cleanedList = [];
   rawList.forEach(text => {
     if (text && !cleanedList.includes(text)) {
@@ -825,7 +827,7 @@ function updateMapelDropdowns() {
 
   const currentValue = selectMapel.value;
 
-  // 4. Render ke Dropdown
+  // 4. Render ke Dropdown Modul Ajar
   selectMapel.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
   cleanedList.forEach(mapel => {
     const opt = document.createElement('option');
@@ -835,7 +837,14 @@ function updateMapelDropdowns() {
     selectMapel.appendChild(opt);
   });
 }
+
+// PEMICU SINKRONISASI REAL-TIME
+document.addEventListener('click', function() {
+  setTimeout(updateMapelDropdowns, 150);
+});
     
+
+
     
     function updateSiswaDropdowns() {
   const select = document.getElementById('nilai-f1');
