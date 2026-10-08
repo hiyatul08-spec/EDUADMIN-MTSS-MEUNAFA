@@ -701,7 +701,7 @@ function updateKelasDropdowns() {
 
   let rawList = [];
 
-  // 1. Ambil data kelas dari appData (jika ada)
+  // 1. Ambil data kelas dari appData lokal
   try {
     if (typeof appData !== 'undefined' && appData && Array.isArray(appData.kelas)) {
       appData.kelas.forEach(item => {
@@ -711,7 +711,7 @@ function updateKelasDropdowns() {
     }
   } catch (e) {}
 
-  // 2. Jika di memory kosong, ambil dari localStorage
+  // 2. Ambil dari localStorage eduadmin_data jika di appData kosong
   if (rawList.length === 0) {
     try {
       const saved = localStorage.getItem('eduadmin_data');
@@ -727,26 +727,39 @@ function updateKelasDropdowns() {
     } catch (e) {}
   }
 
-  // 3. Filter format Romawi (I s/d XII)
+  // 3. Konversi otomatis Angka Biasa (1-12) & Romawi ke format Romawi Standar
+  const mapAngkaKeRomawi = {
+    '1': 'I', '2': 'II', '3': 'III', '4': 'IV', '5': 'V', '6': 'VI',
+    '7': 'VII', '8': 'VIII', '9': 'IX', '10': 'X', '11': 'XI', '12': 'XII'
+  };
+
   let cleanedList = [];
   rawList.forEach(text => {
-    const match = text.match(/(XII|XI|X|IX|VIII|VII|VI|V|IV|III|II|I)/i);
-    if (match) {
-      const romawi = match[1].toUpperCase();
-      if (!cleanedList.includes(romawi)) {
-        cleanedList.push(romawi);
-      }
+    // Cek apakah ada angka biasa (1-12)
+    const matchAngka = text.match(/\b([1-9]|1[0-2])\b/);
+    // Cek apakah ada teks Romawi
+    const matchRomawi = text.match(/(XII|XI|X|IX|VIII|VII|VI|V|IV|III|II|I)/i);
+
+    let hasilRomawi = '';
+    if (matchAngka) {
+      hasilRomawi = mapAngkaKeRomawi[matchAngka[1]];
+    } else if (matchRomawi) {
+      hasilRomawi = matchRomawi[1].toUpperCase();
+    }
+
+    if (hasilRomawi && !cleanedList.includes(hasilRomawi)) {
+      cleanedList.push(hasilRomawi);
     }
   });
 
-  // Urutkan Romawi dari terkecil ke terbesar
+  // Urutkan dari jenjang terkecil ke terbesar
   const urutan = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
   cleanedList.sort((a, b) => urutan.indexOf(a) - urutan.indexOf(b));
 
   // Simpan nilai pilihan user saat ini
   const currentValue = selectJenjang.value;
 
-  // 4. Render ke Dropdown (Jika cleanedList kosong, dropdown otomatis cuma berisi pilihan default)
+  // 4. Render ke Dropdown Modul Ajar
   selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
   cleanedList.forEach(kelas => {
     const opt = document.createElement('option');
