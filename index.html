@@ -1249,33 +1249,50 @@ function updatePreviewLive() {
 
   if (!rawKelas && !rawMapel) return;
 
-  // Tentukan Jenjang Sekolah secara otomatis
+  // 1. Tentukan Jenjang Sekolah dan Fase Kurikulum Merdeka secara otomatis
   let jenjangPrefix = 'SMP / MTs';
+  let faseText = 'Fase D';
+
   if (rawKelas.match(/I|II|III|IV|V|VI|1|2|3|4|5|6/i) && !rawKelas.match(/VII|VIII|IX|X|XI|XII|7|8|9|10|11|12/i)) {
     jenjangPrefix = 'SD / MI';
+    if (rawKelas.match(/I|II|1|2/i)) faseText = 'Fase A';
+    else if (rawKelas.match(/III|IV|3|4/i)) faseText = 'Fase B';
+    else faseText = 'Fase C';
   } else if (rawKelas.match(/X|XI|XII|10|11|12/i)) {
     jenjangPrefix = 'SMA / MA';
+    if (rawKelas.match(/X|10/i)) faseText = 'Fase E';
+    else faseText = 'Fase F';
+  } else {
+    // Untuk Kelas 7, 8, 9 / VII, VIII, IX
+    faseText = 'Fase D';
   }
 
-  const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - ${rawKelas}` : 'SMP / MTs - Kelas 7 (Fase D)';
+  const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - Kelas ${rawKelas} (${faseText})` : 'SMP / MTs - Kelas 7 (Fase D)';
+  const labelHeaderKelas = rawKelas ? `${jenjangPrefix} - ${rawKelas}` : 'SMP / MTs - KELAS 7 (FASE D)';
   const labelMapel = rawMapel || 'AL-QUR\'AN HADIS';
 
-  // Update semua teks header & informasi umum di preview kanan
-  document.querySelectorAll('h2, h3, div, p, span').forEach(el => {
-    if (el.children.length === 0 && el.innerText) {
-      if (el.innerText.includes('MATA PELAJARAN:')) {
-        el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelKelasLengkap.toUpperCase()}`;
-      }
-      if (el.innerText.includes('Jenjang / Kelas:')) {
-        el.innerText = `Jenjang / Kelas: ${labelKelasLengkap}`;
-      }
-      if (el.innerText.includes('Mata Pelajaran:') && !el.innerText.includes('MATA PELAJARAN:')) {
-        el.innerText = `Mata Pelajaran: ${labelMapel}`;
-      }
+  // 2. Update Header Atas (Biru)
+  document.querySelectorAll('.preview-header-mapel, h3, h2').forEach(el => {
+    if (el.children.length === 0 && el.innerText && el.innerText.includes('MATA PELAJARAN:')) {
+      el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas.toUpperCase()}`;
+    }
+  });
+
+  // 3. Update Kolom "Jenjang / Kelas" dan "Mata Pelajaran" di Tabel Informasi Umum
+  document.querySelectorAll('td, div, p, span').forEach(el => {
+    // Mengganti teks Jenjang/Kelas di tabel Informasi Umum
+    if (el.innerText && el.innerText.includes('Jenjang / Kelas:')) {
+      el.innerHTML = `<strong>Jenjang / Kelas:</strong> ${labelKelasLengkap}`;
+    }
+    // Mengganti teks Mata Pelajaran di tabel Informasi Umum
+    if (el.innerText && el.innerText.includes('Mata Pelajaran:') && !el.innerText.includes('MATA PELAJARAN:')) {
+      el.innerHTML = `<strong>Mata Pelajaran:</strong> ${labelMapel}`;
     }
   });
 }
 
+
+    
 // Event listener otomatis saat halaman terbuka
 document.addEventListener('DOMContentLoaded', function() {
   try {
