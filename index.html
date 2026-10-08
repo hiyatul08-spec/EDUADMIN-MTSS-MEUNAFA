@@ -699,37 +699,32 @@ function updateKelasDropdowns() {
   const modulKelas = document.getElementById('modul-jenjang');
   const modulMapel = document.getElementById('modul-mapel');
 
-  // 1. SINKRONISASI DROPDOWN KELAS
+  // 1. SINKRONISASI DROPDOWN KELAS (Murni membaca localStorage)
   if (modulKelas) {
-    let dataKelas = JSON.parse(localStorage.getItem('dataKelas')) || [];
-    if (dataKelas.length === 0) {
-      dataKelas = [
-        { nama: 'VII A', tingkat: 'VII', fase: 'Fase D' },
-        { nama: 'VIII A', tingkat: 'VIII', fase: 'Fase D' },
-        { nama: 'IX A', tingkat: 'IX', fase: 'Fase D' },
-        { nama: 'I_A', tingkat: 'I', fase: 'Fase A' },
-        { nama: 'II-A', tingkat: 'II', fase: 'Fase A' }
-      ];
-    }
-
+    const dataKelas = JSON.parse(localStorage.getItem('dataKelas')) || [];
     let options = '<option value="">-- Pilih Jenjang / Kelas --</option>';
+
     dataKelas.forEach(k => {
       let nama = k.namaKelas || k.nama || k.kelas || '';
       let fase = k.fase || '';
+      
       if (!fase) {
         let t = String(k.tingkat || nama).toUpperCase();
         if (['VII', 'VIII', 'IX'].some(x => t.includes(x))) fase = 'Fase D';
+        else if (['X', 'XI', 'XII'].some(x => t.includes(x))) fase = 'Fase E/F';
         else fase = 'Fase A/B/C';
       }
+
       let label = `SMP / MTs - Kelas ${nama} (${fase})`;
       options += `<option value="${label}">${label}</option>`;
     });
+
     modulKelas.innerHTML = options;
   }
 
   // 2. SINKRONISASI DROPDOWN MATA PELAJARAN
   if (modulMapel) {
-    let dataMapel = JSON.parse(localStorage.getItem('dataMapel')) || [];
+    const dataMapel = JSON.parse(localStorage.getItem('dataMapel')) || [];
     let optionsMapel = '<option value="">-- Pilih Mata Pelajaran --</option>';
     
     dataMapel.forEach(m => {
@@ -738,6 +733,7 @@ function updateKelasDropdowns() {
         optionsMapel += `<option value="${namaMapel}">${namaMapel}</option>`;
       }
     });
+
     modulMapel.innerHTML = optionsMapel;
   }
 }  
