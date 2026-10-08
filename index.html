@@ -696,43 +696,82 @@ function toggleModal(modalId, show) {
 
 // Dynamic Dropdown Helpers
 function updateKelasDropdowns() {
-  const faseSelect = document.getElementById('modul-jenjang');
-  if (!faseSelect) return;
+  const selectJenjang = document.getElementById('modul-jenjang');
+  if (!selectJenjang) return;
 
-  // 1. Ambil data kelas dari localStorage
-  let dataKelas = JSON.parse(localStorage.getItem('dataKelas')) || [];
+  let rawList = [];
 
-  // 2. Jika data di localStorage kosong, gunakan default kelas MTs Meunafa
-  if (dataKelas.length === 0) {
-    dataKelas = [
-      { nama: 'VII A', tingkat: 'VII', fase: 'Fase D' },
-      { nama: 'VIII A', tingkat: 'VIII', fase: 'Fase D' },
-      { nama: 'IX A', tingkat: 'IX', fase: 'Fase D' },
-      { nama: 'I_A', tingkat: 'I', fase: 'Fase A' },
-      { nama: 'II-A', tingkat: 'II', fase: 'Fase A' }
-    ];
+  // 1. Cek variabel appData lokal jika ada
+  try {
+    if (typeof appData !== 'undefined' && appData && Array.isArray(appData.kelas)) {
+      appData.kelas.forEach(item => {
+        let val = (typeof item === 'object' && item !== null) ? (item.tingkat || item.namaKelas || '') : item;
+        if (val) rawList.push(val.toString().trim());
+      });
+    }
+  } catch (e) {}
+
+  // 2. Ambil dari localStorage eduadmin_data
+  if (rawList.length === 0) {
+    try {
+      const saved = localStorage.getItem('eduadmin_data');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && Array.isArray(parsed.kelas)) {
+          parsed.kelas.forEach(item => {
+            let val = (typeof item === 'object' && item !== null) ? (item.tingkat || item.namaKelas || '') : item;
+            if (val) rawList.push(val.toString().trim());
+          });
+        }
+      }
+    } catch (e) {}
   }
 
-  // 3. Susun opsi dropdown secara dinamis untuk SELURUH data kelas yang ada
-  let options = '<option value="">-- Pilih Jenjang / Kelas --</option>';
-  dataKelas.forEach(k => {
-    let fase = k.fase;
-    if (!fase) {
-      const t = String(k.tingkat || k.nama).toUpperCase();
-      if (t.includes('VII') || t.includes('VIII') || t.includes('IX') || ['7','8','9'].some(x => t.includes(x))) {
-        fase = 'Fase D';
-      } else {
-        fase = 'Fase A/B/C';
+  // 3. Ambil dari tabel kelas di DOM jika sedang terbuka
+  if (rawList.length === 0) {
+    const rowsKelas = document.querySelectorAll('#table-kelas tbody tr, .table-kelas tbody tr');
+    rowsKelas.forEach(tr => {
+      const tds = tr.querySelectorAll('td');
+      if (tds.length >= 1) {
+        let namaKls = tds[2] ? tds[2].textContent.trim() : tds[0].textContent.trim();
+        if (namaKls) rawList.push(namaKls);
+      }
+    });
+  }
+
+  // 4. Ekstraksi Tingkat Romawi murni (I s/d XII)
+  let cleanedList = [];
+  rawList.forEach(text => {
+    const match = text.match(/(XII|XI|X|IX|VIII|VII|VI|V|IV|III|II|I)/i);
+    if (match) {
+      const romawi = match[1].toUpperCase();
+      if (!cleanedList.includes(romawi)) {
+        cleanedList.push(romawi);
       }
     }
-    
-    const label = `SMP / MTs - Kelas ${k.nama} (${fase})`;
-    options += `<option value="${label}">${label}</option>`;
   });
 
-  faseSelect.innerHTML = options;
-}
+  // 5. PENGAMAN UTAMA: Jika database benar-benar kosong, sediakan standar MTs/SMP (VII, VIII, IX)
+  if (cleanedList.length === 0) {
+    cleanedList = ['VII', 'VIII', 'IX'];
+  } else {
+    const urutan = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+    cleanedList.sort((a, b) => urutan.indexOf(a) - urutan.indexOf(b));
+  }
 
+  // Simpan nilai aktif user agar tidak ter-reset saat re-render
+  const currentValue = selectJenjang.value;
+
+  // 6. Render ke Dropdown Modul Ajar
+  selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
+  cleanedList.forEach(kelas => {
+    const opt = document.createElement('option');
+    opt.value = kelas;
+    opt.textContent = kelas;
+    if (kelas === currentValue) opt.selected = true;
+    selectJenjang.appendChild(opt);
+  });
+}
     
    
     
