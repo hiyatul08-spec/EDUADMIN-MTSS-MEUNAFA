@@ -696,65 +696,42 @@ function toggleModal(modalId, show) {
 
 // Dynamic Dropdown Helpers
 function updateKelasDropdowns() {
-  const selectJenjang = document.getElementById('modul-jenjang');
-  if (!selectJenjang) return;
+  const faseSelect = document.getElementById('modul-jenjang');
+  if (!faseSelect) return;
 
-  let rawList = [];
+  // 1. Ambil data kelas dari localStorage
+  let dataKelas = JSON.parse(localStorage.getItem('dataKelas')) || [];
 
-  // 1. Ambil data kelas langsung dari appData
-  if (window.appData && Array.isArray(window.appData.kelas)) {
-    window.appData.kelas.forEach(item => {
-      let val = (typeof item === 'object' && item !== null) ? (item.tingkat || item.namaKelas || '') : item;
-      if (val) rawList.push(val.toString().trim());
-    });
+  // 2. Jika data di localStorage kosong, gunakan default kelas MTs Meunafa
+  if (dataKelas.length === 0) {
+    dataKelas = [
+      { nama: 'VII A', tingkat: 'VII', fase: 'Fase D' },
+      { nama: 'VIII A', tingkat: 'VIII', fase: 'Fase D' },
+      { nama: 'IX A', tingkat: 'IX', fase: 'Fase D' },
+      { nama: 'I_A', tingkat: 'I', fase: 'Fase A' },
+      { nama: 'II-A', tingkat: 'II', fase: 'Fase A' }
+    ];
   }
 
-  // Cadangan jika appData belum ter-load sempurna
-  if (rawList.length === 0) {
-    try {
-      const saved = localStorage.getItem('eduadmin_data');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && Array.isArray(parsed.kelas)) {
-          parsed.kelas.forEach(item => {
-            let val = (typeof item === 'object' && item !== null) ? (item.tingkat || item.namaKelas || '') : item;
-            if (val) rawList.push(val.toString().trim());
-          });
-        }
-      }
-    } catch (e) {}
-  }
-
-  // 2. Filter Romawi murni (I - XII) & Hilangkan Duplikat
-  let cleanedList = [];
-  rawList.forEach(text => {
-    const match = text.match(/(XII|XI|X|IX|VIII|VII|VI|V|IV|III|II|I)/i);
-    if (match) {
-      const romawi = match[1].toUpperCase();
-      if (!cleanedList.includes(romawi)) {
-        cleanedList.push(romawi);
+  // 3. Susun opsi dropdown secara dinamis untuk SELURUH data kelas yang ada
+  let options = '<option value="">-- Pilih Jenjang / Kelas --</option>';
+  dataKelas.forEach(k => {
+    let fase = k.fase;
+    if (!fase) {
+      const t = String(k.tingkat || k.nama).toUpperCase();
+      if (t.includes('VII') || t.includes('VIII') || t.includes('IX') || ['7','8','9'].some(x => t.includes(x))) {
+        fase = 'Fase D';
+      } else {
+        fase = 'Fase A/B/C';
       }
     }
+    
+    const label = `SMP / MTs - Kelas ${k.nama} (${fase})`;
+    options += `<option value="${label}">${label}</option>`;
   });
 
-  // Urutkan Romawi dari terkecil ke terbesar
-  const urutan = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-  cleanedList.sort((a, b) => urutan.indexOf(a) - urutan.indexOf(b));
-
-  // Simpan nilai dropdown yang sedang dipilih user agar tidak reset saat auto-update
-  const currentValue = selectJenjang.value;
-
-  // 3. Render Ulang Option
-  selectJenjang.innerHTML = '<option value="">-- Pilih Jenjang / Kelas --</option>';
-  cleanedList.forEach(kelas => {
-    const opt = document.createElement('option');
-    opt.value = kelas;
-    opt.textContent = kelas;
-    if (kelas === currentValue) opt.selected = true; // Pertahankan pilihan aktif
-    selectJenjang.appendChild(opt);
-  });
+  faseSelect.innerHTML = options;
 }
-
 
     
 // Jalankan otomatis
