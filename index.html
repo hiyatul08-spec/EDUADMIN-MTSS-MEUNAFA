@@ -1272,24 +1272,33 @@ function updatePreviewLive() {
   const labelHeaderKelas = rawKelas ? `${jenjangPrefix} - KELAS ${rawKelas.replace(/Kelas\s*/i, '')} (${faseText.toUpperCase()})` : 'SMP / MTS - KELAS 7 (FASE D)';
   const labelMapel = rawMapel || 'AL-QUR\'AN HADIS';
 
-  // 2. Update Header Atas (Biru)
-  document.querySelectorAll('h2, h3, div, p').forEach(el => {
-    if (el.children.length === 0 && el.innerText && (el.innerText.includes('MATA PELAJARAN:') || el.innerText.includes('SMP / MTS - KELAS 7'))) {
-      el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
-    }
-  });
+  // 2. Pemindaian Elemen Teks (Leaf Node Only)
+  const allElements = document.querySelectorAll('p, td, div, span, li, h2, h3');
+  
+  allElements.forEach(el => {
+    // Hanya proses elemen yang tidak punya child HTML lagi (daun struktur DOM)
+    if (el.children.length === 0) {
+      const txt = (el.innerText || el.textContent || '').trim();
 
-  // 3. Update Baris "Jenjang / Kelas" dan "Mata Pelajaran" di Tabel Informasi Umum
-  document.querySelectorAll('td').forEach(td => {
-    const text = td.innerText || td.textContent;
-    if (text.includes('Jenjang / Kelas')) {
-      td.innerHTML = `<strong>Jenjang / Kelas:</strong> ${labelKelasLengkap}`;
-    } else if (text.includes('Mata Pelajaran:') && !text.includes('MATA PELAJARAN:')) {
-      td.innerHTML = `<strong>Mata Pelajaran:</strong> ${labelMapel}`;
+      // Update Header Biru
+      if (txt.includes('MATA PELAJARAN:') || txt.includes('SMP / MTS - KELAS 7')) {
+        el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
+      }
+
+      // Update Label Jenjang/Kelas di Informasi Umum
+      if (txt.includes('Jenjang / Kelas:') || txt.includes('SMP / MTs - Kelas 7 (Fase D)')) {
+        if (!txt.includes('MATA PELAJARAN:')) {
+          el.innerHTML = `<strong>Jenjang / Kelas:</strong> ${labelKelasLengkap}`;
+        }
+      }
+
+      // Update Label Mata Pelajaran di Informasi Umum
+      if (txt.includes('Mata Pelajaran:') && !txt.includes('MATA PELAJARAN:')) {
+        el.innerHTML = `<strong>Mata Pelajaran:</strong> ${labelMapel}`;
+      }
     }
   });
 }
-
     
     
     
