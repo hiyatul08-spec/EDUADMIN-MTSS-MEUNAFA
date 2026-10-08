@@ -1244,16 +1244,17 @@ function generateModulAjar(e) {
 
     
 // Function untuk sync live preview
+// 1. Fungsi Utama Update Preview
 function updatePreviewLive() {
   const selectKelas = document.getElementById('modul-jenjang');
   const selectMapel = document.getElementById('modul-mapel');
   
-  const rawKelas = selectKelas ? (selectKelas.options[selectKelas.selectedIndex]?.text || selectKelas.value) : '';
+  if (!selectKelas) return;
+
+  const rawKelas = selectKelas.options[selectKelas.selectedIndex]?.text || selectKelas.value || '';
   const rawMapel = selectMapel ? (selectMapel.options[selectMapel.selectedIndex]?.text || selectMapel.value) : '';
 
-  if (!rawKelas && !rawMapel) return;
-
-  // 1. Tentukan Jenjang & Fase Otomatis
+  // Penentuan Jenjang & Fase
   let jenjangPrefix = 'SMP / MTs';
   let faseText = 'Fase D';
 
@@ -1273,20 +1274,40 @@ function updatePreviewLive() {
   const labelHeaderKelas = rawKelas ? `${jenjangPrefix} - KELAS ${cleanKelas} (${faseText.toUpperCase()})` : 'SMP / MTS - KELAS 7 (FASE D)';
   const labelMapel = rawMapel || 'AL-QUR\'AN HADIS';
 
-  // 2. Direct Update lewat ID bawaan HTML
+  // Tembak ID spesifik sesuai HTML
   const elFase = document.getElementById('prev-fase');
   const elMapel = document.getElementById('prev-mapel');
 
   if (elFase) elFase.innerText = labelKelasLengkap;
   if (elMapel) elMapel.innerText = labelMapel;
 
-  // 3. Update Header Biru di atas
+  // Update Header Atas
   document.querySelectorAll('p, h2, h3, div').forEach(el => {
     if (el.children.length === 0 && el.innerText && (el.innerText.includes('MATA PELAJARAN:') || el.innerText.includes('SMP / MTS - KELAS 7'))) {
       el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
     }
   });
-}    
+}
+
+// 2. Hubungkan Listener saat Dropdown Berubah (Live Update)
+document.addEventListener('DOMContentLoaded', () => {
+  const selectKelas = document.getElementById('modul-jenjang');
+  const selectMapel = document.getElementById('modul-mapel');
+
+  if (selectKelas) selectKelas.addEventListener('change', updatePreviewLive);
+  if (selectMapel) selectMapel.addEventListener('change', updatePreviewLive);
+});
+
+// 3. Override Fungsi Generate agar Sync Setelah Tab Rendat
+const originalGenerateModulAjar = window.generateModulAjar;
+window.generateModulAjar = function(e) {
+  if (typeof originalGenerateModulAjar === 'function') {
+    originalGenerateModulAjar(e);
+  }
+  // Jalankan update preview setelah penundaan singkat untuk menunggu DOM tab selesai dirender
+  setTimeout(updatePreviewLive, 100);
+  setTimeout(updatePreviewLive, 300);
+};    
     
     
     
