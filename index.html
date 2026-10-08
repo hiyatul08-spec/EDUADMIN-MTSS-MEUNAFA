@@ -1184,12 +1184,50 @@ function switchTabModul(tabName) {
   }
 }
 
-// Function Form Submit
+
+    
+    // Function Form Submit
 function generateModulAjar(e) {
   if (e) e.preventDefault();
+
+  // 1. Ambil nilai dari input/dropdown
+  const rawKelas = document.getElementById('modul-jenjang')?.value || '';
+  const rawMapel = document.getElementById('modul-mapel')?.value || '';
+
+  // 2. Tentukan Jenjang Sekolah secara otomatis dari Pilihan Kelas
+  let jenjangPrefix = 'SMP / MTs';
+  if (rawKelas.match(/I|II|III|IV|V|VI|1|2|3|4|5|6/i) && !rawKelas.match(/VII|VIII|IX|X|XI|XII|7|8|9|10|11|12/i)) {
+    jenjangPrefix = 'SD / MI';
+  } else if (rawKelas.match(/X|XI|XII|10|11|12/i)) {
+    jenjangPrefix = 'SMA / MA';
+  }
+
+  // Gabungkan Jenjang dan Kelas
+  const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - ${rawKelas}` : 'SMP / MTs - Kelas 7 (Fase D)';
+
+  // 3. Update objek data global jika ada
+  if (typeof data !== 'undefined') {
+    data.kelas = labelKelasLengkap;
+    data.mapel = rawMapel || data.mapel;
+  }
+
+  // 4. Update teks di tampilan preview kanan secara langsung
+  document.querySelectorAll('.preview-header-mapel').forEach(el => {
+    el.innerText = `MATA PELAJARAN: ${(rawMapel || '').toUpperCase()} | ${labelKelasLengkap.toUpperCase()}`;
+  });
+
+  const elPreviewMapel = document.getElementById('preview-mapel');
+  const elPreviewKelas = document.getElementById('preview-kelas');
+  if (elPreviewMapel && rawMapel) elPreviewMapel.innerText = rawMapel;
+  if (elPreviewKelas && rawKelas) elPreviewKelas.innerText = labelKelasLengkap;
+
+  // 5. Tampilkan tab preview modul
   switchTabModul('modul');
 }
 
+
+
+    
 // Event listener otomatis saat halaman terbuka
 document.addEventListener('DOMContentLoaded', function() {
   try {
