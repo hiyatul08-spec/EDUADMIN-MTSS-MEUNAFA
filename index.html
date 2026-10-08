@@ -1247,12 +1247,14 @@ function updatePreviewLive() {
   const selectKelas = document.getElementById('modul-jenjang');
   const selectMapel = document.getElementById('modul-mapel');
   
-  const rawKelas = selectKelas ? (selectKelas.options[selectKelas.selectedIndex]?.text || selectKelas.value) : '';
+  if (!selectKelas) return;
+
+  const rawKelas = selectKelas.value || selectKelas.options[selectKelas.selectedIndex]?.text || '';
   const rawMapel = selectMapel ? (selectMapel.options[selectMapel.selectedIndex]?.text || selectMapel.value) : '';
 
-  if (!rawKelas && !rawMapel) return;
+  if (!rawKelas) return;
 
-  // 1. Tentukan Jenjang & Fase Otomatis
+  // 1. Logika Jenjang & Fase
   let jenjangPrefix = 'SMP / MTs';
   let faseText = 'Fase D';
 
@@ -1267,36 +1269,49 @@ function updatePreviewLive() {
     else faseText = 'Fase F';
   }
 
-  const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - Kelas ${rawKelas.replace(/Kelas\s*/i, '')} (${faseText})` : 'SMP / MTs - Kelas 7 (Fase D)';
-  const labelHeaderKelas = rawKelas ? `${jenjangPrefix} - KELAS ${rawKelas.replace(/Kelas\s*/i, '')} (${faseText.toUpperCase()})` : 'SMP / MTS - KELAS 7 (FASE D)';
+  const cleanKelas = rawKelas.replace(/Kelas\s*/i, '').trim();
+  const labelKelasLengkap = `${jenjangPrefix} - Kelas ${cleanKelas} (${faseText})`;
+  const labelHeaderKelas = `${jenjangPrefix} - KELAS ${cleanKelas} (${faseText.toUpperCase()})`;
   const labelMapel = rawMapel || 'AL-QUR\'AN HADIS';
 
-  // 2. Cari area preview dokumen di sebelah kanan
-  const previewArea = document.querySelector('.lg\\:col-span-8') || document.body;
-
-  // 3. Update ID spesifik jika ada
-  const elHeader = document.getElementById('preview-header-kelas');
-  const elJenjang = document.getElementById('preview-jenjang-kelas');
-  const elMapel = document.getElementById('preview-mapel-nama');
-
-  if (elHeader) elHeader.innerText = labelHeaderKelas;
-  if (elJenjang) elJenjang.innerText = labelKelasLengkap;
+  // 2. Jika elemen id="prev-fase" masih ada (Sebelum Generate)
+  const elFase = document.getElementById('prev-fase');
+  const elMapel = document.getElementById('prev-mapel');
+  if (elFase) elFase.innerText = labelKelasLengkap;
   if (elMapel) elMapel.innerText = labelMapel;
 
-  // 4. Fallback: Ubah langsung teks di dalam elemen-elemen kecil area preview
-  previewArea.querySelectorAll('p, div, span, h2, h3, td').forEach(el => {
-    if (el.children.length === 0 && el.innerText) {
-      if (el.innerText.includes('MATA PELAJARAN:') || el.innerText.includes('SMP / MTS - KELAS 7')) {
-        el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
-      } else if (el.innerText.includes('Jenjang / Kelas:')) {
-        el.innerHTML = `<strong>Jenjang / Kelas:</strong> ${labelKelasLengkap}`;
-      } else if (el.innerText.includes('Mata Pelajaran:') && !el.innerText.includes('MATA PELAJARAN:')) {
-        el.innerHTML = `<strong>Mata Pelajaran:</strong> ${labelMapel}`;
-      }
+  // 3. Jika elemen ID sudah hilang diganti HTML baru (Setelah Generate)
+  document.querySelectorAll('div, p, span, td').forEach(el => {
+    // Cari elemen yang berisi teks 'Jenjang / Kelas:'
+    if (el.children.length <= 1 && el.innerText && el.innerText.includes('Jenjang / Kelas:')) {
+      el.innerHTML = `<strong>Jenjang / Kelas:</strong> ${labelKelasLengkap}`;
+    }
+    // Cari elemen yang berisi teks 'Mata Pelajaran:' di area Informasi Umum
+    if (el.children.length <= 1 && el.innerText && el.innerText.includes('Mata Pelajaran:') && !el.innerText.includes('MATA PELAJARAN:')) {
+      el.innerHTML = `<strong>Mata Pelajaran:</strong> ${labelMapel}`;
+    }
+    // Update Header Biru Atas
+    if (el.children.length === 0 && el.innerText && (el.innerText.includes('MATA PELAJARAN:') || el.innerText.includes('FASE'))) {
+      el.innerText = `MATA PELAJARAN: ${labelMapel.toUpperCase()} | ${labelHeaderKelas}`;
     }
   });
 }
 
+// 4. Jalankan Otomatis saat Ada Perubahan DOM / Tab Switch
+const observer = new MutationObserver(() => {
+  updatePreviewLive();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const selectKelas = document.getElementById('modul-jenjang');
+  const selectMapel = document.getElementById('modul-mapel');
+
+  if (selectKelas) selectKelas.addEventListener('change', updatePreviewLive);
+  if (selectMapel) selectMapel.addEventListener('change', updatePreviewLive);
+
+  observer.observe(document.body, { childList: true, subtree: true });
+  setTimeout(updatePreviewLive, 300);
+});
 function generateModulAjar(e) {
   if (e) e.preventDefault();
   if (typeof switchTabModul === 'function') switchTabModul('modul');
