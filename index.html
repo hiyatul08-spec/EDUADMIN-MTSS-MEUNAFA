@@ -145,11 +145,10 @@
           </thead>
           <tbody id="table-mapel" class="divide-y divide-slate-200"></tbody>
         </table>
-   </div>
-</div>
-</div>
+      </div>
+    </div>
 
-<div id="page-kelas" class="page-content p-8 space-y-6 hidden">
+    <div id="page-kelas" class="page-content p-8 space-y-6 hidden">
       <div class="flex justify-end items-center">
         <button onclick="toggleModal('modal-kelas', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Tambah Kelas</button>
       </div>
@@ -320,36 +319,20 @@
                 </ul>
               </div>
               <div>
-                <!-- B. KEGIATAN PEMBELAJARAN -->
-                        <div class="space-y-2">
-                            <h5 class="font-semibold text-slate-800">B. Kegiatan Pembelajaran</h5>
-                            <div class="border-l-2 border-indigo-500 pl-3 space-y-2 mt-1">
-                                <p><strong>1. Pendahuluan:</strong> Membuka pelajaran dengan salam, berdoa, dan memberikan pertanyaan pemantik terkait topik <span class="out-bab font-semibold">AMANAH</span>.</p>
-                                <p><strong>2. Inti:</strong> Siswa mengamati studi kasus, mendiskusikan masalah dalam kelompok, dan menyajikan hasil karya.</p>
-                                <p><strong>3. Penutup:</strong> Menyimpulkan pembelajaran bersama, refleksi, dan apresiasi kelompok.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- FOOTER TANDA TANGAN -->
-                    <div class="pt-6 mt-6 border-t border-slate-300 grid grid-cols-2 text-center text-xs md:text-sm font-medium">
-                        <div>
-                            <p>Mengetahui,</p>
-                            <p class="font-bold">Kepala Sekolah / Madrasah</p>
-                            <div class="h-16"></div>
-                            <p class="font-bold underline out-kepala">Drs. H. Muhammad Ridwan, M.Pd.</p>
-                            <p class="text-xs text-slate-500">NIP. <span class="out-nip-kepala">19730814 199903 1 001</span></p>
-                        </div>
-                        <div>
-                            <p>Dibuat Oleh,</p>
-                            <p class="font-bold">Guru Mata Pelajaran</p>
-                            <div class="h-16"></div>
-                            <p class="font-bold underline out-guru">ANTO</p>
-                            <p class="text-xs text-slate-500">NIP. <span class="out-nip-guru">1970</span></p>
-                        </div>
-                    </div>
+                <h5 class="font-semibold text-slate-800">B. Kegiatan Pembelajaran</h5>
+                <div class="border-l-2 border-indigo-500 pl-3 space-y-2 mt-1">
+                  <p><strong>1. Pendahuluan:</strong> Membuka pelajaran dengan salam, berdoa, dan memberikan pertanyaan pemantik terkait topik.</p>
+                  <p><strong>2. Inti:</strong> Siswa mengamati studi kasus, mendiskusikan masalah dalam kelompok, dan menyajikan hasil karya.</p>
+                  <p><strong>3. Penutup:</strong> Menyimpulkan pembelajaran bersama, refleksi, dan apresiasi kelompok.</p>
                 </div>
+              </div>
             </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
     <div id="page-media" class="page-content p-8 space-y-6 hidden">
       <div class="flex justify-end items-center">
         <button onclick="toggleModal('modal-media', true)" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600 flex items-center gap-2"><i class="fa-solid fa-plus"></i>Tambah Media</button>
@@ -448,43 +431,27 @@
       </div>
     </div>
 
-          
-  
-
-<!-- PAGE: PENGATURAN SYSTEM -->
-<div id="page-pengaturan" class="page-content p-8 space-y-6 hidden">
-    <div class="border-b pb-3 mb-4">
-        <h1 class="text-xl font-bold text-slate-800">Pengaturan System</h1>
-        <p class="text-xs text-slate-500">Atur profil sekolah dan identitas kepala sekolah.</p>
-    </div>
-
-    <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4 max-w-xl">
-        <h2 class="font-bold text-slate-800 text-sm border-b pb-2">Identitas Sekolah & Kepala Sekolah</h2>
-        
+    <div id="page-pengaturan" class="page-content p-8 space-y-6 hidden">
+      <div class="bg-white p-6 rounded-xl border border-slate-200 max-w-xl space-y-4">
         <div>
-            <label class="text-xs font-semibold block mb-1 text-slate-600">Nama Madrasah / Sekolah</label>
-            <input type="text" id="sys-nama-sekolah" value="MTs Meunafa" class="w-full border rounded-lg p-2.5 text-xs outline-none focus:ring-2 focus:ring-indigo-500">
+          <label class="text-xs font-semibold block mb-1">Nama Madrasah / Sekolah</label>
+          <input type="text" id="cfg-nama" value="MTs Meunafa" class="w-full border rounded-lg p-2 text-sm outline-none">
         </div>
-
         <div>
-            <label class="text-xs font-semibold block mb-1 text-slate-600">Kepala Madrasah / Sekolah</label>
-            <input type="text" id="sys-nama-kepsek" value="Drs. H. Muhammad Ridwan, M.Pd." class="w-full border rounded-lg p-2.5 text-xs outline-none focus:ring-2 focus:ring-indigo-500">
+          <label class="text-xs font-semibold block mb-1">Tahun Pelajaran</label>
+          <input type="text" id="cfg-thn" value="2026 / 2027" class="w-full border rounded-lg p-2 text-sm outline-none">
         </div>
-
         <div>
-            <label class="text-xs font-semibold block mb-1 text-slate-600">NIP Kepala Madrasah</label>
-            <input type="text" id="sys-nip-kepsek" value="19730814 199903 1 001" placeholder="Contoh: 19730814 199903 1 001" class="w-full border rounded-lg p-2.5 text-xs outline-none focus:ring-2 focus:ring-indigo-500">
-        </div>
-
-        <div class="pt-2">
-            <button onclick="saveSystemSettings()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition">
-                Simpan Perubahan
-            </button>
-        </div>
-    </div>
+  <label class="text-xs font-semibold block mb-1">Kepala Madrasah</label>
+  <input type="text" id="cfg-kepala" value="Administrator" class="w-full border rounded-lg p-2 text-sm outline-none">
 </div>
+<div>
+  <label class="text-xs font-semibold block mb-1">NIP Kepala Madrasah</label>
+  <input type="text" id="cfg-nip-kepala" placeholder="Contoh: 19800101 200501 1 001" class="w-full border rounded-lg p-2 text-sm outline-none">
+</div>
+<button onclick="alert('Pengaturan berhasil disimpan!')" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600">Simpan Pengaturan</button>      </div>
+    </div>
 
-          
   </main>
 
 
@@ -1485,67 +1452,5 @@ document.addEventListener('DOMContentLoaded', function() {
 }
   
   </script> 
-
-<script>
-function simpanPengaturanSystem() {
-    const sekolah = document.getElementById('sys-nama-sekolah').value;
-    const kepsek = document.getElementById('sys-nama-kepsek').value;
-    const nip = document.getElementById('sys-nip-kepsek').value;
-
-    localStorage.setItem('edu_nama_sekolah', sekolah);
-    localStorage.setItem('edu_nama_kepsek', kepsek);
-    localStorage.setItem('edu_nip_kepsek', nip);
-
-    // Langsung memperbarui pengesahan di layar
-    document.querySelectorAll('.out-sekolah').forEach(el => el.textContent = sekolah);
-    document.querySelectorAll('.out-kepala').forEach(el => el.textContent = kepsek);
-    document.querySelectorAll('.out-nip-kepala').forEach(el => el.textContent = nip);
-
-  alert('Pengaturan System berhasil disimpan!');
-}
-
-// Otomatis muat data simpanan saat halaman dibuka
-document.addEventListener('DOMContentLoaded', function() {
-    const savedSekolah = localStorage.getItem('edu_nama_sekolah');
-    const savedKepsek = localStorage.getItem('edu_nama_kepsek');
-    const savedNip = localStorage.getItem('edu_nip_kepsek');
-
-    if (savedSekolah && document.getElementById('sys-nama-sekolah')) {
-        document.getElementById('sys-nama-sekolah').value = savedSekolah;
-        document.querySelectorAll('.out-sekolah').forEach(el => el.textContent = savedSekolah);
-    }
-    if (savedKepsek && document.getElementById('sys-nama-kepsek')) {
-        document.getElementById('sys-nama-kepsek').value = savedKepsek;
-        document.querySelectorAll('.out-kepala').forEach(el => el.textContent = savedKepsek);
-    }
-    if (savedNip && document.getElementById('sys-nip-kepsek')) {
-        document.getElementById('sys-nip-kepsek').value = savedNip;
-        document.querySelectorAll('.out-nip-kepala').forEach(el => el.textContent = savedNip);
-    }
-});
-
-
-
-
-
-
-
-  
-// Otomatis muat data saat web pertama dibuka
-window.addEventListener('DOMContentLoaded', () => {
-    const savedSekolah = localStorage.getItem('edu_nama_sekolah') || 'MTsS Meunafa';
-    const savedKepsek = localStorage.getItem('edu_nama_kepsek') || 'Drs. H. Muhammad Ridwan, M.Pd.';
-    const savedNip = localStorage.getItem('edu_nip_kepsek') || '19730814 199903 1 001';
-
-    if(document.getElementById('sys-nama-sekolah')) document.getElementById('sys-nama-sekolah').value = savedSekolah;
-    if(document.getElementById('sys-nama-kepsek')) document.getElementById('sys-nama-kepsek').value = savedKepsek;
-    if(document.getElementById('sys-nip-kepsek')) document.getElementById('sys-nip-kepsek').value = savedNip;
-
-    document.querySelectorAll('.out-sekolah').forEach(el => el.textContent = savedSekolah);
-    document.querySelectorAll('.out-kepala').forEach(el => el.textContent = savedKepsek);
-    document.querySelectorAll('.out-nip-kepala').forEach(el => el.textContent = savedNip);
-});
-</script>
-        
 </body>
 </html>
