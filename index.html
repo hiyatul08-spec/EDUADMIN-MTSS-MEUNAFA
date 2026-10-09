@@ -450,8 +450,9 @@
 
           
   
-        <!-- PAGE: PENGATURAN SYSTEM -->
-        <div id="page-pengaturan" class="page-content p-8 space-y-6 hidden">
+
+<!-- PAGE: PENGATURAN SYSTEM -->
+<div id="page-pengaturan" class="page-content p-8 space-y-6 hidden">
             <div class="border-b pb-3 mb-4">
                 <h1 class="text-xl font-bold text-slate-800">Pengaturan System</h1>
                 <p class="text-xs text-slate-500">Atur profil sekolah dan identitas kepala sekolah.</p>
@@ -1497,9 +1498,36 @@ function simpanPengaturanSystem() {
     document.querySelectorAll('.out-kepala').forEach(el => el.textContent = kepsek);
     document.querySelectorAll('.out-nip-kepala').forEach(el => el.textContent = nip);
 
-    alert('Pengaturan System berhasil disimpan!');
+  alert('Pengaturan System berhasil disimpan!');
 }
 
+// Otomatis muat data simpanan saat halaman dibuka
+document.addEventListener('DOMContentLoaded', function() {
+    const savedSekolah = localStorage.getItem('edu_nama_sekolah');
+    const savedKepsek = localStorage.getItem('edu_nama_kepsek');
+    const savedNip = localStorage.getItem('edu_nip_kepsek');
+
+    if (savedSekolah && document.getElementById('sys-nama-sekolah')) {
+        document.getElementById('sys-nama-sekolah').value = savedSekolah;
+        document.querySelectorAll('.out-sekolah').forEach(el => el.textContent = savedSekolah);
+    }
+    if (savedKepsek && document.getElementById('sys-nama-kepsek')) {
+        document.getElementById('sys-nama-kepsek').value = savedKepsek;
+        document.querySelectorAll('.out-kepala').forEach(el => el.textContent = savedKepsek);
+    }
+    if (savedNip && document.getElementById('sys-nip-kepsek')) {
+        document.getElementById('sys-nip-kepsek').value = savedNip;
+        document.querySelectorAll('.out-nip-kepala').forEach(el => el.textContent = savedNip);
+    }
+});
+
+
+
+
+
+
+
+  
 // Otomatis muat data saat web pertama dibuka
 window.addEventListener('DOMContentLoaded', () => {
     const savedSekolah = localStorage.getItem('edu_nama_sekolah') || 'MTsS Meunafa';
