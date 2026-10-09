@@ -447,25 +447,25 @@
       </div>
     </div>
 
+          
     <div id="page-pengaturan" class="page-content p-8 space-y-6 hidden">
-      <div class="bg-white p-6 rounded-xl border border-slate-200 max-w-xl space-y-4">
-        <div>
-          <label class="text-xs font-semibold block mb-1">Nama Madrasah / Sekolah</label>
-          <input type="text" id="cfg-nama" value="MTs Meunafa" class="w-full border rounded-lg p-2 text-sm outline-none">
-        </div>
-        <div>
-          <label class="text-xs font-semibold block mb-1">Tahun Pelajaran</label>
-          <input type="text" id="cfg-thn" value="2026 / 2027" class="w-full border rounded-lg p-2 text-sm outline-none">
-        </div>
-        <div>
-  <label class="text-xs font-semibold block mb-1">Kepala Madrasah</label>
-  <input type="text" id="cfg-kepala" value="Administrator" class="w-full border rounded-lg p-2 text-sm outline-none">
-</div>
-<div>
-  <label class="text-xs font-semibold block mb-1">NIP Kepala Madrasah</label>
-  <input type="text" id="cfg-nip-kepala" placeholder="Contoh: 19800101 200501 1 001" class="w-full border rounded-lg p-2 text-sm outline-none">
-</div>
-<button onclick="alert('Pengaturan berhasil disimpan!')" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600">Simpan Pengaturan</button>      </div>
+            <div class="bg-white p-6 rounded-xl border border-slate-200 max-w-xl space-y-4">
+                <h2 class="font-bold text-slate-800 text-base border-b pb-2">Pengaturan System & Identitas</h2>
+                <div>
+                    <label class="text-xs font-semibold block mb-1">Nama Madrasah / Sekolah</label>
+                    <input type="text" id="sys-nama-sekolah" value="MTsS Meunafa" class="w-full border rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold block mb-1">Kepala Madrasah / Sekolah</label>
+                    <input type="text" id="sys-nama-kepsek" value="Drs. H. Muhammad Ridwan, M.Pd." class="w-full border rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold block mb-1">NIP Kepala Madrasah</label>
+                    <input type="text" id="sys-nip-kepsek" value="19730814 199903 1 001" placeholder="Contoh: 19730814 199903 1 001" class="w-full border rounded-lg p-2 text-sm outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <button type="button" onclick="simpanPengaturanSystem()" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600">Simpan Pengaturan</button>
+            </div>
+      </div>
     </div>
 
   </main>
@@ -1468,5 +1468,40 @@ document.addEventListener('DOMContentLoaded', function() {
 }
   
   </script> 
+
+<script>
+function simpanPengaturanSystem() {
+    const sekolah = document.getElementById('sys-nama-sekolah').value;
+    const kepsek = document.getElementById('sys-nama-kepsek').value;
+    const nip = document.getElementById('sys-nip-kepsek').value;
+
+    localStorage.setItem('edu_nama_sekolah', sekolah);
+    localStorage.setItem('edu_nama_kepsek', kepsek);
+    localStorage.setItem('edu_nip_kepsek', nip);
+
+    // Langsung memperbarui pengesahan di layar
+    document.querySelectorAll('.out-sekolah').forEach(el => el.textContent = sekolah);
+    document.querySelectorAll('.out-kepala').forEach(el => el.textContent = kepsek);
+    document.querySelectorAll('.out-nip-kepala').forEach(el => el.textContent = nip);
+
+    alert('Pengaturan System berhasil disimpan!');
+}
+
+// Otomatis muat data saat web pertama dibuka
+window.addEventListener('DOMContentLoaded', () => {
+    const savedSekolah = localStorage.getItem('edu_nama_sekolah') || 'MTsS Meunafa';
+    const savedKepsek = localStorage.getItem('edu_nama_kepsek') || 'Drs. H. Muhammad Ridwan, M.Pd.';
+    const savedNip = localStorage.getItem('edu_nip_kepsek') || '19730814 199903 1 001';
+
+    if(document.getElementById('sys-nama-sekolah')) document.getElementById('sys-nama-sekolah').value = savedSekolah;
+    if(document.getElementById('sys-nama-kepsek')) document.getElementById('sys-nama-kepsek').value = savedKepsek;
+    if(document.getElementById('sys-nip-kepsek')) document.getElementById('sys-nip-kepsek').value = savedNip;
+
+    document.querySelectorAll('.out-sekolah').forEach(el => el.textContent = savedSekolah);
+    document.querySelectorAll('.out-kepala').forEach(el => el.textContent = savedKepsek);
+    document.querySelectorAll('.out-nip-kepala').forEach(el => el.textContent = savedNip);
+});
+</script>
+        
 </body>
 </html>
