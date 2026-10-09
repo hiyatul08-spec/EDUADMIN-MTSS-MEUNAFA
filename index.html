@@ -1277,8 +1277,8 @@ function updatePreviewLive() {
   const labelMapel = rawMapel || 'AL-QUR\'AN HADIS';
 
 // Update teks Jenjang / Kelas di tabel INFORMASI UMUM
-  if (document.getElementById('prev-fase')) {
-    document.getElementById('prev-fase').textContent = labelKelasLengkap;
+if (document.getElementById('prev-fase')) {
+    document.getElementById('prev-fase').textContent = labelKelasLengkap || rawKelas || '-';
   }
 
   
