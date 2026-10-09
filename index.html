@@ -1249,6 +1249,20 @@ function updatePreviewLive() {
   const rawKelas = selectKelas ? (selectKelas.options[selectKelas.selectedIndex]?.text || selectKelas.value) : '';
   const rawMapel = selectMapel ? (selectMapel.options[selectMapel.selectedIndex]?.text || selectMapel.value) : '';
 
+// Sync langsung ke elemen preview INFORMASI UMUM
+  if (document.getElementById('prev-mapel')) {
+    document.getElementById('prev-mapel').textContent = rawMapel || '-';
+  }
+  if (document.getElementById('prev-fase')) {
+    document.getElementById('prev-fase').textContent = rawKelas || '-';
+  }
+  if (document.getElementById('prev-waktu')) {
+    const selectWaktu = document.getElementById('modul-waktu');
+    const rawWaktu = selectWaktu ? (selectWaktu.options[selectWaktu.selectedIndex]?.text || selectWaktu.value) : '-';
+    document.getElementById('prev-waktu').textContent = rawWaktu;
+  }
+
+  
   if (!rawKelas && !rawMapel) return;
 
   // 1. Tentukan Jenjang & Fase Otomatis
