@@ -1253,9 +1253,8 @@ function updatePreviewLive() {
   const selectWaktu = document.getElementById('modul-waktu') || document.getElementById('modul-alokasi') || document.querySelector('select[name*="waktu"]');
   const rawWaktu = selectWaktu ? (selectWaktu.options[selectWaktu.selectedIndex]?.text || selectWaktu.value) : '-';
 
-  if (document.getElementById('prev-mapel')) document.getElementById('prev-mapel').textContent = rawMapel || '-';
-  if (document.getElementById('prev-fase'))  document.getElementById('prev-fase').textContent = rawKelas || '-';
-  if (document.getElementById('prev-waktu')) document.getElementById('prev-waktu').textContent = rawWaktu || '-';  
+ if (document.getElementById('prev-mapel')) document.getElementById('prev-mapel').textContent = rawMapel || '-';
+  if (document.getElementById('prev-waktu')) document.getElementById('prev-waktu').textContent = rawWaktu || '-';
   if (!rawKelas && !rawMapel) return;
 
   // 1. Tentukan Jenjang & Fase Otomatis
@@ -1277,6 +1276,12 @@ function updatePreviewLive() {
   const labelHeaderKelas = rawKelas ? `${jenjangPrefix} - KELAS ${rawKelas.replace(/Kelas\s*/i, '')} (${faseText.toUpperCase()})` : 'SMP / MTS - KELAS 7 (FASE D)';
   const labelMapel = rawMapel || 'AL-QUR\'AN HADIS';
 
+// Update teks Jenjang / Kelas di tabel INFORMASI UMUM
+  if (document.getElementById('prev-fase')) {
+    document.getElementById('prev-fase').textContent = labelKelasLengkap;
+  }
+
+  
   // 2. Cari area preview dokumen di sebelah kanan
   const previewArea = document.querySelector('.lg\\:col-span-8') || document.body;
 
