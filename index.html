@@ -1039,11 +1039,11 @@ function updatePreviewContent() {
                 ? mapelSelect.options[mapelSelect.selectedIndex].text 
                 : 'PENDIDIKAN PANCASILA';
 
-  const faseSelect = document.getElementById('modul-fase');
-  const fase = (faseSelect && faseSelect.options[faseSelect.selectedIndex]) 
-               ? faseSelect.options[faseSelect.selectedIndex].text 
-               : 'SMP / MTs - Kelas 7 (Fase D)';
-
+ const faseSelect = document.getElementById('modul-fase') || document.getElementById('modul-jenjang');
+  const fase = (faseSelect && faseSelect.options && faseSelect.options[faseSelect.selectedIndex])
+    ? faseSelect.options[faseSelect.selectedIndex].text
+    : '';
+  
   const waktuSelect = document.getElementById('modul-waktu');
   const waktu = (waktuSelect && waktuSelect.options[waktuSelect.selectedIndex]) 
                 ? waktuSelect.options[waktuSelect.selectedIndex].text 
