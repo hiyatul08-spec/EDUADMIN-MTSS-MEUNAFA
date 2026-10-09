@@ -1205,7 +1205,7 @@ function generateModulAjar(e) {
     jenjangPrefix = 'SMA / MA';
   }
 
-  const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - ${rawKelas}` : 'SMP / MTs - Kelas 7 (Fase D)';
+ const labelKelasLengkap = rawKelas ? `${jenjangPrefix} - Kelas ${rawKelas.replace(/Kelas\s*/i, '')} (${faseText})` : 'SMP / MTs - Kelas 7 (Fase D)';
 
   // 3. Update Objek Data Global (Penting agar tidak tertimpa saat render tab)
   if (typeof data !== 'undefined') {
