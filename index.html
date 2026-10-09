@@ -448,27 +448,37 @@
     </div>
 
           
-    <!-- PAGE: PENGATURAN SYSTEM -->
+   <!-- PAGE: PENGATURAN SYSTEM -->
         <div id="page-pengaturan" class="page-content p-8 space-y-6 hidden">
-      <div class="bg-white p-6 rounded-xl border border-slate-200 max-w-xl space-y-4">
-        <div>
-          <label class="text-xs font-semibold block mb-1">Nama Madrasah / Sekolah</label>
-          <input type="text" id="cfg-nama" value="MTs Meunafa" class="w-full border rounded-lg p-2 text-sm outline-none">
+            <div class="border-b pb-3 mb-4">
+                <h1 class="text-xl font-bold text-slate-800">Pengaturan System</h1>
+                <p class="text-xs text-slate-500">Atur profil sekolah dan identitas kepala sekolah.</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4 max-w-xl">
+                <h2 class="font-bold text-slate-800 text-sm border-b pb-2">Identitas Sekolah & Kepala Sekolah</h2>
+                
+                <div>
+                    <label class="text-xs font-semibold block mb-1 text-slate-600">Nama Madrasah / Sekolah</label>
+                    <input type="text" id="sys-nama-sekolah" value="MTsS Meunafa" class="w-full border rounded-lg p-2.5 text-xs outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="text-xs font-semibold block mb-1 text-slate-600">Kepala Madrasah / Sekolah</label>
+                    <input type="text" id="sys-nama-kepsek" value="Drs. H. Muhammad Ridwan, M.Pd." class="w-full border rounded-lg p-2.5 text-xs outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="text-xs font-semibold block mb-1 text-slate-600">NIP Kepala Madrasah</label>
+                    <input type="text" id="sys-nip-kepsek" value="19730814 199903 1 001" placeholder="Contoh: 19730814 199903 1 001" class="w-full border rounded-lg p-2.5 text-xs outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <button type="button" onclick="simpanPengaturanSystem()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-xs font-medium">Simpan Pengaturan</button>
+            </div>
         </div>
-        <div>
-          <label class="text-xs font-semibold block mb-1">Tahun Pelajaran</label>
-          <input type="text" id="cfg-thn" value="2026 / 2027" class="w-full border rounded-lg p-2 text-sm outline-none">
-        </div>
-        <div>
-  <label class="text-xs font-semibold block mb-1">Kepala Madrasah</label>
-  <input type="text" id="cfg-kepala" value="Administrator" class="w-full border rounded-lg p-2 text-sm outline-none">
-</div>
-<div>
-  <label class="text-xs font-semibold block mb-1">NIP Kepala Madrasah</label>
-  <input type="text" id="cfg-nip-kepala" placeholder="Contoh: 19800101 200501 1 001" class="w-full border rounded-lg p-2 text-sm outline-none">
-</div>
-<button onclick="alert('Pengaturan berhasil disimpan!')" class="bg-emerald-500 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-600">Simpan Pengaturan</button>      </div>
-    </div>
+
+
+          
   </main>
 
 
