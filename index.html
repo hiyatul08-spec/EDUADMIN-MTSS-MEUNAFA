@@ -752,75 +752,151 @@ function toggleModal(modalId, show) {
 }
 
 // Dynamic Dropdown Helpers
+// 1. SINKRONISASI KELAS
 function updateKelasDropdowns() {
-  // 1. Target spesifik dropdown Jenjang di Modul Ajar dan dropdown Kelas di Modal Siswa
-  const selectJenjang = document.getElementById('modul-jenjang');
-  const selectSiswaKelas = document.getElementById('siswa-kelas') || 
-                           document.querySelector('#modal-siswa select[name="kelas"]') || 
-                           document.querySelectorAll('#modal-siswa select')[1]; // Khusus pilih select KEDUA (Kelas)
+  const targets = [
+    document.getElementById('modul-jenjang'),
+    document.getElementById('siswa-f3'),
+    document.getElementById('jadwal-f3') // Target Kelas di Modal Jadwal
+  ];
 
   let rawList = [];
-
-  // 2. Ambil data kelas langsung dari tabel DOM (#table-kelas)
   const rowsKelas = document.querySelectorAll('#table-kelas tr');
   rowsKelas.forEach(tr => {
     const tds = tr.querySelectorAll('td');
     if (tds.length >= 1) {
-      let namaKls = tds[0] ? tds[0].textContent.trim() : '';
-      let tingkatKls = tds[2] ? tds[2].textContent.trim() : '';
-      
-      let val = tingkatKls || namaKls;
-      if (val && !val.includes('Tidak ada') && !val.includes('Belum ada')) {
-        rawList.push(val);
+      let namaKelas = tds[0] ? tds[0].textContent.trim() : '';
+      if (namaKelas && !namaKelas.includes('Tidak ada') && !namaKelas.includes('Belum ada')) {
+        rawList.push(namaKelas);
       }
     }
   });
 
-  // 3. Cadangan dari appData jika tabel belum ter-render
-  if (rawList.length === 0) {
-    try {
-      if (typeof appData !== 'undefined' && appData && Array.isArray(appData.kelas)) {
-        appData.kelas.forEach(item => {
-          let val = (typeof item === 'object' && item !== null) ? (item.tingkat || item.namaKelas || item.nama || '') : item;
-          if (val) rawList.push(val.toString().trim());
-        });
-      }
-    } catch (e) {}
+  if (rawList.length === 0 && typeof appData !== 'undefined' && Array.isArray(appData.kelas)) {
+    appData.kelas.forEach(item => {
+      let val = (typeof item === 'object' && item !== null) ? (item.namaKelas || item.nama || '') : item;
+      if (val) rawList.push(val.toString().trim());
+    });
   }
 
-  // 4. Bersihkan data ganda
-  let cleanedList = [];
-  rawList.forEach(text => {
-    if (text && !cleanedList.includes(text)) {
-      cleanedList.push(text);
+  let cleanedList = [...new Set(rawList)];
+
+  targets.forEach(selectElem => {
+    if (selectElem) {
+      const currentValue = selectElem.value;
+      selectElem.innerHTML = '<option value="">-- Pilih Kelas --</option>';
+      cleanedList.forEach(kelas => {
+        const opt = document.createElement('option');
+        opt.value = kelas;
+        opt.textContent = kelas;
+        if (kelas === currentValue) opt.selected = true;
+        selectElem.appendChild(opt);
+      });
+    }
+  });
+}
+
+// 2. SINKRONISASI MATA PELAJARAN
+function updateMapelDropdowns() {
+  const targets = [
+    document.getElementById('modul-mapel'),
+    document.getElementById('nilai-f2'),
+    document.getElementById('guru-f3'),
+    document.getElementById('jadwal-f4') // Target Mapel di Modal Jadwal
+  ];
+
+  let rawList = [];
+  const rowsMapel = document.querySelectorAll('#table-mapel tr');
+  rowsMapel.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    if (tds.length >= 2) {
+      let namaMapel = tds[1] ? tds[1].textContent.trim() : '';
+      if (namaMapel && !namaMapel.includes('Tidak ada') && !namaMapel.includes('Belum ada')) {
+        rawList.push(namaMapel);
+      }
     }
   });
 
-  // Urutkan kelas
-  cleanedList.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
-
-  // Helper untuk render ke dropdown kelas
-  const fillSelect = (selectElem) => {
-    if (!selectElem) return;
-    const currentVal = selectElem.value;
-    selectElem.innerHTML = '<option value="">-- Pilih Kelas --</option>';
-    cleanedList.forEach(kelas => {
-      const opt = document.createElement('option');
-      opt.value = kelas;
-      opt.textContent = kelas;
-      if (kelas === currentVal) opt.selected = true;
-      selectElem.appendChild(opt);
+  if (rawList.length === 0 && typeof appData !== 'undefined' && Array.isArray(appData.mapel)) {
+    appData.mapel.forEach(item => {
+      let val = (typeof item === 'object' && item !== null) ? (item.namaMapel || item.nama || '') : item;
+      if (val) rawList.push(val.toString().trim());
     });
-  };
+  }
 
-  // Render HANYA ke dropdown kelas yang tepat
-  fillSelect(selectJenjang);
-  fillSelect(selectSiswaKelas);
+  let cleanedList = [...new Set(rawList)];
+
+  targets.forEach(selectElem => {
+    if (selectElem) {
+      const currentValue = selectElem.value;
+      selectElem.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
+      cleanedList.forEach(mapel => {
+        const opt = document.createElement('option');
+        opt.value = mapel;
+        opt.textContent = mapel;
+        if (mapel === currentValue) opt.selected = true;
+        selectElem.appendChild(opt);
+      });
+    }
+  });
 }
 
-// PEMICU SINKRONISASI REAL-TIME
+// 3. SINKRONISASI GURU
+function updateGuruDropdowns() {
+  const targets = [
+    document.getElementById('modul-guru'),
+    document.getElementById('jadwal-f5'), // Target Guru di Modal Jadwal
+    document.querySelector('#modal-kelas select[name="wali_kelas"]')
+  ];
+
+  let rawList = [];
+  const rowsGuru = document.querySelectorAll('#table-guru tr');
+  rowsGuru.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    if (tds.length >= 2) {
+      let namaGuru = tds[1] ? tds[1].textContent.trim() : '';
+      if (namaGuru.includes('(')) namaGuru = namaGuru.split('(')[0].trim();
+      if (namaGuru && !namaGuru.includes('Tidak ada') && !namaGuru.includes('Belum ada')) {
+        rawList.push(namaGuru);
+      }
+    }
+  });
+
+  if (rawList.length === 0 && typeof appData !== 'undefined' && Array.isArray(appData.guru)) {
+    appData.guru.forEach(item => {
+      let val = (typeof item === 'object' && item !== null) ? (item.namaGuru || item.nama || '') : item;
+      if (val) {
+        let cleanVal = val.toString().trim();
+        if (cleanVal.includes('(')) cleanVal = cleanVal.split('(')[0].trim();
+        rawList.push(cleanVal);
+      }
+    });
+  }
+
+  let cleanedList = [...new Set(rawList)];
+
+  targets.forEach(selectElem => {
+    if (selectElem) {
+      const currentValue = selectElem.value;
+      selectElem.innerHTML = '<option value="">-- Pilih Guru Pengajar --</option>';
+      cleanedList.forEach(guru => {
+        const opt = document.createElement('option');
+        opt.value = guru;
+        opt.textContent = guru;
+        if (guru === currentValue) opt.selected = true;
+        selectElem.appendChild(opt);
+      });
+    }
+  });
+}
+
+// PEMICU UTAMA
 document.addEventListener('click', function() {
-  setTimeout(updateKelasDropdowns, 150);
+  setTimeout(() => {
+    updateKelasDropdowns();
+    updateMapelDropdowns();
+    updateGuruDropdowns();
+  }, 100);
 });
     
    
