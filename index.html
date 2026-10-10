@@ -529,22 +529,48 @@
       </form>
     </div>
   </div>
+  
 
-  <!-- Modal Nilai -->
-  <div id="modal-nilai" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
-    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
-      <h3 class="text-lg font-bold">Input Nilai Siswa</h3>
-      <form onsubmit="addData(event, 'nilai')" class="space-y-3">
-        <div><label class="text-xs font-semibold block mb-1">Nama Siswa</label><select id="nilai-f1" required class="select-siswa-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white"></select></div>
-<div><label class="text-xs font-semibold block mb-1">Mata Pelajaran</label><select id="nilai-f2" required class="select-mapel-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white"></select></div>        <div class="grid grid-cols-3 gap-2">
-          <div><label class="text-xs font-semibold block mb-1">Tugas</label><input type="number" id="nilai-f3" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-          <div><label class="text-xs font-semibold block mb-1">UTS</label><input type="number" id="nilai-f4" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-          <div><label class="text-xs font-semibold block mb-1">UAS</label><input type="number" id="nilai-f5" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+ <!-- Modal Nilai -->
+<div id="modal-nilai" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
+  <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
+    <h3 class="text-lg font-bold">Input Nilai Siswa</h3>
+    <form onsubmit="addData(event, 'nilai')" class="space-y-3">
+      <div>
+        <label class="text-xs font-semibold block mb-1">Nama Siswa</label>
+        <select id="nilai-f1" required class="select-siswa-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
+          <option value="">-- Pilih Siswa --</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs font-semibold block mb-1">Mata Pelajaran</label>
+        <select id="nilai-f2" required class="select-mapel-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
+          <option value="">-- Pilih Mata Pelajaran --</option>
+        </select>
+      </div>
+      <div class="grid grid-cols-3 gap-2">
+        <div>
+          <label class="text-xs font-semibold block mb-1">Tugas</label>
+          <input type="number" id="nilai-f3" required class="w-full border rounded-lg p-2 text-sm outline-none">
         </div>
-        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-nilai', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
-      </form>
-    </div>
+        <div>
+          <label class="text-xs font-semibold block mb-1">UTS</label>
+          <input type="number" id="nilai-f4" required class="w-full border rounded-lg p-2 text-sm outline-none">
+        </div>
+        <div>
+          <label class="text-xs font-semibold block mb-1">UAS</label>
+          <input type="number" id="nilai-f5" required class="w-full border rounded-lg p-2 text-sm outline-none">
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="toggleModal('modal-nilai', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button>
+        <button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button>
+      </div>
+    </form>
   </div>
+</div>
+
+  
 
   <!-- Modal Jadwal -->
   <div id="modal-jadwal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
