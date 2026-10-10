@@ -878,36 +878,38 @@ document.addEventListener('click', function() {
 function updateMapelDropdowns() {
   const targets = [
     document.getElementById('modul-mapel'),
-    document.getElementById('nilai-mapel'), // ID modal input nilai
-    document.getElementById('guru-f3')
+    document.getElementById('nilai-f2'),
+    document.getElementById('guru-f3'),
+    document.getElementById('jadwal-f3')
   ];
 
   let rawList = [];
 
-  // Ambil data mapel dari tabel DOM (#table-mapel)
+  // 1. Ambil data dari tabel DOM (#table-mapel) dengan memeriksa seluruh kolom td
   const rowsMapel = document.querySelectorAll('#table-mapel tr');
   rowsMapel.forEach(tr => {
     const tds = tr.querySelectorAll('td');
-    if (tds.length >= 2) {
-      let namaMapel = tds[1] ? tds[1].textContent.trim() : '';
-      if (namaMapel && !namaMapel.includes('Tidak ada') && !namaMapel.includes('Belum ada')) {
-        rawList.push(namaMapel);
+    tds.forEach(td => {
+      let text = td.textContent.trim();
+      // Abaikan angka/ID/tombol aksi, ambil teks nama mapel
+      if (text && isNaN(text) && !text.includes('Tidak ada') && !text.includes('Hapus') && !text.includes('Edit')) {
+        rawList.push(text);
       }
-    }
+    });
   });
 
-  // Cadangan jika tabel belum ter-render
+  // 2. Fallback cadangan jika tabel DOM belum ter-render sempurna
   if (rawList.length === 0 && typeof appData !== 'undefined' && Array.isArray(appData.mapel)) {
     appData.mapel.forEach(item => {
-      let val = (typeof item === 'object' && item !== null) ? (item.namaMapel || item.nama || '') : item;
+      let val = (typeof item === 'object' && item !== null) ? (item.namaMapel || item.nama || item.mapel || '') : item;
       if (val) rawList.push(val.toString().trim());
     });
   }
 
-  // Filter unik
+  // 3. Filter unik (hilangkan duplikat)
   let cleanedList = [...new Set(rawList)];
 
-  // Inject ke elemen select
+  // 4. Populate ke seluruh target dropdown
   targets.forEach(selectElem => {
     if (selectElem) {
       const currentValue = selectElem.value;
@@ -922,6 +924,11 @@ function updateMapelDropdowns() {
     }
   });
 }
+
+// PEMICU SINKRONISASI REAL-TIME
+document.addEventListener('click', function() {
+  setTimeout(updateMapelDropdowns, 100);
+});
     
 
 
