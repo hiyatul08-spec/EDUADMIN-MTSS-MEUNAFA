@@ -873,30 +873,33 @@ function updateMapelDropdowns() {
 function updateGuruDropdowns() {
   const targets = [
     document.getElementById('modul-guru'),
-    document.getElementById('jadwal-f5'), // Target Guru di Modal Jadwal
+    document.getElementById('jadwal-f5'),
     document.querySelector('#modal-kelas select[name="wali_kelas"]')
   ];
 
   let rawList = [];
 
-  // 1. Ambil dari seluruh sel tabel #table-guru (Cari teks nama guru)
+  // 1. Ambil HANYA dari Kolom Ke-2 (index 1 = Nama Guru) di tabel #table-guru
   const rowsGuru = document.querySelectorAll('#table-guru tr');
   rowsGuru.forEach(tr => {
     const tds = tr.querySelectorAll('td');
-    tds.forEach(td => {
-      let txt = td.textContent.trim();
-      // Filter bukan angka NIP, bukan tombol aksi Hapus/Edit
-      if (txt && isNaN(txt) && !txt.includes('Tidak ada') && !txt.includes('Hapus') && !txt.includes('Edit')) {
-        if (txt.includes('(')) txt = txt.split('(')[0].trim();
-        rawList.push(txt);
+    // Minimal harus ada 2 kolom (NIP/No & Nama Guru)
+    if (tds.length >= 2) {
+      // Index 1 adalah kolom Nama Guru murni
+      let namaGuru = tds[1] ? tds[1].textContent.trim() : '';
+      
+      // Filter agar tidak mengambil teks header, tombol aksi, atau 'Tidak ada'
+      if (namaGuru && !namaGuru.includes('Tidak ada') && !namaGuru.includes('Belum ada') && !namaGuru.includes('Nama Guru')) {
+        if (namaGuru.includes('(')) namaGuru = namaGuru.split('(')[0].trim();
+        rawList.push(namaGuru);
       }
-    });
+    }
   });
 
-  // 2. Cadangan jika tabel DOM belum ter-render
+  // 2. Cadangan dari appData jika tabel DOM belum memuat
   if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.guru)) {
     appData.guru.forEach(item => {
-      let val = (typeof item === 'object' && item !== null) ? (item.namaGuru || item.nama || item.f2 || item.f1 || '') : item;
+      let val = (typeof item === 'object' && item !== null) ? (item.namaGuru || item.nama || item.f2 || '') : item;
       if (val) {
         let cleanVal = val.toString().trim();
         if (cleanVal.includes('(')) cleanVal = cleanVal.split('(')[0].trim();
@@ -905,10 +908,9 @@ function updateGuruDropdowns() {
     });
   }
 
-  // 3. Filter data unik
+  // 3. Hilangkan duplikat dan render ke dropdown
   let cleanedList = [...new Set(rawList)];
 
-  // 4. Render ke dropdown target
   targets.forEach(selectElem => {
     if (selectElem) {
       const currentValue = selectElem.value;
@@ -923,7 +925,6 @@ function updateGuruDropdowns() {
     }
   });
 }
-
 // PEMICU UTAMA
 document.addEventListener('click', function() {
   setTimeout(() => {
