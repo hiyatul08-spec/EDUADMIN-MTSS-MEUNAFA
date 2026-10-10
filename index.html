@@ -850,18 +850,15 @@ document.addEventListener('click', function() {
     
     
 function updateMapelDropdowns() {
-  // Target seluruh dropdown mata pelajaran yang ada di aplikasi
   const targets = [
     document.getElementById('modul-mapel'),
-    document.getElementById('nilai-mapel'),
-    document.getElementById('guru-f3'), // Modal Tambah Guru
-    document.querySelector('#modal-nilai select[name="mapel"]'),
-    document.querySelector('#modal-guru select[name="mapel"]')
+    document.getElementById('nilai-mapel'), // ID modal input nilai
+    document.getElementById('guru-f3')
   ];
 
   let rawList = [];
 
-  // 1. Ambil nama mapel langsung dari baris tabel DOM (#table-mapel)
+  // Ambil data mapel dari tabel DOM (#table-mapel)
   const rowsMapel = document.querySelectorAll('#table-mapel tr');
   rowsMapel.forEach(tr => {
     const tds = tr.querySelectorAll('td');
@@ -873,27 +870,18 @@ function updateMapelDropdowns() {
     }
   });
 
-  // 2. Cadangan jika tabel DOM belum ter-render
-  if (rawList.length === 0) {
-    try {
-      if (typeof appData !== 'undefined' && appData && Array.isArray(appData.mapel)) {
-        appData.mapel.forEach(item => {
-          let val = (typeof item === 'object' && item !== null) ? (item.namaMapel || item.nama || '') : item;
-          if (val) rawList.push(val.toString().trim());
-        });
-      }
-    } catch (e) {}
+  // Cadangan jika tabel belum ter-render
+  if (rawList.length === 0 && typeof appData !== 'undefined' && Array.isArray(appData.mapel)) {
+    appData.mapel.forEach(item => {
+      let val = (typeof item === 'object' && item !== null) ? (item.namaMapel || item.nama || '') : item;
+      if (val) rawList.push(val.toString().trim());
+    });
   }
 
-  // 3. Filter data unik
-  let cleanedList = [];
-  rawList.forEach(text => {
-    if (text && !cleanedList.includes(text)) {
-      cleanedList.push(text);
-    }
-  });
+  // Filter unik
+  let cleanedList = [...new Set(rawList)];
 
-  // 4. Render ke seluruh dropdown mapel yang ditemukan
+  // Inject ke elemen select
   targets.forEach(selectElem => {
     if (selectElem) {
       const currentValue = selectElem.value;
@@ -908,11 +896,6 @@ function updateMapelDropdowns() {
     }
   });
 }
-
-// PEMICU SINKRONISASI REAL-TIME
-document.addEventListener('click', function() {
-  setTimeout(updateMapelDropdowns, 150);
-});
     
 
 
