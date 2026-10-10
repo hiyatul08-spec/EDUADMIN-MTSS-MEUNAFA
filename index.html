@@ -878,21 +878,25 @@ function updateGuruDropdowns() {
   ];
 
   let rawList = [];
+
+  // 1. Ambil dari seluruh sel tabel #table-guru (Cari teks nama guru)
   const rowsGuru = document.querySelectorAll('#table-guru tr');
   rowsGuru.forEach(tr => {
     const tds = tr.querySelectorAll('td');
-    if (tds.length >= 2) {
-      let namaGuru = tds[1] ? tds[1].textContent.trim() : '';
-      if (namaGuru.includes('(')) namaGuru = namaGuru.split('(')[0].trim();
-      if (namaGuru && !namaGuru.includes('Tidak ada') && !namaGuru.includes('Belum ada')) {
-        rawList.push(namaGuru);
+    tds.forEach(td => {
+      let txt = td.textContent.trim();
+      // Filter bukan angka NIP, bukan tombol aksi Hapus/Edit
+      if (txt && isNaN(txt) && !txt.includes('Tidak ada') && !txt.includes('Hapus') && !txt.includes('Edit')) {
+        if (txt.includes('(')) txt = txt.split('(')[0].trim();
+        rawList.push(txt);
       }
-    }
+    });
   });
 
-  if (rawList.length === 0 && typeof appData !== 'undefined' && Array.isArray(appData.guru)) {
+  // 2. Cadangan jika tabel DOM belum ter-render
+  if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.guru)) {
     appData.guru.forEach(item => {
-      let val = (typeof item === 'object' && item !== null) ? (item.namaGuru || item.nama || '') : item;
+      let val = (typeof item === 'object' && item !== null) ? (item.namaGuru || item.nama || item.f2 || item.f1 || '') : item;
       if (val) {
         let cleanVal = val.toString().trim();
         if (cleanVal.includes('(')) cleanVal = cleanVal.split('(')[0].trim();
@@ -901,8 +905,10 @@ function updateGuruDropdowns() {
     });
   }
 
+  // 3. Filter data unik
   let cleanedList = [...new Set(rawList)];
 
+  // 4. Render ke dropdown target
   targets.forEach(selectElem => {
     if (selectElem) {
       const currentValue = selectElem.value;
