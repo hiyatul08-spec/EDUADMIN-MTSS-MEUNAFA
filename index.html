@@ -1041,46 +1041,110 @@ document.addEventListener('click', function() {
 
 
     
-  function updateSiswaDropdowns() {
+  // 1. FUNGSI SINKRONISASI SISWA
+function updateSiswaDropdowns() {
   const select = document.getElementById('nilai-f1');
-  if (select) {
-    const currentValue = select.value;
-    let rawList = [];
+  if (!select) return;
 
-    // 1. Ambil data siswa dari tabel DOM (#table-siswa)
-    const rowsSiswa = document.querySelectorAll('#table-siswa tr');
-    rowsSiswa.forEach(tr => {
-      const tds = tr.querySelectorAll('td');
-      if (tds.length >= 2) {
-        let namaSiswa = tds[1] ? tds[1].textContent.trim() : '';
-        if (namaSiswa && !namaSiswa.includes('Tidak ada') && !namaSiswa.includes('Belum ada')) {
-          rawList.push(namaSiswa);
-        }
+  const currentValue = select.value;
+  let rawList = [];
+
+  // Ambil dari seluruh sel tabel #table-siswa
+  const rowsSiswa = document.querySelectorAll('#table-siswa tr');
+  rowsSiswa.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    tds.forEach(td => {
+      let txt = td.textContent.trim();
+      // Filter teks nama (bukan angka/NISN, bukan tombol aksi)
+      if (txt && isNaN(txt) && !txt.includes('Tidak ada') && !txt.includes('Hapus') && !txt.includes('Edit') && !txt.includes('L') && !txt.includes('P')) {
+        rawList.push(txt);
       }
     });
+  });
 
-    // 2. Cadangan jika tabel DOM belum ter-render
-    if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.siswa)) {
-      appData.siswa.forEach(s => {
-        let val = (typeof s === 'object' && s !== null) ? (s.f2 || s.namaSiswa || s.nama || '') : s;
-        if (val) rawList.push(val.toString().trim());
+  // Cadangan dari appData jika tabel belum ter-render
+  if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.siswa)) {
+    appData.siswa.forEach(s => {
+      let val = (typeof s === 'object' && s !== null) ? (s.nama || s.namaSiswa || s.f2 || s.f1 || '') : s;
+      if (val) rawList.push(val.toString().trim());
+    });
+  }
+
+  let cleanedList = [...new Set(rawList)];
+
+  select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+  cleanedList.forEach(siswa => {
+    const opt = document.createElement('option');
+    opt.value = siswa;
+    opt.textContent = siswa;
+    if (siswa === currentValue) opt.selected = true;
+    select.appendChild(opt);
+  });
+}
+
+// 2. FUNGSI SINKRONISASI MATA PELAJARAN
+function updateMapelDropdowns() {
+  const selectMapel = document.getElementById('nilai-f2');
+  const targets = [
+    document.getElementById('modul-mapel'),
+    selectMapel,
+    document.getElementById('guru-f3'),
+    document.getElementById('jadwal-f4')
+  ];
+
+  let rawList = [];
+
+  // Ambil dari tabel #table-mapel
+  const rowsMapel = document.querySelectorAll('#table-mapel tr');
+  rowsMapel.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    if (tds.length >= 2) {
+      let namaMapel = tds[1] ? tds[1].textContent.trim() : '';
+      if (namaMapel && !namaMapel.includes('Tidak ada') && !namaMapel.includes('Belum ada')) {
+        rawList.push(namaMapel);
+      }
+    }
+  });
+
+  // Cadangan dari appData
+  if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.mapel)) {
+    appData.mapel.forEach(item => {
+      let val = (typeof item === 'object' && item !== null) ? (item.namaMapel || item.nama || item.f2 || '') : item;
+      if (val) rawList.push(val.toString().trim());
+    });
+  }
+
+  let cleanedList = [...new Set(rawList)];
+
+  targets.forEach(selectElem => {
+    if (selectElem) {
+      const currentValue = selectElem.value;
+      selectElem.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
+      cleanedList.forEach(mapel => {
+        const opt = document.createElement('option');
+        opt.value = mapel;
+        opt.textContent = mapel;
+        if (mapel === currentValue) opt.selected = true;
+        selectElem.appendChild(opt);
       });
     }
+  });
+}
 
-    // 3. Filter data murni & unik
-    let cleanedList = [...new Set(rawList)];
-
-    // 4. Render ke dropdown Nama Siswa
-    select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
-    cleanedList.forEach(siswa => {
-      const opt = document.createElement('option');
-      opt.value = siswa;
-      opt.textContent = siswa;
-      if (siswa === currentValue) opt.selected = true;
-      select.appendChild(opt);
-    });
-
-    if (currentValue) select.value = currentValue;
+// 3. PEMICU OTOMATIS SAAT MODAL DIBUKA
+function toggleModal(modalId, show) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    if (show) {
+      modal.classList.remove('hidden');
+      // Langsung jalankan pengisian dropdown saat modal tampil
+      setTimeout(() => {
+        if (typeof updateSiswaDropdowns === 'function') updateSiswaDropdowns();
+        if (typeof updateMapelDropdowns === 'function') updateMapelDropdowns();
+      }, 50);
+    } else {
+      modal.classList.add('hidden');
+    }
   }
 }
     
