@@ -1041,37 +1041,38 @@ document.addEventListener('click', function() {
 
 
     
-  // 1. FUNGSI SINKRONISASI SISWA
-function updateSiswaDropdowns() {
+ function updateSiswaDropdowns() {
   const select = document.getElementById('nilai-f1');
   if (!select) return;
 
   const currentValue = select.value;
   let rawList = [];
 
-  // Ambil dari seluruh sel tabel #table-siswa
+  // 1. Ambil HANYA kolom ke-2 (index 1) dari tabel DOM (#table-siswa)
   const rowsSiswa = document.querySelectorAll('#table-siswa tr');
   rowsSiswa.forEach(tr => {
     const tds = tr.querySelectorAll('td');
-    tds.forEach(td => {
-      let txt = td.textContent.trim();
-      // Filter teks nama (bukan angka/NISN, bukan tombol aksi)
-      if (txt && isNaN(txt) && !txt.includes('Tidak ada') && !txt.includes('Hapus') && !txt.includes('Edit') && !txt.includes('L') && !txt.includes('P')) {
-        rawList.push(txt);
+    if (tds.length >= 2) {
+      // Ambil teks spesifik dari kolom Nama Siswa (index 1)
+      let namaSiswa = tds[1] ? tds[1].textContent.trim() : '';
+      if (namaSiswa && !namaSiswa.includes('Tidak ada') && !namaSiswa.includes('Belum ada')) {
+        rawList.push(namaSiswa);
       }
-    });
+    }
   });
 
-  // Cadangan dari appData jika tabel belum ter-render
+  // 2. Cadangan jika tabel DOM belum ter-render
   if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.siswa)) {
     appData.siswa.forEach(s => {
-      let val = (typeof s === 'object' && s !== null) ? (s.nama || s.namaSiswa || s.f2 || s.f1 || '') : s;
+      let val = (typeof s === 'object' && s !== null) ? (s.nama || s.namaSiswa || s.f2 || '') : s;
       if (val) rawList.push(val.toString().trim());
     });
   }
 
+  // 3. Filter unik
   let cleanedList = [...new Set(rawList)];
 
+  // 4. Render murni nama siswa
   select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
   cleanedList.forEach(siswa => {
     const opt = document.createElement('option');
