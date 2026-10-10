@@ -1165,24 +1165,8 @@ function updateMapelDropdowns() {
   });
 }
 
-// 3. PEMICU OTOMATIS SAAT MODAL DIBUKA
-function toggleModal(modalId, show) {
-  const modal = document.getElementById(modalId);
-  if (modal) {
-    if (show) {
-      modal.classList.remove('hidden');
-      // Langsung jalankan pengisian dropdown saat modal tampil
-      setTimeout(() => {
-        if (typeof updateSiswaDropdowns === 'function') updateSiswaDropdowns();
-        if (typeof updateMapelDropdowns === 'function') updateMapelDropdowns();
-      }, 50);
-    } else {
-      modal.classList.add('hidden');
-    }
-  }
-}
+
     
-   
     
     // Render Table Data
     function renderTables() {
