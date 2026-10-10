@@ -735,22 +735,24 @@
       document.getElementById('header-title').innerText = titleMap[tabId] || 'Dashboard';
     }
 
+    
     // Modal Manager
 function toggleModal(modalId, show) {
   const modal = document.getElementById(modalId);
   if (modal) {
     if (show) {
-      updateKelasDropdowns();
-      updateGuruDropdowns();
-      updateMapelDropdowns();
-      updateSiswaDropdowns();
       modal.classList.remove('hidden');
+      // Jalankan sinkronisasi otomatis saat modal dibuka
+      updateKelasDropdowns();
+      updateMapelDropdowns();
+      updateGuruDropdowns();
     } else {
       modal.classList.add('hidden');
     }
   }
 }
 
+    
 // Dynamic Dropdown Helpers
 // 1. SINKRONISASI KELAS
 function updateKelasDropdowns() {
