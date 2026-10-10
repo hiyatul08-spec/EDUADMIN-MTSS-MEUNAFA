@@ -768,21 +768,26 @@ document.addEventListener('click', function() {
    
     
 
-
     
     function updateGuruDropdowns() {
-  const selectModulGuru = document.getElementById('modul-guru') || document.querySelector('select[name="guru"]');
+  // Target dropdown guru dan wali kelas di seluruh modal & menu
+  const targets = [
+    document.getElementById('modul-guru'),
+    document.querySelector('#modal-kelas select[name="wali_kelas"]'),
+    document.querySelector('#modal-kelas select:nth-of-type(1)'),
+    document.querySelectorAll('#modal-kelas select')[0]
+  ];
+
   let rawList = [];
 
-  // 1. Ambil HANYA kolom Nama Guru (index ke-1) dari tabel DOM (#table-guru)
+  // 1. Ambil HANYA nama guru dari kolom ke-2 tabel DOM (#table-guru)
   const rowsGuru = document.querySelectorAll('#table-guru tr');
   rowsGuru.forEach(tr => {
     const tds = tr.querySelectorAll('td');
     if (tds.length >= 2) {
-      // Ambil teks dari kolom Nama Guru saja
       let namaGuru = tds[1] ? tds[1].textContent.trim() : '';
       
-      // Bersihkan jika ada sisa tanda kurung atau teks bawaan
+      // Bersihkan jika ada teks dalam kurung
       if (namaGuru.includes('(')) {
         namaGuru = namaGuru.split('(')[0].trim();
       }
@@ -793,7 +798,7 @@ document.addEventListener('click', function() {
     }
   });
 
-  // 2. Cadangan dari appData jika tabel DOM belum ter-render
+  // 2. Cadangan jika tabel DOM belum ter-render
   if (rawList.length === 0) {
     try {
       if (typeof appData !== 'undefined' && appData && Array.isArray(appData.guru)) {
@@ -809,7 +814,7 @@ document.addEventListener('click', function() {
     } catch (e) {}
   }
 
-  // 3. Filter data murni & unik
+  // 3. Filter data unik
   let cleanedList = [];
   rawList.forEach(text => {
     if (text && !cleanedList.includes(text)) {
@@ -817,25 +822,31 @@ document.addEventListener('click', function() {
     }
   });
 
-  // 4. Render ke dropdown Nama Guru
-  if (selectModulGuru) {
-    const currentValue = selectModulGuru.value;
-    selectModulGuru.innerHTML = '<option value="">-- Pilih Guru Pengajar --</option>';
-    cleanedList.forEach(guru => {
-      const opt = document.createElement('option');
-      opt.value = guru;
-      opt.textContent = guru; // Tampilan murni nama saja
-      if (guru === currentValue) opt.selected = true;
-      selectModulGuru.appendChild(opt);
-    });
-  }
+  // 4. Render ke seluruh dropdown target
+  targets.forEach(selectElem => {
+    if (selectElem) {
+      const currentValue = selectElem.value;
+      const isWaliKelas = selectElem.closest('#modal-kelas') || selectElem.name === 'wali_kelas';
+      
+      selectElem.innerHTML = isWaliKelas 
+        ? '<option value="">-- Pilih Wali Kelas --</option>' 
+        : '<option value="">-- Pilih Guru Pengajar --</option>';
+
+      cleanedList.forEach(guru => {
+        const opt = document.createElement('option');
+        opt.value = guru;
+        opt.textContent = guru;
+        if (guru === currentValue) opt.selected = true;
+        selectElem.appendChild(opt);
+      });
+    }
+  });
 }
 
 // PEMICU SINKRONISASI REAL-TIME
 document.addEventListener('click', function() {
   setTimeout(updateGuruDropdowns, 150);
 });
-
     
     
 function updateMapelDropdowns() {
