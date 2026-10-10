@@ -874,7 +874,6 @@ document.addEventListener('click', function() {
   setTimeout(updateGuruDropdowns, 150);
 });
     
-    
 function updateMapelDropdowns() {
   const targets = [
     document.getElementById('modul-mapel'),
@@ -885,23 +884,23 @@ function updateMapelDropdowns() {
 
   let rawList = [];
 
-  // 1. Ambil data dari tabel DOM (#table-mapel) dengan memeriksa seluruh kolom td
+  // 1. Ambil HANYA kolom ke-2 (index 1) dari tabel DOM (#table-mapel)
   const rowsMapel = document.querySelectorAll('#table-mapel tr');
   rowsMapel.forEach(tr => {
     const tds = tr.querySelectorAll('td');
-    tds.forEach(td => {
-      let text = td.textContent.trim();
-      // Abaikan angka/ID/tombol aksi, ambil teks nama mapel
-      if (text && isNaN(text) && !text.includes('Tidak ada') && !text.includes('Hapus') && !text.includes('Edit')) {
-        rawList.push(text);
+    if (tds.length >= 2) {
+      // Index 1 adalah kolom Nama Mata Pelajaran
+      let namaMapel = tds[1] ? tds[1].textContent.trim() : '';
+      if (namaMapel && !namaMapel.includes('Tidak ada') && !namaMapel.includes('Belum ada')) {
+        rawList.push(namaMapel);
       }
-    });
+    }
   });
 
-  // 2. Fallback cadangan jika tabel DOM belum ter-render sempurna
+  // 2. Cadangan dari appData jika tabel DOM belum ter-render
   if (rawList.length === 0 && typeof appData !== 'undefined' && Array.isArray(appData.mapel)) {
     appData.mapel.forEach(item => {
-      let val = (typeof item === 'object' && item !== null) ? (item.namaMapel || item.nama || item.mapel || '') : item;
+      let val = (typeof item === 'object' && item !== null) ? (item.namaMapel || item.nama || '') : item;
       if (val) rawList.push(val.toString().trim());
     });
   }
@@ -909,7 +908,7 @@ function updateMapelDropdowns() {
   // 3. Filter unik (hilangkan duplikat)
   let cleanedList = [...new Set(rawList)];
 
-  // 4. Populate ke seluruh target dropdown
+  // 4. Render ke seluruh target dropdown
   targets.forEach(selectElem => {
     if (selectElem) {
       const currentValue = selectElem.value;
