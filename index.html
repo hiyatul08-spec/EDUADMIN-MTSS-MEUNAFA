@@ -1334,8 +1334,8 @@ function switchTabModul(tabName) {
         const data = updatePreviewContent();
 
         // 1. Ambil elemen input langsung dari halaman Pengaturan System
-        const sysKepalaEl = document.getElementById('sys-kepala') || document.querySelector('input[placeholder*="Kepala"]');
-        const sysNipEl = document.getElementById('sys-nip-kepala') || document.getElementById('sys-nip') || document.querySelectorAll('input[placeholder*="NIP"]')[0];
+        const sysKepalaEl = document.getElementById('sys-kepala') || document.querySelector('input[placeholder*="Kepala Madrasah"]') || document.querySelector('input[placeholder*="Kepala"]');
+        const sysNipEl = document.getElementById('sys-nip-kepala') || document.querySelectorAll('input[placeholder*="NIP"]')[1] || document.getElementById('sys-nip');
 
         // 2. Prioritaskan nilai dari input halaman Pengaturan jika ada nilainya
         let namaKepala = (sysKepalaEl && sysKepalaEl.value.trim() !== '') 
