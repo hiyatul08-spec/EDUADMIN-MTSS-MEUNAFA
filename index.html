@@ -1354,10 +1354,19 @@ function switchTabModul(tabName) {
                         ? cfgNipEl.value 
                         : (localStorage.getItem('cfgNipKepala') || '1965123678910');
 
-        // 3. Ambil NIP Guru dari sidebar Modul Ajar
+       // 3. Ambil NIP Guru dari sidebar Modul Ajar
         let nipGuru = document.getElementById('modul-nip-guru')?.value || 
                       document.getElementById('nip-guru')?.value || 
                       '-';
+
+        // 4. Ambil data Semester dari Pengaturan System
+        const cfgSemesterEl = document.getElementById('cfg-semester');
+        let semesterAktif = (cfgSemesterEl && cfgSemesterEl.value) 
+                            ? cfgSemesterEl.value 
+                            : (localStorage.getItem('cfgSemester') || 'Ganjil');
+
+
+  
   
   if (tabName === 'modul') {
             previewBox.innerHTML = `
