@@ -1016,31 +1016,22 @@ document.addEventListener('click', function() {
 // 1. SINKRONISASI DROPDOWN SISWA
 function updateSiswaDropdowns() {
   const targets = [
-    document.getElementById('nilai-f1'), // Target Nama Siswa di Modal Nilai
-    document.getElementById('absen-f1')
+    document.getElementById('nilai-f1') // Target Nama Siswa di Modal Nilai
   ];
 
   let rawList = [];
 
-  // Ambil Kolom Ke-2 (index 1: Nama Siswa) dari tabel #table-siswa
+  // Ambil Nama Siswa dari kolom ke-2 (#table-siswa)
   const rowsSiswa = document.querySelectorAll('#table-siswa tr');
   rowsSiswa.forEach(tr => {
     const tds = tr.querySelectorAll('td');
     if (tds.length >= 2) {
       let namaSiswa = tds[1] ? tds[1].textContent.trim() : '';
-      if (namaSiswa && !namaSiswa.includes('Tidak ada') && !namaSiswa.includes('Belum ada') && !namaSiswa.includes('Nama Siswa')) {
+      if (namaSiswa && !namaSiswa.includes('Tidak ada') && !namaSiswa.includes('Nama Siswa')) {
         rawList.push(namaSiswa);
       }
     }
   });
-
-  // Cadangan dari appData jika tabel belum dimuat
-  if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.siswa)) {
-    appData.siswa.forEach(item => {
-      let val = (typeof item === 'object' && item !== null) ? (item.namaSiswa || item.nama || item.f2 || '') : item;
-      if (val) rawList.push(val.toString().trim());
-    });
-  }
 
   let cleanedList = [...new Set(rawList)];
 
@@ -1058,6 +1049,9 @@ function updateSiswaDropdowns() {
     }
   });
 }
+
+
+    
 
 // 2. SINKRONISASI DROPDOWN MATA PELAJARAN
 function updateMapelDropdowns() {
