@@ -308,7 +308,7 @@
                 </svg>
                 Unduh Word (.doc)
             </button>
-            <button onclick="window.print()" type="button" class="bg-slate-700 hover:bg-slate-800 text-white font-semibold px-3 py-1.5 rounded text-xs flex items-center gap-1.5 transition shadow">
+            <button onclick="printDocument()" type="button" class="bg-slate-700 hover:bg-slate-800 text-white font-semibold px-3 py-1.5 rounded text-xs flex items-center gap-1.5 transition shadow">
                 Cetak / PDF
             </button>
         </div>
@@ -2292,7 +2292,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Fungsi Export Dokumen ke Microsoft Word
         function exportToWord() {
-            const previewElement = document.getElementById('previewBox');
+            // Mengambil kontainer pratinjau yang benar
+            const previewElement = document.getElementById('preview-content-modul');
             if (!previewElement) {
                 alert('Dokumen pratinjau tidak ditemukan!');
                 return;
@@ -2339,6 +2340,33 @@ document.addEventListener('DOMContentLoaded', function() {
                 link.click();
                 document.body.removeChild(link);
             }
+        }
+
+        // Fungsi Cetak Khusus Lembar Dokumen Saja (Tanpa Sidebar UI)
+        function printDocument() {
+            const previewElement = document.getElementById('preview-content-modul');
+            if (!previewElement) {
+                alert('Dokumen pratinjau tidak ditemukan!');
+                return;
+            }
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Cetak Dokumen - EduAdmin</title>
+                        <script src="https://cdn.tailwindcss.com"></script>
+                        <style>
+                            @page { size: A4; margin: 15mm; }
+                            body { font-family: sans-serif; background: #fff; color: #000; }
+                        </style>
+                    </head>
+                    <body class="p-4" onload="window.print(); window.close();">
+                        ${previewElement.innerHTML}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
         }
     
     
