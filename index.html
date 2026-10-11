@@ -1334,9 +1334,8 @@ function switchTabModul(tabName) {
         const data = updatePreviewContent();
 
         // Ambil data Kepala Sekolah/Madrasah dari Pengaturan System
-        const namaKepala = document.getElementById('sys-kepala')?.value || document.querySelector('input[placeholder*="Kepala"]')?.value || 'Drs. H. Ahmad Dahlan, M.Pd.';
-        const nipKepala = document.getElementById('sys-nip-kepala')?.value || document.querySelector('input[placeholder*="NIP"]')?.value || '19750812 200003 1 002';
-
+        const namaKepala = localStorage.getItem('sysKepala') || document.getElementById('sys-kepala')?.value || document.querySelector('input[placeholder*="Kepala"]')?.value || 'Darmawan Sudarso';
+        const nipKepala = localStorage.getItem('sysNipKepala') || document.getElementById('sys-nip-kepala')?.value || document.querySelector('input[placeholder*="NIP"]')?.value || '19750812 200003 1 002';
         if (tabName === 'modul') {
             previewBox.innerHTML = `
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
