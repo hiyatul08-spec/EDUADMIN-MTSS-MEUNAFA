@@ -555,23 +555,26 @@
   </div>
   
 
- <!-- Modal Nilai -->
+<!-- Modal Nilai -->
 <div id="modal-nilai" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
   <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
     <h3 class="text-lg font-bold">Input Nilai Siswa</h3>
     <form onsubmit="addData(event, 'nilai')" class="space-y-3">
+      
       <div>
         <label class="text-xs font-semibold block mb-1">Nama Siswa</label>
-        <select id="nilai-f1" required class="select-siswa-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
+        <select id="nilai-f1" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
           <option value="">-- Pilih Siswa --</option>
         </select>
       </div>
+
       <div>
-        <label class="text-xs font-semibold block mb-1">Mata Pelajaran</label>
-        <select id="nilai-f2" required class="select-mapel-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
+        <select id="nilai-f2" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
           <option value="">-- Pilih Mata Pelajaran --</option>
         </select>
       </div>
+
+      <!-- Input Nilai Tugas, UTS, UAS -->
       <div class="grid grid-cols-3 gap-2">
         <div>
           <label class="text-xs font-semibold block mb-1">Tugas</label>
@@ -586,10 +589,12 @@
           <input type="number" id="nilai-f5" required class="w-full border rounded-lg p-2 text-sm outline-none">
         </div>
       </div>
+
       <div class="flex justify-end gap-2 pt-2">
         <button type="button" onclick="toggleModal('modal-nilai', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button>
         <button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button>
       </div>
+
     </form>
   </div>
 </div>
@@ -998,48 +1003,103 @@ document.addEventListener('click', function() {
 
 
     
- function updateSiswaDropdowns() {
-  const select = document.getElementById('nilai-f1');
-  if (!select) return;
+// 1. SINKRONISASI DROPDOWN SISWA
+function updateSiswaDropdowns() {
+  const targets = [
+    document.getElementById('nilai-f1'), // Target Nama Siswa di Modal Nilai
+    document.getElementById('absen-f1')
+  ];
 
-  const currentValue = select.value;
   let rawList = [];
 
-  // 1. Ambil HANYA kolom ke-2 (index 1) dari tabel DOM (#table-siswa)
+  // Ambil Kolom Ke-2 (index 1: Nama Siswa) dari tabel #table-siswa
   const rowsSiswa = document.querySelectorAll('#table-siswa tr');
   rowsSiswa.forEach(tr => {
     const tds = tr.querySelectorAll('td');
     if (tds.length >= 2) {
-      // Ambil teks spesifik dari kolom Nama Siswa (index 1)
       let namaSiswa = tds[1] ? tds[1].textContent.trim() : '';
-      if (namaSiswa && !namaSiswa.includes('Tidak ada') && !namaSiswa.includes('Belum ada')) {
+      if (namaSiswa && !namaSiswa.includes('Tidak ada') && !namaSiswa.includes('Belum ada') && !namaSiswa.includes('Nama Siswa')) {
         rawList.push(namaSiswa);
       }
     }
   });
 
-  // 2. Cadangan jika tabel DOM belum ter-render
+  // Cadangan dari appData jika tabel belum dimuat
   if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.siswa)) {
-    appData.siswa.forEach(s => {
-      let val = (typeof s === 'object' && s !== null) ? (s.nama || s.namaSiswa || s.f2 || '') : s;
+    appData.siswa.forEach(item => {
+      let val = (typeof item === 'object' && item !== null) ? (item.namaSiswa || item.nama || item.f2 || '') : item;
       if (val) rawList.push(val.toString().trim());
     });
   }
 
-  // 3. Filter unik
   let cleanedList = [...new Set(rawList)];
 
-  // 4. Render murni nama siswa
-  select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
-  cleanedList.forEach(siswa => {
-    const opt = document.createElement('option');
-    opt.value = siswa;
-    opt.textContent = siswa;
-    if (siswa === currentValue) opt.selected = true;
-    select.appendChild(opt);
+  targets.forEach(selectElem => {
+    if (selectElem) {
+      const currentValue = selectElem.value;
+      selectElem.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+      cleanedList.forEach(siswa => {
+        const opt = document.createElement('option');
+        opt.value = siswa;
+        opt.textContent = siswa;
+        if (siswa === currentValue) opt.selected = true;
+        selectElem.appendChild(opt);
+      });
+    }
   });
 }
 
+// 2. SINKRONISASI DROPDOWN MATA PELAJARAN
+function updateMapelDropdowns() {
+  const targets = [
+    document.getElementById('modul-mapel'),
+    document.getElementById('nilai-f2'), // Target Mapel di Modal Nilai
+    document.getElementById('guru-f3'),
+    document.getElementById('jadwal-f4')  // Target Mapel di Modal Jadwal
+  ];
+
+  let rawList = [];
+
+  // Ambil Kolom Ke-2 (index 1: Nama Mapel) dari tabel #table-mapel
+  const rowsMapel = document.querySelectorAll('#table-mapel tr');
+  rowsMapel.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    if (tds.length >= 2) {
+      let namaMapel = tds[1] ? tds[1].textContent.trim() : '';
+      if (namaMapel && !namaMapel.includes('Tidak ada') && !namaMapel.includes('Belum ada') && !namaMapel.includes('Mata Pelajaran')) {
+        rawList.push(namaMapel);
+      }
+    }
+  });
+
+  // Cadangan dari appData
+  if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.mapel)) {
+    appData.mapel.forEach(item => {
+      let val = (typeof item === 'object' && item !== null) ? (item.namaMapel || item.nama || item.f2 || '') : item;
+      if (val) rawList.push(val.toString().trim());
+    });
+  }
+
+  let cleanedList = [...new Set(rawList)];
+
+  targets.forEach(selectElem => {
+    if (selectElem) {
+      const currentValue = selectElem.value;
+      selectElem.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
+      cleanedList.forEach(mapel => {
+        const opt = document.createElement('option');
+        opt.value = mapel;
+        opt.textContent = mapel;
+        if (mapel === currentValue) opt.selected = true;
+        selectElem.appendChild(opt);
+      });
+    }
+  });
+}
+
+
+
+    
 // 2. FUNGSI SINKRONISASI MATA PELAJARAN
 function updateMapelDropdowns() {
   const selectMapel = document.getElementById('nilai-f2');
