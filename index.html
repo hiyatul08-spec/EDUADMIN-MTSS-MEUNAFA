@@ -1331,47 +1331,123 @@ function switchTabModul(tabName) {
   const previewBox = document.getElementById('preview-content-modul');
   if (!previewBox) return;
 
-  const data = updatePreviewContent();
+const data = updatePreviewContent();
 
-  if (tabName === 'modul') {
-    previewBox.innerHTML = `
-      <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
-        <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>
-        <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${data.mapel.toUpperCase()} | ${data.fase.toUpperCase()}</p>
-        <p class="text-slate-600 italic text-xs mt-0.5">Bab / Topik Utama: ${data.bab.toUpperCase()} | Alokasi Waktu: ${data.waktu}</p>
-      </div>
-      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">1. MODUL AJAR (RPP PLUS STANDAR RESMI)</div>
-      
-      <div class="border rounded-lg p-3 bg-slate-50/50 space-y-2 text-xs mb-4">
-        <h4 class="font-bold text-slate-900 border-b pb-1">I. INFORMASI UMUM</h4>
-        <div class="grid grid-cols-2 gap-2">
-          <div><p><strong>Nama Penyusun:</strong> ${data.guru}</p></div>
-          <div><p><strong>Satuan Pendidikan:</strong> ${data.satuan}</p></div>
-         <div><p><strong>Mata Pelajaran:</strong> ${data.mapel}</p></div>
-<div><p><strong>Jenjang / Kelas:</strong> <span id="prev-fase">${data.kelas || '-'}</span></p></div>
-          <div><p><strong>Model Learning:</strong> ${data.model}</p></div>
-          <div><p><strong>Alokasi Waktu:</strong> ${data.waktu}</p></div>
-        </div>
-      </div>
+        // Ambil data Kepala Sekolah/Madrasah dari Pengaturan System
+        const namaKepala = document.getElementById('sys-kepala')?.value || document.querySelector('input[placeholder*="Kepala"]')?.value || 'Drs. H. Ahmad Dahlan, M.Pd.';
+        const nipKepala = document.getElementById('sys-nip-kepala')?.value || document.querySelector('input[placeholder*="NIP"]')?.value || '19750812 200003 1 002';
 
-      <div class="space-y-3 text-xs">
-        <h4 class="font-bold text-slate-900 border-b pb-1">II. KOMPONEN INTI</h4>
-        <div>
-          <p class="font-bold text-slate-800 mb-1">A. Tujuan Pembelajaran (TP)</p>
-          <ul class="list-disc pl-5 space-y-1 text-slate-700">
-            <li>Peserta didik mampu menjelaskan makna dan konsep nilai <strong>${data.bab}</strong> secara komprehensif.</li>
-            <li>Peserta didik mampu mengidentifikasi serta menganalisis contoh perilaku yang mencerminkan sikap jujur dan bertanggung jawab.</li>
-          </ul>
-        </div>
-        <div>
-          <p class="font-bold text-slate-800 mb-1">B. Kegiatan Pembelajaran</p>
-          <ol class="list-decimal pl-5 space-y-1 text-slate-700">
-            <li><strong>Pendahuluan:</strong> Membuka pelajaran dengan salam, berdoa, dan memberikan pertanyaan pemantik terkait topik ${data.bab}.</li>
-            <li><strong>Inti:</strong> Siswa mengamati studi kasus, mendiskusikan masalah dalam kelompok dengan model ${data.model}, dan menyajikan hasil karya.</li>
-            <li><strong>Penutup:</strong> Menyimpulkan pembelajaran bersama, refleksi, dan apresiasi kelompok.</li>
-          </ol>
-        </div>
-      </div>`;
+        if (tabName === 'modul') {
+            previewBox.innerHTML = `
+                <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+                    <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>
+                    <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || '').toUpperCase()} | ${(data.fase || '').toUpperCase()}</p>
+                    <p class="text-xs text-slate-600 mt-0.5">Bab / Topik Utama: ${data.bab} | Alokasi Waktu: ${data.waktu}</p>
+                </div>
+
+                <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">1. MODUL AJAR (RPP PLUS STANDAR RESMI)</div>
+
+                <!-- I. INFORMASI UMUM -->
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs mb-4 space-y-1">
+                    <h3 class="font-bold text-slate-900 border-b pb-1 mb-2">I. INFORMASI UMUM</h3>
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+                        <p><strong>Nama Penyusun:</strong> ${data.guru || '-'}</p>
+                        <p><strong>Satuan Pendidikan:</strong> ${data.satuan || 'MTs Meunafa'}</p>
+                        <p><strong>Mata Pelajaran:</strong> ${data.mapel || '-'}</p>
+                        <p><strong>Jenjang / Kelas:</strong> ${data.fase || '-'}</p>
+                        <p><strong>Model Learning:</strong> ${data.model || '-'}</p>
+                        <p><strong>Alokasi Waktu:</strong> ${data.waktu || '-'}</p>
+                    </div>
+                </div>
+
+                <!-- II. KOMPONEN INTI -->
+                <div class="text-xs space-y-3">
+                    <h3 class="font-bold text-slate-900 border-b pb-1">II. KOMPONEN INTI</h3>
+
+                    <div>
+                        <p class="font-bold text-slate-800">A. Tujuan Pembelajaran (TP)</p>
+                        <ul class="list-disc pl-5 mt-1 space-y-0.5 text-slate-700">
+                            <li>Peserta didik mampu menjelaskan makna dan konsep nilai <strong>${data.bab}</strong> secara komprehensif.</li>
+                            <li>Peserta didik mampu mengidentifikasi serta menganalisis contoh perilaku yang mencerminkan sikap terkait <strong>${data.bab}</strong>.</li>
+                            <li>Peserta didik mampu merumuskan solusi atas permasalahan terkait <strong>${data.bab}</strong> melalui kerja sama diskusi kelompok.</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <p class="font-bold text-slate-800">B. Pemahaman Bermakna</p>
+                        <p class="mt-1 text-slate-700">Penerapan nilai ${data.bab} membangun integritas, kepercayaan, dan keharmonisan hidup bersosial. Sikap bertanggung jawab atas kewajiban yang diberikan akan membentuk karakter pribadi yang unggul dan dapat diandalkan.</p>
+                    </div>
+
+                    <div>
+                        <p class="font-bold text-slate-800">C. Pertanyaan Pemantik</p>
+                        <ul class="list-disc pl-5 mt-1 space-y-0.5 text-slate-700">
+                            <li>Mengapa penerapan nilai ${data.bab} sangat penting dalam kehidupan sehari-hari?</li>
+                            <li>Apa dampak yang kamu rasakan apabila seseorang tidak menjalankan ${data.bab} dengan baik?</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <p class="font-bold text-slate-800">D. Kegiatan Pembelajaran (Sintaks ${data.model})</p>
+                        <div class="space-y-2 mt-1">
+                            <div class="border rounded p-2 bg-slate-50">
+                                <p class="font-semibold">1. Kegiatan Pendahuluan (10 Menit)</p>
+                                <ul class="list-disc pl-5 text-slate-700 space-y-0.5 mt-0.5">
+                                    <li>Guru membuka pembelajaran dengan salam, berdoa bersama, dan mengecek kehadiran siswa.</li>
+                                    <li>Guru melakukan apersepsi terkait materi sebelumnya dan menyambungkannya dengan topik ${data.bab}.</li>
+                                    <li>Guru menyampaikan tujuan pembelajaran dan skema penilaian.</li>
+                                </ul>
+                            </div>
+
+                            <div class="border rounded p-2 bg-slate-50">
+                                <p class="font-semibold">2. Kegiatan Inti (60 Menit)</p>
+                                <ul class="list-disc pl-5 text-slate-700 space-y-0.5 mt-0.5">
+                                    <li><strong>Fase 1 (Orientasi Masalah):</strong> Siswa mengamati artikel/studi kasus mengenai materi ${data.bab}.</li>
+                                    <li><strong>Fase 2 (Pengorganisasian Siswa):</strong> Siswa dibagi menjadi kelompok heterogen untuk mendiskusikan LKPD.</li>
+                                    <li><strong>Fase 3 (Penyelidikan Kelompok):</strong> Siswa mengumpulkan informasi dan mendiskusikan solusi.</li>
+                                    <li><strong>Fase 4 (Penyajian Hasil):</strong> Masing-masing kelompok menyajikan hasil diskusi di depan kelas.</li>
+                                </ul>
+                            </div>
+
+                            <div class="border rounded p-2 bg-slate-50">
+                                <p class="font-semibold">3. Kegiatan Penutup (10 Menit)</p>
+                                <ul class="list-disc pl-5 text-slate-700 space-y-0.5 mt-0.5">
+                                    <li>Siswa bersama guru menyimpulkan poin-poin utama materi ${data.bab}.</li>
+                                    <li>Guru memberikan refleksi singkat dan menutup kegiatan dengan doa serta salam.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="font-bold text-slate-800">E. Asesmen Pembelajaran</p>
+                        <ul class="list-disc pl-5 mt-1 space-y-0.5 text-slate-700">
+                            <li><strong>Asesmen Diagnostik:</strong> Kuis pemantik kognitif awal sebelum materi dimulai.</li>
+                            <li><strong>Asesmen Formatif:</strong> Observasi sikap dan penilaian kinerja presentasi kelompok.</li>
+                            <li><strong>Asesmen Sumatif:</strong> Tes tertulis (${document.getElementById('modul-asesmen')?.value || 'Pilihan Ganda / Isian'}) di akhir materi.</li>
+                        </ul>
+                    </div>
+
+                    <!-- LEMBAR PENGESAHAN -->
+                    <div class="pt-8 grid grid-cols-2 text-center text-xs mt-6">
+                        <div>
+                            <p>Mengetahui,</p>
+                            <p class="font-semibold">Kepala Sekolah / Madrasah</p>
+                            <div class="h-16"></div>
+                            <p class="font-bold underline">${namaKepala}</p>
+                            <p>NIP. ${nipKepala}</p>
+                        </div>
+                        <div>
+                            <p>Dibuat Oleh,</p>
+                            <p class="font-semibold">Guru Mata Pelajaran</p>
+                            <div class="h-16"></div>
+                            <p class="font-bold underline">${data.guru || '-'}</p>
+                            <p>NIP. ${document.getElementById('modul-nip-guru')?.value || '-'}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    
   } else if (tabName === 'atp') {
     previewBox.innerHTML = `
       <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
