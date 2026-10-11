@@ -1221,23 +1221,43 @@ function toggleModal(modalId, show) {
 
     
     // Add Data Function
-    function addData(e, type) {
-      e.preventDefault();
-      const newItem = { id: Date.now() };
-      let i = 1;
-      
-      while (document.getElementById(`${type}-f${i}`)) {
-        newItem[`f${i}`] = document.getElementById(`${type}-f${i}`).value;
-        document.getElementById(`${type}-f${i}`).value = '';
-        i++;
-      }
+  // Add Data Function
+function addData(e, type) {
+  e.preventDefault();
+  const newItem = { id: Date.now() };
 
-      appData[type].push(newItem);
-      saveData();
-      renderTables();
-      toggleModal(`modal-${type}`, false);
+  if (type === 'siswa') {
+    // Penanganan khusus Modal Siswa
+    newItem['f1'] = document.getElementById('siswa-f1') ? document.getElementById('siswa-f1').value : '';
+    newItem['f2'] = document.getElementById('siswa-f2') ? document.getElementById('siswa-f2').value : '';
+    newItem['f3'] = document.getElementById('siswa-jk') ? document.getElementById('siswa-jk').value : '';
+    newItem['f4'] = document.getElementById('siswa-kelas') ? document.getElementById('siswa-kelas').value : '';
+
+    // Reset isi form modal siswa
+    if (document.getElementById('siswa-f1')) document.getElementById('siswa-f1').value = '';
+    if (document.getElementById('siswa-f2')) document.getElementById('siswa-f2').value = '';
+    if (document.getElementById('siswa-jk')) document.getElementById('siswa-jk').value = '';
+    if (document.getElementById('siswa-kelas')) document.getElementById('siswa-kelas').value = '';
+  } else {
+    // Modul selain siswa menggunakan loop otomatis
+    let i = 1;
+    while (document.getElementById(`${type}-f${i}`)) {
+      newItem[`f${i}`] = document.getElementById(`${type}-f${i}`).value;
+      document.getElementById(`${type}-f${i}`).value = '';
+      i++;
     }
+  }
 
+  appData[type].push(newItem);
+  saveData();
+  renderTables();
+  toggleModal(`modal-${type}`, false);
+}
+
+
+
+
+    
     // Delete Data Function
     function deleteData(type, id) {
       if (confirm('Yakin ingin menghapus data ini?')) {
