@@ -1649,7 +1649,7 @@ function switchTabModul(tabName) {
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
                     <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>
                     <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || '').toUpperCase()} | ${(data.fase || '').toUpperCase()}</p>
-                    <p class="text-xs text-slate-600 mt-0.5">Bab / Topik Utama: ${data.bab} | Alokasi Waktu: ${data.waktu || '2 JP x 40 Menit'}</p>
+                    <p class="text-xs text-slate-600 mt-0.5">Bab / Topik Utama: ${data.bab} | Alokasi Waktu: ${data.waktu || '2 JP x 35 Menit'}</p>
                 </div>
 
                 <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3 flex items-center gap-1.5">
@@ -1659,32 +1659,32 @@ function switchTabModul(tabName) {
                 <!-- BOX MATERI UTAMA -->
                 <div class="bg-indigo-50/60 p-3.5 rounded-lg border border-indigo-100 text-xs mb-4">
                     <h3 class="font-bold text-indigo-950 text-sm mb-1">Materi Utama: ${data.bab}</h3>
-                    <p class="text-slate-600">Mata Pelajaran: ${data.mapel || 'Pendidikan Pancasila'} | Kelas/Fase: ${data.fase || 'SD / MI - Kelas 1-3 (Fase A/B Awal)'}</p>
+                    <p class="text-slate-600">Mata Pelajaran: ${data.mapel || 'Al-Qur\'an Hadis'} | Kelas/Fase: ${data.fase || 'Kelas I-A'}</p>
                 </div>
 
-                <!-- ISI MATERI AJAR -->
+                <!-- ISI MATERI AJAR DINAMIS & PAS -->
                 <div class="text-xs space-y-4 text-slate-800 leading-relaxed mb-6">
                     <div>
-                        <h4 class="font-bold text-indigo-900 mb-1 border-b pb-1">1. Pengertian dan Hakikat Sikap ${data.bab}</h4>
+                        <h4 class="font-bold text-indigo-900 mb-1 border-b pb-1">1. Konsep Dasar dan Hakikat ${data.bab}</h4>
                         <p class="text-justify">
-                            Secara bahasa, kata <strong>${data.bab}</strong> berarti jujur, terpercaya, atau sesuatu yang dititipkan kepada orang lain. Dalam konteks mata pelajaran <strong>${data.mapel || 'Pendidikan Pancasila'}</strong>, sikap ini mencerminkan komitmen moral dan tanggung jawab seseorang untuk memenuhi janji, melaksanakan tugas dengan jujur, serta menjaga kepercayaan yang telah diberikan oleh orang lain maupun lembaga sosial.
+                            Pembahasan mengenai <strong>${data.bab}</strong> dalam mata pelajaran <strong>${data.mapel || 'Al-Qur\'an Hadis'}</strong> merupakan bagian penting untuk membangun pemahaman konseptual dan keterampilan praktis siswa. Pemahaman yang mendalam tentang <strong>${data.bab}</strong> membantu siswa menguasai kaidah, prinsip utama, serta penerapannya secara tepat dalam proses pembelajaran sehari-hari.
                         </p>
                     </div>
 
                     <div>
-                        <h4 class="font-bold text-indigo-900 mb-1 border-b pb-1">2. Bentuk-Bentuk Penerapan ${data.bab} dalam Kehidupan</h4>
-                        <p class="mb-1 text-justify">Sikap ini tidak hanya sebatas menjaga barang titipan, melainkan mencakup spectrum yang luas dalam kehidupan bermasyarakat dan bernegara:</p>
+                        <h4 class="font-bold text-indigo-900 mb-1 border-b pb-1">2. Poin-Poin Penting dan Implementasi ${data.bab}</h4>
+                        <p class="mb-1 text-justify">Dalam mempelajari dan menerapkan materi <strong>${data.bab}</strong>, terdapat beberapa aspek utama yang perlu diperhatikan:</p>
                         <ul class="list-disc pl-5 space-y-1">
-                            <li><strong>${data.bab} terhadap Diri Sendiri:</strong> Menjaga kesehatan, memanfaatkan waktu belajar secara bijak, dan menghindari kebiasaan buruk.</li>
-                            <li><strong>${data.bab} di Lingkungan Sekolah:</strong> Mengerjakan tugas tepat waktu, menjaga fasilitas kelas, serta mengelola jabatan kelas (seperti pengurus kelas) dengan jujur.</li>
-                            <li><strong>${data.bab} dalam Bermasyarakat:</strong> Menjaga nama baik keluarga, mematuhi norma hukum yang berlaku, serta menjaga rahasia bersama.</li>
+                            <li><strong>Pemahaman Teoretis:</strong> Mengenali definisi, hukum, dan aturan dasar yang berlaku pada materi <strong>${data.bab}</strong>.</li>
+                            <li><strong>Penerapan dalam Pembelajaran:</strong> Melatih kemampuan menganalisis dan mempraktikkan materi <strong>${data.bab}</strong> melalui latihan soal dan kegiatan membaca/berdiskusi.</li>
+                            <li><strong>Pembiasaan Sehari-hari:</strong> Mengintegrasikan nilai dan kecakapan dari materi <strong>${data.bab}</strong> dalam kegiatan belajar di kelas maupun di luar sekolah.</li>
                         </ul>
                     </div>
 
                     <div>
-                        <h4 class="font-bold text-indigo-900 mb-1 border-b pb-1">3. Hikmah dan Keutamaan Menjaga ${data.bab}</h4>
+                        <h4 class="font-bold text-indigo-900 mb-1 border-b pb-1">3. Manfaat dan Tujuan Pembelajaran ${data.bab}</h4>
                         <p class="text-justify">
-                            Seseorang yang senantiasa menjaga kepatuhan dan kejujuran akan mendapatkan ketenangan batin, dihargai oleh lingkungan sekitar, serta dipercaya untuk memegang tanggung jawab yang lebih besar di masa depan. Sebaliknya, pengabaian terhadap nilai ini dapat merusak tatanan sosial, menghilangkan rasa saling percaya, dan memicu timbulnya perselisihan.
+                            Melalui penguasaan materi <strong>${data.bab}</strong>, siswa diharapkan mampu meningkatkan kompetensi akademik, ketelitian, serta kepercayaan diri dalam menyelesaikan setiap tugas pembelajaran. Penguasaan yang baik pada topik ini juga menjadi fondasi penting untuk memahami materi lanjutan pada jenjang berikutnya.
                         </p>
                     </div>
                 </div>
@@ -1707,6 +1707,7 @@ function switchTabModul(tabName) {
                     </div>
                 </div>
             `;
+        
         
 
 
