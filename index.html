@@ -1732,12 +1732,13 @@ function switchTabModul(tabName) {
 
     
 } else if (tabName === 'asesmen') {
-            const kelasText = (data.fase || '').toUpperCase();
+           const kelasText = (data.fase || '').toUpperCase().trim();
             let formatSoalHtml = '';
 
-            // Deteksi Logika Kelas (Romawi, Angka, atau Fase)
+            // Deteksi Akurat Berdasarkan Teks Dropdown
             const isKelas13 = kelasText.includes('KELAS 1') || kelasText.includes('KELAS 2') || kelasText.includes('KELAS 3') || 
                               kelasText.includes('KELAS I-') || kelasText.includes('KELAS II-') || kelasText.includes('KELAS III-') || 
+                              kelasText.startsWith('KELAS I ') || kelasText.startsWith('KELAS II ') || kelasText.startsWith('KELAS III ') ||
                               kelasText.includes('FASE A');
 
             const isKelas46 = kelasText.includes('KELAS 4') || kelasText.includes('KELAS 5') || kelasText.includes('KELAS 6') || 
@@ -1779,7 +1780,7 @@ function switchTabModul(tabName) {
                         </ol>
                     </div>`;
             } else {
-                // KELAS 7-12 SMP/MTs/SMA/MA: 40 PG + 10 Essay
+                // KELAS 7-12 SMP/MTs/SMA/MA (Ternasuk KELAS VII, VIII, IX, X, XI, XII / FASE D, E, F): 40 PG + 10 Essay
                 let pgList40 = '';
                 for (let i = 1; i <= 40; i++) {
                     pgList40 += `<li class="mb-1.5">Soal analisis ke-${i} terkait materi <strong>${data.bab}</strong> (${data.mapel || 'Mata Pelajaran'}) pada jenjang lanjutan?<br>A. Opsi Jawaban A &nbsp;&nbsp;&nbsp; B. Opsi Jawaban B &nbsp;&nbsp;&nbsp; C. Opsi Jawaban C &nbsp;&nbsp;&nbsp; D. Opsi Jawaban D</li>`;
