@@ -1732,78 +1732,138 @@ function switchTabModul(tabName) {
 
     
 } else if (tabName === 'asesmen') {
-        const kelasText = (data.fase || '').toUpperCase().trim();
+       const kelasText = (data.fase || '').toUpperCase().trim();
+            const mapelText = (data.mapel || 'Mata Pelajaran').toUpperCase();
+            const babText = data.bab || 'Materi Utama';
             let formatSoalHtml = '';
 
-            // 1. Deteksi Kelas 1-3 SD/MI (Format: 1, 2, 3, I, II, III, atau FASE A)
+            // 1. Deteksi Kelas 1-3 SD/MI
             const isKelas13 = /\b(KELAS 1|KELAS 2|KELAS 3|KELAS I|KELAS II|KELAS III|FASE A)\b/.test(kelasText) ||
                               kelasText.includes('KELAS I-') || kelasText.includes('KELAS II-') || kelasText.includes('KELAS III-');
 
-            // 2. Deteksi Kelas 4-6 SD/MI (Format: 4, 5, 6, IV, V, VI, atau FASE B/C)
-            // Menggunakan Regex \b agar KELAS VII/VIII tidak ikut terdeteksi sebagai KELAS V/VI
+            // 2. Deteksi Kelas 4-6 SD/MI
             const isKelas46 = /\b(KELAS 4|KELAS 5|KELAS 6|KELAS IV|KELAS V|KELAS VI|FASE B|FASE C)\b/.test(kelasText) ||
                               kelasText.includes('KELAS IV-') || kelasText.includes('KELAS V-') || kelasText.includes('KELAS VI-');
 
+            // --- ENGINE GENERATOR SOAL KONTEN SPEKTRUM MAPEL & TOPIK ---
+            const buildContextualQuestion = (index, bab, mapel, type) => {
+                const isAgama = /AL-QUR'AN|HADIS|FIKIH|PAI|AKIDAH|AKHLAK|SKL|TAJWID/.test(mapel);
+                const isSains = /IPA|BIOLOGI|FISIKA|KIMIA|MATEMATIKA/.test(mapel);
+                const isSosial = /IPS|PKN|PPKN|SEJARAH|BAHASA/.test(mapel);
+
+                if (type === 'PG') {
+                    let qText = '', a = '', b = '', c = '', d = '';
+
+                    if (isAgama) {
+                        const templates = [
+                            { q: `Siswa yang menerapkan hukum atau kaidah <strong>${bab}</strong> saat membaca Al-Qur'an atau beribadah akan terhindar dari...`, a: `Kesalahan makna dan kekeliruan kaidah`, b: `Pujian dari sesama teman`, c: `Kemudahan dalam menghafal`, d: `Kelancaran membaca tanpa tajwid` },
+                            { q: `Manakah di bawah ini contoh penerapan atau perilaku yang sesuai dengan ajaran <strong>${bab}</strong> dalam kehidupan sehari-hari?`, a: `Menjalankan perintah sesuai kaidah dan penuh tanggung jawab`, b: `Apatis terhadap hukum-hukum pembelajaran`, c: `Melakukan amalan hanya saat diawasi guru`, d: `Mengabaikan keutamaan dan nilai ${bab}` },
+                            { q: `Di bawah ini yang merupakan dalil, prinsip dasar, atau hukum utama dalam pembahasan <strong>${bab}</strong> adalah...`, a: `Menjaga ketepatan dan ketaatan sesuai syariat/prinsip`, b: `Meniru kebiasaan yang tidak ada tuntunannya`, c: `Memilih hukum yang paling mudah tanpa rujukan`, d: `Mengabaikan aturan yang sudah ditetapkan` },
+                            { q: `Ketika menjumpai permasalahan mengenai <strong>${bab}</strong> pada mata pelajaran ${data.mapel || 'Agama'}, sikap yang paling tepat adalah...`, a: `Mempelajari kaidahnya dan bertanya kepada ahli/guru`, b: `Membiarkannya tanpa mencari kebenaran`, c: `Menganggap semua pemahaman adalah sama`, d: `Menghindari topik tersebut` }
+                        ];
+                        const t = templates[(index - 1) % templates.length];
+                        return { q: t.q, a: t.a, b: t.b, c: t.c, d: t.d };
+                    } else if (isSains) {
+                        const templates = [
+                            { q: `Dalam eksperimen atau analisis materi <strong>${bab}</strong>, faktor utama yang mempengaruhi proses keberhasilannya adalah...`, a: `Ketepatan variabel dan pemahaman konsep ${bab}`, b: `Perkiraan tanpa pengukuran yang valid`, c: `Waktu pengamatan yang acak dan tidak teratur`, d: `Pengabaian terhadap hukum alam/rumus dasar` },
+                            { q: `Penerapan prinsip <strong>${bab}</strong> pada fenomena atau kehidupan nyata dapat ditemui pada peristiwa...`, a: `Proses alami yang mengikuti hukum dan kaidah ${bab}`, b: `Perubahan materi tanpa adanya sebab-akibat`, c: `Gejala spontan yang tidak dapat dijelaskan secara ilmiah`, d: `Sistem tertutup yang tidak memiliki energi` }
+                        ];
+                        const t = templates[(index - 1) % templates.length];
+                        return { q: t.q, a: t.a, b: t.b, c: t.c, d: t.d };
+                    } else {
+                        const templates = [
+                            { q: `Implementasi nilai-nilai atau konsep <strong>${bab}</strong> dalam konteks kemasyarakatan dan berbangsa bertujuan untuk...`, a: `Menciptakan keharmonisan dan keteraturan sosial`, b: `Menimbulkan persaingan yang tidak sehat`, c: `Membatasi kreativitas warga negara`, d: `Menghapuskan keberagaman aturan` },
+                            { q: `Tantangan terbesar dalam mempertahankan pemahaman <strong>${bab}</strong> di era globalisasi saat ini adalah...`, a: `Pengaruh budaya luar dan minimnya pembiasaan`, b: `Banyaknya literatur resmi yang terbit`, c: `Dukungan penuh dari seluruh lapisan masyarakat`, d: `Kemudahan akses informasi pembelajaran` }
+                        ];
+                        const t = templates[(index - 1) % templates.length];
+                        return { q: t.q, a: t.a, b: t.b, c: t.c, d: t.d };
+                    }
+                }
+            };
+
             if (isKelas13) {
-                // KELAS 1-3 SD/MI: 5 Isian Singkat
+                // KELAS 1-3 SD/MI: 5 Isian Singkat Sederhana
                 formatSoalHtml = `
                     <div class="mb-4">
-                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-2">A. SOAL ISIAN SINGKAT (5 SOAL)</h4>
-                        <ol class="list-decimal pl-5 space-y-2 text-justify">
-                            <li>Sebutkan arti sederhana dari <strong>${data.bab}</strong>!</li>
-                            <li>Mengapa kita harus menerapkan sikap <strong>${data.bab}</strong> saat belajar di sekolah?</li>
-                            <li>Tuliskan salah satu contoh perilaku yang mencerminkan <strong>${data.bab}</strong> di rumah!</li>
-                            <li>Apa yang terjadi jika seseorang tidak memiliki sikap <strong>${data.bab}</strong>?</li>
-                            <li>Tuliskan nilai kebaikan yang kamu dapatkan setelah mempelajari materi <strong>${data.bab}</strong>!</li>
+                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">A. SOAL ISIAN SINGKAT (5 SOAL)</h4>
+                        <ol class="list-decimal pl-5 space-y-3 text-justify text-xs">
+                            <li>Apakah arti atau pengertian sederhana dari <strong>${babText}</strong>?</li>
+                            <li>Tuliskan 1 contoh perbuatan yang mencerminkan materi <strong>${babText}</strong> di sekolah!</li>
+                            <li>Mengapa kita harus belajar topik <strong>${babText}</strong> pada pelajaran <strong>${data.mapel || 'Mata Pelajaran'}</strong>?</li>
+                            <li>Sebutkan manfaat yang kamu dapatkan jika rajin menerapkan <strong>${babText}</strong>!</li>
+                            <li>Apa yang harus kamu lakukan jika melihat teman belum memahami <strong>${babText}</strong>?</li>
                         </ol>
                     </div>`;
             } else if (isKelas46) {
                 // KELAS 4-6 SD/MI: 10 PG + 5 Isian Singkat
                 let pgList = '';
                 for (let i = 1; i <= 10; i++) {
-                    pgList += `<li class="mb-2">Pertanyaan pilihan ganda ke-${i} mengenai pemahaman konsep dasar dan penerapan <strong>${data.bab}</strong> dalam kehidupan sehari-hari?<br>a. Pilihan A &nbsp;&nbsp; b. Pilihan B &nbsp;&nbsp; c. Pilihan C &nbsp;&nbsp; d. Pilihan D</li>`;
+                    const item = buildContextualQuestion(i, babText, mapelText, 'PG');
+                    pgList += `
+                        <li class="mb-3">
+                            <p class="font-medium text-slate-800">${i}. ${item.q}</p>
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-1 mt-1 pl-2 text-slate-700">
+                                <div>A. ${item.a}</div>
+                                <div>B. ${item.b}</div>
+                                <div>C. ${item.c}</div>
+                                <div>D. ${item.d}</div>
+                            </div>
+                        </li>`;
                 }
                 formatSoalHtml = `
-                    <div class="mb-4">
-                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-2">A. PILIHAN GANDA (10 SOAL)</h4>
-                        <ol class="list-decimal pl-5 space-y-1">${pgList}</ol>
+                    <div class="mb-5">
+                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">A. PILIHAN GANDA (10 SOAL)</h4>
+                        <ul class="space-y-1 text-xs">${pgList}</ul>
                     </div>
                     <div class="mb-4">
-                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-2">B. SOAL ISIAN SINGKAT (5 SOAL)</h4>
-                        <ol class="list-decimal pl-5 space-y-2 text-justify">
-                            <li>Jelaskan pengertian <strong>${data.bab}</strong> menurut pemahamanmu sendiri!</li>
-                            <li>Sebutkan 2 contoh nyata penerapan <strong>${data.bab}</strong> di lingkungan sekolah!</li>
-                            <li>Mengapa penerapan <strong>${data.bab}</strong> sangat dianjurkan dalam mata pelajaran <strong>${data.mapel || 'Al-Quran Hadis'}</strong>?</li>
-                            <li>Apa manfaat utama yang dirasakan saat kita menerapkan <strong>${data.bab}</strong> secara konsisten?</li>
-                            <li>Tuliskan langkah konkret yang akan kamu lakukan untuk meningkatkan pembiasaan <strong>${data.bab}</strong>!</li>
+                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">B. SOAL ISIAN SINGKAT (5 SOAL)</h4>
+                        <ol class="list-decimal pl-5 space-y-3 text-justify text-xs">
+                            <li>Jelaskan secara ringkas hukum/konsep utama dari <strong>${babText}</strong>!</li>
+                            <li>Sebutkan 2 contoh penerapan <strong>${babText}</strong> dalam kegiatan sehari-hari!</li>
+                            <li>Mengapa materi <strong>${babText}</strong> sangat penting pada mata pelajaran <strong>${data.mapel || 'Mata Pelajaran'}</strong>?</li>
+                            <li>Apa dampak negatif jika seseorang mengabaikan prinsip <strong>${babText}</strong>?</li>
+                            <li>Tuliskan langkah konkret kamu dalam mempelajari <strong>${babText}</strong> agar mendapat nilai terbaik!</li>
                         </ol>
                     </div>`;
             } else {
-                // KELAS 7-12 SMP/MTs/SMA/MA (Ternasuk KELAS VII, VIII, IX, X, XI, XII / FASE D, E, F): 40 PG + 10 Essay
+                // KELAS 7-12 SMP/MTs/SMA/MA: 40 PG + 10 Essay Analitis
                 let pgList40 = '';
                 for (let i = 1; i <= 40; i++) {
-                    pgList40 += `<li class="mb-1.5">Soal analisis ke-${i} terkait materi <strong>${data.bab}</strong> (${data.mapel || 'Mata Pelajaran'}) pada jenjang lanjutan?<br>A. Opsi Jawaban A &nbsp;&nbsp;&nbsp; B. Opsi Jawaban B &nbsp;&nbsp;&nbsp; C. Opsi Jawaban C &nbsp;&nbsp;&nbsp; D. Opsi Jawaban D</li>`;
+                    const item = buildContextualQuestion(i, babText, mapelText, 'PG');
+                    pgList40 += `
+                        <li class="mb-3 break-inside-avoid">
+                            <p class="font-medium text-slate-800">${i}. ${item.q}</p>
+                            <div class="grid grid-cols-2 gap-x-4 gap-y-1 mt-1 pl-2 text-slate-700">
+                                <div>A. ${item.a}</div>
+                                <div>B. ${item.b}</div>
+                                <div>C. ${item.c}</div>
+                                <div>D. ${item.d}</div>
+                            </div>
+                        </li>`;
                 }
                 let essayList10 = '';
                 for (let i = 1; i <= 10; i++) {
-                    essayList10 += `<li class="mb-2">Berikan analisis komprehensif mengenai studi kasus ke-${i} yang berkaitan dengan tantangan penerapan <strong>${data.bab}</strong> di era modern beserta solusinya!</li>`;
+                    essayList10 += `
+                        <li class="mb-2 text-justify">
+                            Lakukan analisis kritis mengenai permasalahan ke-${i} terkait penerapan kaidah/prinsip <strong>${babText}</strong> (${data.mapel || 'Mata Pelajaran'}) pada tantangan era modern beserta solusinya!
+                        </li>`;
                 }
                 formatSoalHtml = `
                     <div class="mb-6">
-                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-2">A. PILIHAN GANDA (40 SOAL)</h4>
-                        <ol class="list-decimal pl-5 space-y-1">${pgList40}</ol>
+                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">A. PILIHAN GANDA (40 SOAL)</h4>
+                        <ul class="text-xs space-y-1">${pgList40}</ul>
                     </div>
                     <div class="mb-4">
-                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-2">B. SOAL ESSAY / URAIAN (10 SOAL)</h4>
-                        <ol class="list-decimal pl-5 space-y-1 text-justify">${essayList10}</ol>
+                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">B. SOAL ESSAY / URAIAN (10 SOAL)</h4>
+                        <ol class="list-decimal pl-5 space-y-2 text-xs">${essayList10}</ol>
                     </div>`;
             }
 
             previewBox.innerHTML = `
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
                     <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR ASESMEN / EVALUASI PEMBELAJARAN</h2>
-                    <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || '').toUpperCase()} | ${(data.fase || '').toUpperCase()}</p>
-                    <p class="text-xs text-slate-600 mt-0.5">Topik / Bab: ${data.bab} | Semester: ${semesterAktif} | TP: 2026/2027</p>
+                    <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${mapelText} | ${(data.fase || '').toUpperCase()}</p>
+                    <p class="text-xs text-slate-600 mt-0.5">Topik / Bab: ${babText} | Semester: ${semesterAktif} | TP: 2026/2027</p>
                 </div>
 
                 <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-4 flex items-center gap-1.5">
@@ -1817,7 +1877,7 @@ function switchTabModul(tabName) {
                     <p><strong>Nilai / Paraf Guru:</strong> ...........................................................</p>
                 </div>
 
-                <div class="text-xs space-y-4 text-slate-800 leading-relaxed mb-6">
+                <div class="text-xs text-slate-800 leading-relaxed mb-6">
                     ${formatSoalHtml}
                 </div>
 
