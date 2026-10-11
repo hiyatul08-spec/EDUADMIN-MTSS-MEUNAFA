@@ -1773,7 +1773,7 @@ function switchTabModul(tabName) {
                         <ol class="list-decimal pl-5 space-y-2 text-justify">
                             <li>Jelaskan pengertian <strong>${data.bab}</strong> menurut pemahamanmu sendiri!</li>
                             <li>Sebutkan 2 contoh nyata penerapan <strong>${data.bab}</strong> di lingkungan sekolah!</li>
-                            <li>Mengapa penerapan <strong>${data.bab}</strong> sangat dianjurkan dalam pembelajaran?</li>
+                            <li>Mengapa penerapan <strong>${data.bab}</strong> sangat dianjurkan dalam mata pelajaran <strong>${data.mapel || 'Al-Quran Hadis'}</strong>?</li>
                             <li>Apa manfaat utama yang dirasakan saat kita menerapkan <strong>${data.bab}</strong> secara konsisten?</li>
                             <li>Tuliskan langkah konkret yang akan kamu lakukan untuk meningkatkan pembiasaan <strong>${data.bab}</strong>!</li>
                         </ol>
@@ -1782,7 +1782,7 @@ function switchTabModul(tabName) {
                 // KELAS 7-12 SMP/MTs/SMA/MA: 40 PG + 10 Essay
                 let pgList40 = '';
                 for (let i = 1; i <= 40; i++) {
-                    pgList40 += `<li class="mb-1.5">Soal analisis ke-${i} terkait materi <strong>${data.bab}</strong> pada jenjang lanjutan?<br>A. Opsi Jawaban A &nbsp;&nbsp;&nbsp; B. Opsi Jawaban B &nbsp;&nbsp;&nbsp; C. Opsi Jawaban C &nbsp;&nbsp;&nbsp; D. Opsi Jawaban D</li>`;
+                    pgList40 += `<li class="mb-1.5">Soal analisis ke-${i} terkait materi <strong>${data.bab}</strong> (${data.mapel || 'Mata Pelajaran'}) pada jenjang lanjutan?<br>A. Opsi Jawaban A &nbsp;&nbsp;&nbsp; B. Opsi Jawaban B &nbsp;&nbsp;&nbsp; C. Opsi Jawaban C &nbsp;&nbsp;&nbsp; D. Opsi Jawaban D</li>`;
                 }
                 let essayList10 = '';
                 for (let i = 1; i <= 10; i++) {
@@ -1838,6 +1838,7 @@ function switchTabModul(tabName) {
                     </div>
                 </div>
             `;
+        }
         
         
                 
