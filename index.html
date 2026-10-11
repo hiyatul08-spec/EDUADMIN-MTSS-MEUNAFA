@@ -1333,25 +1333,23 @@ function switchTabModul(tabName) {
 
         const data = updatePreviewContent();
 
-        // Ambil data Kepala Sekolah & NIP dari Pengaturan System
-        const sysKepalaInput = document.getElementById('sys-kepala') || document.querySelector('#pengaturan input[placeholder*="Kepala"]');
-        const sysNipInput = document.getElementById('sys-nip-kepala') || document.getElementById('sys-nip') || document.querySelector('#pengaturan input[placeholder*="NIP"]');
+        // 1. Ambil elemen input langsung dari halaman Pengaturan System
+        const sysKepalaEl = document.getElementById('sys-kepala') || document.querySelector('input[placeholder*="Kepala"]');
+        const sysNipEl = document.getElementById('sys-nip-kepala') || document.getElementById('sys-nip') || document.querySelectorAll('input[placeholder*="NIP"]')[0];
 
-        let namaKepala = localStorage.getItem('sysKepala') || 
-                         localStorage.getItem('sys_kepala') || 
-                         (sysKepalaInput ? sysKepalaInput.value : '') || 
-                         'Darmawan Sudarso';
+        // 2. Prioritaskan nilai dari input halaman Pengaturan jika ada nilainya
+        let namaKepala = (sysKepalaEl && sysKepalaEl.value.trim() !== '') 
+                         ? sysKepalaEl.value 
+                         : (localStorage.getItem('sysKepala') || localStorage.getItem('sys_kepala') || 'JURMAN');
 
-        let nipKepala = localStorage.getItem('sysNipKepala') || 
-                        localStorage.getItem('sys_nip_kepala') || 
-                        (sysNipInput ? sysNipInput.value : '') || 
-                        '-';
+        let nipKepala = (sysNipEl && sysNipEl.value.trim() !== '') 
+                        ? sysNipEl.value 
+                        : (localStorage.getItem('sysNipKepala') || localStorage.getItem('sys_nip_kepala') || '19750812 200003 1 002');
 
-        // Ambil NIP Guru dari sidebar Modul Ajar
+        // 3. Ambil NIP Guru dari sidebar Perangkat Ajar
         let nipGuru = document.getElementById('modul-nip-guru')?.value || 
                       document.getElementById('nip-guru')?.value || 
                       '-';
-
         if (tabName === 'modul') {
             previewBox.innerHTML = `
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
