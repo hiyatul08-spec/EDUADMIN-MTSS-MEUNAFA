@@ -1220,24 +1220,24 @@ function toggleModal(modalId, show) {
 
 
     
-    // Add Data Function
+   
   // Add Data Function
 function addData(e, type) {
   e.preventDefault();
   const newItem = { id: Date.now() };
 
   if (type === 'siswa') {
-    // Penanganan khusus Modal Siswa
+  // Penanganan khusus Modal Siswa
     newItem['f1'] = document.getElementById('siswa-f1') ? document.getElementById('siswa-f1').value : '';
     newItem['f2'] = document.getElementById('siswa-f2') ? document.getElementById('siswa-f2').value : '';
-    newItem['f3'] = document.getElementById('siswa-jk') ? document.getElementById('siswa-jk').value : '';
-    newItem['f4'] = document.getElementById('siswa-kelas') ? document.getElementById('siswa-kelas').value : '';
+    newItem['f3'] = document.getElementById('siswa-f3') ? document.getElementById('siswa-f3').value : ''; // f3 = Kelas
+    newItem['f4'] = document.getElementById('siswa-jk') ? document.getElementById('siswa-jk').value : ''; // f4 = Jenis Kelamin
 
     // Reset isi form modal siswa
     if (document.getElementById('siswa-f1')) document.getElementById('siswa-f1').value = '';
     if (document.getElementById('siswa-f2')) document.getElementById('siswa-f2').value = '';
+    if (document.getElementById('siswa-f3')) document.getElementById('siswa-f3').value = '';
     if (document.getElementById('siswa-jk')) document.getElementById('siswa-jk').value = '';
-    if (document.getElementById('siswa-kelas')) document.getElementById('siswa-kelas').value = '';
   } else {
     // Modul selain siswa menggunakan loop otomatis
     let i = 1;
