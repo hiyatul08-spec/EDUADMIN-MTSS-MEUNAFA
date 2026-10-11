@@ -536,23 +536,37 @@
     </div>
   </div>
 
-  <!-- Modal Kelas (Dengan Dropdown Dynamic Guru/Wali Kelas) -->
-  <div id="modal-kelas" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
-    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
-      <h3 class="text-lg font-bold">Tambah Data Kelas</h3>
-      <form onsubmit="addData(event, 'kelas')" class="space-y-3">
-        <div><label class="text-xs font-semibold block mb-1">Nama Kelas</label><input type="text" id="kelas-f1" placeholder="Contoh: VII A" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div>
-          <label class="text-xs font-semibold block mb-1">Wali Kelas</label>
-          <select id="kelas-f2" required class="select-guru-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
-            <option value="">-- Pilih Wali Kelas --</option>
-          </select>
-        </div>
-        <div><label class="text-xs font-semibold block mb-1">Tingkat</label><input type="text" id="kelas-f3" placeholder="VII / VIII / IX" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
-        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-kelas', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
-      </form>
-    </div>
+  <!-- Modal Kelas -->
+<div id="modal-kelas" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
+  <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
+    <h3 class="text-lg font-bold">Tambah Data Kelas</h3>
+    <form onsubmit="addData(event, 'kelas')" class="space-y-3">
+      
+      <div>
+        <label class="text-xs font-semibold block mb-1">Nama Kelas</label>
+        <input type="text" id="kelas-f1" placeholder="Contoh: VII A" required class="w-full border rounded-lg p-2 text-sm outline-none">
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold block mb-1">Wali Kelas</label>
+        <select id="kelas-f2" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
+          <option value="">-- Pilih Wali Kelas --</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="text-xs font-semibold block mb-1">Tingkat</label>
+        <input type="text" id="kelas-f3" placeholder="VII / VIII / IX" required class="w-full border rounded-lg p-2 text-sm outline-none">
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button type="button" onclick="toggleModal('modal-kelas', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button>
+        <button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button>
+      </div>
+
+    </form>
   </div>
+</div>
   
 
 <!-- Modal Nilai -->
