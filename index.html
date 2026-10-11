@@ -1333,30 +1333,24 @@ function switchTabModul(tabName) {
 
         const data = updatePreviewContent();
 
-        // 1. Ambil Data Kepala Sekolah & NIP dari localStorage / System Config
-        let sysData = {};
-        try {
-            sysData = JSON.parse(localStorage.getItem('edu_sys_config') || localStorage.getItem('sysConfig') || '{}');
-        } catch(e) {}
+        // 1. Ambil langsung berdasarkan ID asli elemen HTML Pengaturan System (cfg-kepala & cfg-nip-kepala)
+        const cfgKepalaEl = document.getElementById('cfg-kepala');
+        const cfgNipEl = document.getElementById('cfg-nip-kepala');
 
-        let namaKepala = localStorage.getItem('sysKepala') || 
-                         localStorage.getItem('sys_kepala') || 
-                         sysData.kepala || 
-                         sysData.namaKepala ||
-                         document.getElementById('sys-kepala')?.value || 
-                         'ADAM SALEH';
+        // 2. Ambil nilai nama dan NIP Kepala Madrasah
+        let namaKepala = (cfgKepalaEl && cfgKepalaEl.value.trim() !== '') 
+                         ? cfgKepalaEl.value 
+                         : (localStorage.getItem('cfgKepala') || 'ADAM SALEH');
 
-        let nipKepala = localStorage.getItem('sysNipKepala') || 
-                        localStorage.getItem('sys_nip_kepala') || 
-                        sysData.nipKepala || 
-                        sysData.nip_kepala ||
-                        document.getElementById('sys-nip-kepala')?.value || 
-                        '1965123678910';
+        let nipKepala = (cfgNipEl && cfgNipEl.value.trim() !== '') 
+                        ? cfgNipEl.value 
+                        : (localStorage.getItem('cfgNipKepala') || '1965123678910');
 
-        // 2. Ambil khusus NIP Guru dari input sidebar Modul Ajar
+        // 3. Ambil NIP Guru dari sidebar Modul Ajar
         let nipGuru = document.getElementById('modul-nip-guru')?.value || 
                       document.getElementById('nip-guru')?.value || 
                       '-';
+  
   if (tabName === 'modul') {
             previewBox.innerHTML = `
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
