@@ -1732,18 +1732,17 @@ function switchTabModul(tabName) {
 
     
 } else if (tabName === 'asesmen') {
-           const kelasText = (data.fase || '').toUpperCase().trim();
+        const kelasText = (data.fase || '').toUpperCase().trim();
             let formatSoalHtml = '';
 
-            // Deteksi Akurat Berdasarkan Teks Dropdown
-            const isKelas13 = kelasText.includes('KELAS 1') || kelasText.includes('KELAS 2') || kelasText.includes('KELAS 3') || 
-                              kelasText.includes('KELAS I-') || kelasText.includes('KELAS II-') || kelasText.includes('KELAS III-') || 
-                              kelasText.startsWith('KELAS I ') || kelasText.startsWith('KELAS II ') || kelasText.startsWith('KELAS III ') ||
-                              kelasText.includes('FASE A');
+            // 1. Deteksi Kelas 1-3 SD/MI (Format: 1, 2, 3, I, II, III, atau FASE A)
+            const isKelas13 = /\b(KELAS 1|KELAS 2|KELAS 3|KELAS I|KELAS II|KELAS III|FASE A)\b/.test(kelasText) ||
+                              kelasText.includes('KELAS I-') || kelasText.includes('KELAS II-') || kelasText.includes('KELAS III-');
 
-            const isKelas46 = kelasText.includes('KELAS 4') || kelasText.includes('KELAS 5') || kelasText.includes('KELAS 6') || 
-                              kelasText.includes('KELAS IV') || kelasText.includes('KELAS V') || kelasText.includes('KELAS VI') || 
-                              kelasText.includes('FASE B') || kelasText.includes('FASE C');
+            // 2. Deteksi Kelas 4-6 SD/MI (Format: 4, 5, 6, IV, V, VI, atau FASE B/C)
+            // Menggunakan Regex \b agar KELAS VII/VIII tidak ikut terdeteksi sebagai KELAS V/VI
+            const isKelas46 = /\b(KELAS 4|KELAS 5|KELAS 6|KELAS IV|KELAS V|KELAS VI|FASE B|FASE C)\b/.test(kelasText) ||
+                              kelasText.includes('KELAS IV-') || kelasText.includes('KELAS V-') || kelasText.includes('KELAS VI-');
 
             if (isKelas13) {
                 // KELAS 1-3 SD/MI: 5 Isian Singkat
