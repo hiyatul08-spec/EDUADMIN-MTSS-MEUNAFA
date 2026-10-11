@@ -1463,31 +1463,96 @@ function switchTabModul(tabName) {
 
           
       } else if (tabName === 'atp') {
-    previewBox.innerHTML = `
-      <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
-        <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">ALUR TUJUAN PEMBELAJARAN (ATP)</h2>
-        <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${data.mapel.toUpperCase()} | ${data.fase.toUpperCase()}</p>
-        <p class="text-slate-600 italic text-xs mt-0.5">Bab / Topik Utama: ${data.bab.toUpperCase()} | Alokasi Waktu: ${data.waktu}</p>
-      </div>
-      <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3">2. ALUR TUJUAN PEMBELAJARAN (ATP)</div>
-      <table class="w-full border-collapse border border-slate-300 text-left text-xs">
-        <thead>
-          <tr class="bg-slate-100">
-            <th class="border border-slate-300 p-2">Jenjang & Fase</th>
-            <th class="border border-slate-300 p-2">Mata Pelajaran</th>
-            <th class="border border-slate-300 p-2">Materi / Bab</th>
-            <th class="border border-slate-300 p-2">Alokasi Waktu</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="border border-slate-300 p-2">${data.fase}</td>
-            <td class="border border-slate-300 p-2">${data.mapel}</td>
-            <td class="border border-slate-300 p-2">${data.bab}</td>
-            <td class="border border-slate-300 p-2">${data.waktu}</td>
-          </tr>
-        </tbody>
-      </table>`;
+            previewBox.innerHTML = `
+                <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+                    <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">ALUR TUJUAN PEMBELAJARAN (ATP) KURIKULUM MERDEKA</h2>
+                    <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || '').toUpperCase()} | ${(data.fase || '').toUpperCase()}</p>
+                    <p class="text-xs text-slate-600 mt-0.5">Satuan Pendidikan: ${data.satuan || 'MTs Meunafa'} | Tahun Pelajaran: ${data.tahun || '2026/2027'}</p>
+                </div>
+
+                <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3 flex items-center gap-1.5">
+                    <span>2. ALUR TUJUAN PEMBELAJARAN (ATP) LENGKAP</span>
+                </div>
+
+                <p class="text-xs text-slate-600 mb-3">Alur Tujuan Pembelajaran disusun secara sistematis berdasarkan Capaian Pembelajaran (CP) Elemen Kurikulum Merdeka:</p>
+
+                <!-- TABEL ATP STANDAR KUMER -->
+                <div class="overflow-x-auto mb-6">
+                    <table class="w-full text-xs border-collapse border border-slate-300">
+                        <thead>
+                            <tr class="bg-indigo-900 text-white font-bold text-center">
+                                <th class="border border-slate-300 p-2.5 w-1/6 uppercase">ELEMEN</th>
+                                <th class="border border-slate-300 p-2.5 w-1/3 uppercase">CAPAIAN PEMBELAJARAN (CP)</th>
+                                <th class="border border-slate-300 p-2.5 w-1/4 uppercase">TUJUAN PEMBELAJARAN (TP)</th>
+                                <th class="border border-slate-300 p-2.5 w-1/4 uppercase">INDIKATOR KETERCAPAIAN (IKTP)</th>
+                                <th class="border border-slate-300 p-2.5 w-24 uppercase">ALOKASI</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-800 align-top">
+                            <tr class="hover:bg-slate-50">
+                                <td class="border border-slate-300 p-2.5 font-bold text-center">Pemahaman & Akhlak</td>
+                                <td class="border border-slate-300 p-2.5 text-justify">
+                                    Peserta didik mampu memahami, menganalisis, dan menginternalisasi nilai-nilai <strong>${data.bab}</strong> pada Pendidikan Pancasila / Keagamaan untuk diterapkan dalam kehidupan pribadi, sekolah, dan bermasyarakat.
+                                </td>
+                                <td class="border border-slate-300 p-2.5">
+                                    <ol class="list-decimal pl-4 space-y-1">
+                                        <li>Menganalisis definisi dan pentingnya nilai <strong>${data.bab}</strong>.</li>
+                                        <li>Menunjukkan perilaku bertanggung jawab dalam tugas sehari-hari.</li>
+                                        <li>Merumuskan solusi atas bentuk pelanggaran komitmen sosial.</li>
+                                    </ol>
+                                </td>
+                                <td class="border border-slate-300 p-2.5">
+                                    <ul class="list-disc pl-4 space-y-1">
+                                        <li>Mampu mendeskripsikan arti <strong>${data.bab}</strong>.</li>
+                                        <li>Mampu menyebutkan 3 contoh sikap tepat.</li>
+                                        <li>Aktif dan kritis saat diskusi kelompok.</li>
+                                    </ul>
+                                </td>
+                                <td class="border border-slate-300 p-2.5 text-center font-medium">${data.waktu || '2 JP x 40 Menit'}</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="border border-slate-300 p-2.5 font-bold text-center">Penerapan Praktis</td>
+                                <td class="border border-slate-300 p-2.5 text-justify">
+                                    Peserta didik mampu mempraktikkan perilaku <strong>${data.bab}</strong> dalam kehidupan nyata sebagai bentuk partisipasi warga negara/sekolah yang bertanggung jawab.
+                                </td>
+                                <td class="border border-slate-300 p-2.5">
+                                    <ol class="list-decimal pl-4 space-y-1">
+                                        <li>Menyusun rencana aksi nyata pelaksanaan <strong>${data.bab}</strong> di lingkungan kelas.</li>
+                                        <li>Mempraktikkan kedisiplinan dan kejujuran pada tugas sekolah.</li>
+                                    </ol>
+                                </td>
+                                <td class="border border-slate-300 p-2.5">
+                                    <ul class="list-disc pl-4 space-y-1">
+                                        <li>Mampu menyelesaikan LKPD tepat waktu.</li>
+                                        <li>Menunjukkan kekonsistenan antara kata dan perbuatan.</li>
+                                    </ul>
+                                </td>
+                                <td class="border border-slate-300 p-2.5 text-center font-medium">${data.waktu || '2 JP x 40 Menit'}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- LEMBAR PENGESAHAN DINAMIS -->
+                <div class="pt-6 grid grid-cols-2 text-center text-xs mt-6 border-t border-slate-200">
+                    <div>
+                        <p>Mengetahui,</p>
+                        <p class="font-semibold">Kepala Sekolah / Madrasah</p>
+                        <div class="h-16"></div>
+                        <p class="font-bold underline">${namaKepala}</p>
+                        <p>NIP. ${nipKepala}</p>
+                    </div>
+                    <div>
+                        <p>Dibuat Oleh,</p>
+                        <p class="font-semibold">Guru Mata Pelajaran</p>
+                        <div class="h-16"></div>
+                        <p class="font-bold underline">${data.guru || '-'}</p>
+                        <p>NIP. ${nipGuru}</p>
+                    </div>
+                </div>
+            `;
+
+    
   } else if (tabName === 'lkpd') {
     previewBox.innerHTML = `
       <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
