@@ -869,72 +869,16 @@ function updateMapelDropdowns() {
   });
 }
 
-// 3. SINKRONISASI GURU
-function updateGuruDropdowns() {
-  const targets = [
-    document.getElementById('modul-guru'),
-    document.getElementById('jadwal-f5'), // Target Guru di Modal Jadwal
-    document.querySelector('#modal-kelas select[name="wali_kelas"]')
-  ];
-
-  let rawList = [];
-  const rowsGuru = document.querySelectorAll('#table-guru tr');
-  rowsGuru.forEach(tr => {
-    const tds = tr.querySelectorAll('td');
-    if (tds.length >= 2) {
-      let namaGuru = tds[1] ? tds[1].textContent.trim() : '';
-      if (namaGuru.includes('(')) namaGuru = namaGuru.split('(')[0].trim();
-      if (namaGuru && !namaGuru.includes('Tidak ada') && !namaGuru.includes('Belum ada')) {
-        rawList.push(namaGuru);
-      }
-    }
-  });
-
-  if (rawList.length === 0 && typeof appData !== 'undefined' && Array.isArray(appData.guru)) {
-    appData.guru.forEach(item => {
-      let val = (typeof item === 'object' && item !== null) ? (item.namaGuru || item.nama || '') : item;
-      if (val) {
-        let cleanVal = val.toString().trim();
-        if (cleanVal.includes('(')) cleanVal = cleanVal.split('(')[0].trim();
-        rawList.push(cleanVal);
-      }
-    });
-  }
-
-  let cleanedList = [...new Set(rawList)];
-
-  targets.forEach(selectElem => {
-    if (selectElem) {
-      const currentValue = selectElem.value;
-      selectElem.innerHTML = '<option value="">-- Pilih Guru Pengajar --</option>';
-      cleanedList.forEach(guru => {
-        const opt = document.createElement('option');
-        opt.value = guru;
-        opt.textContent = guru;
-        if (guru === currentValue) opt.selected = true;
-        selectElem.appendChild(opt);
-      });
-    }
-  });
-}
-
-// PEMICU UTAMA
-document.addEventListener('click', function() {
-  setTimeout(() => {
-    updateKelasDropdowns();
-    updateMapelDropdowns();
-    updateGuruDropdowns();
-  }, 100);
-});
     
    
     
 
-    
+    // 3. SINKRONISASI GURU
     function updateGuruDropdowns() {
   // Target dropdown guru dan wali kelas di seluruh modal & menu
-  const targets = [
+const targets = [
     document.getElementById('modul-guru'),
+    document.getElementById('jadwal-f5'),
     document.querySelector('#modal-kelas select[name="wali_kelas"]'),
     document.querySelector('#modal-kelas select:nth-of-type(1)'),
     document.querySelectorAll('#modal-kelas select')[0]
@@ -1009,6 +953,10 @@ document.addEventListener('click', function() {
 document.addEventListener('click', function() {
   setTimeout(updateGuruDropdowns, 150);
 });
+
+
+
+
     
 function updateMapelDropdowns() {
   const targets = [
