@@ -482,10 +482,11 @@
 
       <div>
         <label class="text-xs font-semibold block mb-1">Kelas</label>
-        <select id="siswa-kelas" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
+        <select id="siswa-f3" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
           <option value="">-- Pilih Kelas --</option>
         </select>
       </div>
+
       <div class="flex justify-end gap-2 pt-2">
         <button type="button" onclick="toggleModal('modal-siswa', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button>
         <button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button>
@@ -535,59 +536,42 @@
     </div>
   </div>
 
-  <!-- Modal Kelas -->
-<div id="modal-kelas" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
-  <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
-    <h3 class="text-lg font-bold">Tambah Data Kelas</h3>
-    <form onsubmit="addData(event, 'kelas')" class="space-y-3">
-      
-      <div>
-        <label class="text-xs font-semibold block mb-1">Nama Kelas</label>
-        <input type="text" id="kelas-f1" placeholder="Contoh: VII A" required class="w-full border rounded-lg p-2 text-sm outline-none">
-      </div>
-
-      <div>
-        <label class="text-xs font-semibold block mb-1">Wali Kelas</label>
-        <select id="kelas-f2" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
-          <option value="">-- Pilih Wali Kelas --</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="text-xs font-semibold block mb-1">Tingkat</label>
-        <input type="text" id="kelas-f3" placeholder="VII / VIII / IX" required class="w-full border rounded-lg p-2 text-sm outline-none">
-      </div>
-
-      <div class="flex justify-end gap-2 pt-2">
-        <button type="button" onclick="toggleModal('modal-kelas', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button>
-        <button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button>
-      </div>
-
-    </form>
+  <!-- Modal Kelas (Dengan Dropdown Dynamic Guru/Wali Kelas) -->
+  <div id="modal-kelas" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
+    <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
+      <h3 class="text-lg font-bold">Tambah Data Kelas</h3>
+      <form onsubmit="addData(event, 'kelas')" class="space-y-3">
+        <div><label class="text-xs font-semibold block mb-1">Nama Kelas</label><input type="text" id="kelas-f1" placeholder="Contoh: VII A" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div>
+          <label class="text-xs font-semibold block mb-1">Wali Kelas</label>
+          <select id="kelas-f2" required class="select-guru-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
+            <option value="">-- Pilih Wali Kelas --</option>
+          </select>
+        </div>
+        <div><label class="text-xs font-semibold block mb-1">Tingkat</label><input type="text" id="kelas-f3" placeholder="VII / VIII / IX" required class="w-full border rounded-lg p-2 text-sm outline-none"></div>
+        <div class="flex justify-end gap-2 pt-2"><button type="button" onclick="toggleModal('modal-kelas', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button><button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button></div>
+      </form>
+    </div>
   </div>
-</div>
   
 
-<!-- Modal Nilai -->
+ <!-- Modal Nilai -->
 <div id="modal-nilai" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center hidden z-50">
   <div class="bg-white p-6 rounded-xl w-full max-w-md space-y-4 shadow-xl">
     <h3 class="text-lg font-bold">Input Nilai Siswa</h3>
     <form onsubmit="addData(event, 'nilai')" class="space-y-3">
-      
       <div>
         <label class="text-xs font-semibold block mb-1">Nama Siswa</label>
-        <select id="nilai-f1" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
+        <select id="nilai-f1" required class="select-siswa-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
           <option value="">-- Pilih Siswa --</option>
         </select>
       </div>
-
       <div>
-        <select id="nilai-f2" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
+        <label class="text-xs font-semibold block mb-1">Mata Pelajaran</label>
+        <select id="nilai-f2" required class="select-mapel-dropdown w-full border rounded-lg p-2 text-sm outline-none bg-white">
           <option value="">-- Pilih Mata Pelajaran --</option>
         </select>
       </div>
-
-      <!-- Input Nilai Tugas, UTS, UAS -->
       <div class="grid grid-cols-3 gap-2">
         <div>
           <label class="text-xs font-semibold block mb-1">Tugas</label>
@@ -602,12 +586,10 @@
           <input type="number" id="nilai-f5" required class="w-full border rounded-lg p-2 text-sm outline-none">
         </div>
       </div>
-
       <div class="flex justify-end gap-2 pt-2">
         <button type="button" onclick="toggleModal('modal-nilai', false)" class="px-4 py-2 text-sm bg-slate-200 rounded-lg">Batal</button>
         <button type="submit" class="px-4 py-2 text-sm bg-emerald-500 text-white rounded-lg">Simpan</button>
       </div>
-
     </form>
   </div>
 </div>
@@ -799,42 +781,29 @@ function toggleModal(modalId, show) {
 function updateKelasDropdowns() {
   const targets = [
     document.getElementById('modul-jenjang'),
-    document.getElementById('siswa-kelas'), // Target Kelas di Modal Siswa
-    document.getElementById('jadwal-f3'),
-    document.getElementById('modul-f3')
+    document.getElementById('siswa-f3'),  // Hanya mengisi dropdown Kelas di modal siswa
+    document.getElementById('jadwal-f3')
   ];
 
   let rawList = [];
-
-  // 1. Ambil HANYA dari tabel #table-kelas
   const rowsKelas = document.querySelectorAll('#table-kelas tr');
   rowsKelas.forEach(tr => {
     const tds = tr.querySelectorAll('td');
-    
-    // Pastikan mengambil Kolom Nama Kelas (biasanya index 1 atau index 0 jika tidak ada kolom nomor/checkbox)
-    if (tds.length >= 2) {
-      let namaKelas = tds[1] ? tds[1].textContent.trim() : '';
-      
-      // Jika tds[1] ternyata wali kelas (ada gelar S.Pd/M.Pd), paksa ambil tds[0] atau kolom nama kelas
-      if (namaKelas.includes('.') || namaKelas.includes('S.Pd') || namaKelas.includes('M.Pd')) {
-        namaKelas = tds[0] ? tds[0].textContent.trim() : '';
-      }
-
-      if (namaKelas && !namaKelas.includes('Tidak ada') && !namaKelas.includes('Belum ada') && !namaKelas.includes('Nama Kelas')) {
+    if (tds.length >= 1) {
+      let namaKelas = tds[0] ? tds[0].textContent.trim() : '';
+      if (namaKelas && !namaKelas.includes('Tidak ada') && !namaKelas.includes('Belum ada')) {
         rawList.push(namaKelas);
       }
     }
   });
 
-  // 2. Cadangan dari appData jika tabel belum ter-render
   if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.kelas)) {
     appData.kelas.forEach(item => {
-      let val = (typeof item === 'object' && item !== null) ? (item.namaKelas || item.nama || item.f1 || '') : item;
+      let val = (typeof item === 'object' && item !== null) ? (item.namaKelas || item.nama || '') : item;
       if (val) rawList.push(val.toString().trim());
     });
   }
 
-  // 3. Render ke dropdown
   let cleanedList = [...new Set(rawList)];
 
   targets.forEach(selectElem => {
@@ -900,41 +869,129 @@ function updateMapelDropdowns() {
   });
 }
 
-
-
-    
 // 3. SINKRONISASI GURU
 function updateGuruDropdowns() {
   const targets = [
     document.getElementById('modul-guru'),
-    document.getElementById('jadwal-f5'),
-    document.getElementById('kelas-f2') // HANYA Wali Kelas
+    document.getElementById('jadwal-f5'), // Target Guru di Modal Jadwal
+    document.querySelector('#modal-kelas select[name="wali_kelas"]')
   ];
 
   let rawList = [];
-
-  // Ambil hanya dari tabel guru
   const rowsGuru = document.querySelectorAll('#table-guru tr');
   rowsGuru.forEach(tr => {
     const tds = tr.querySelectorAll('td');
     if (tds.length >= 2) {
       let namaGuru = tds[1] ? tds[1].textContent.trim() : '';
-      if (namaGuru && !namaGuru.includes('Tidak ada') && !namaGuru.includes('Belum ada') && !namaGuru.includes('Nama Guru')) {
-        if (namaGuru.includes('(')) namaGuru = namaGuru.split('(')[0].trim();
+      if (namaGuru.includes('(')) namaGuru = namaGuru.split('(')[0].trim();
+      if (namaGuru && !namaGuru.includes('Tidak ada') && !namaGuru.includes('Belum ada')) {
         rawList.push(namaGuru);
       }
     }
   });
+
+  if (rawList.length === 0 && typeof appData !== 'undefined' && Array.isArray(appData.guru)) {
+    appData.guru.forEach(item => {
+      let val = (typeof item === 'object' && item !== null) ? (item.namaGuru || item.nama || '') : item;
+      if (val) {
+        let cleanVal = val.toString().trim();
+        if (cleanVal.includes('(')) cleanVal = cleanVal.split('(')[0].trim();
+        rawList.push(cleanVal);
+      }
+    });
+  }
 
   let cleanedList = [...new Set(rawList)];
 
   targets.forEach(selectElem => {
     if (selectElem) {
       const currentValue = selectElem.value;
-      const isWali = selectElem.id === 'kelas-f2';
+      selectElem.innerHTML = '<option value="">-- Pilih Guru Pengajar --</option>';
+      cleanedList.forEach(guru => {
+        const opt = document.createElement('option');
+        opt.value = guru;
+        opt.textContent = guru;
+        if (guru === currentValue) opt.selected = true;
+        selectElem.appendChild(opt);
+      });
+    }
+  });
+}
+
+// PEMICU UTAMA
+document.addEventListener('click', function() {
+  setTimeout(() => {
+    updateKelasDropdowns();
+    updateMapelDropdowns();
+    updateGuruDropdowns();
+  }, 100);
+});
+    
+   
+    
+
+    
+    function updateGuruDropdowns() {
+  // Target dropdown guru dan wali kelas di seluruh modal & menu
+  const targets = [
+    document.getElementById('modul-guru'),
+    document.querySelector('#modal-kelas select[name="wali_kelas"]'),
+    document.querySelector('#modal-kelas select:nth-of-type(1)'),
+    document.querySelectorAll('#modal-kelas select')[0]
+  ];
+
+  let rawList = [];
+
+  // 1. Ambil HANYA nama guru dari kolom ke-2 tabel DOM (#table-guru)
+  const rowsGuru = document.querySelectorAll('#table-guru tr');
+  rowsGuru.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    if (tds.length >= 2) {
+      let namaGuru = tds[1] ? tds[1].textContent.trim() : '';
       
-      selectElem.innerHTML = isWali 
-        ? '<option value="">-- Pilih Wali Kelas --</option>'
+      // Bersihkan jika ada teks dalam kurung
+      if (namaGuru.includes('(')) {
+        namaGuru = namaGuru.split('(')[0].trim();
+      }
+
+      if (namaGuru && !namaGuru.includes('Tidak ada') && !namaGuru.includes('Belum ada')) {
+        rawList.push(namaGuru);
+      }
+    }
+  });
+
+  // 2. Cadangan jika tabel DOM belum ter-render
+  if (rawList.length === 0) {
+    try {
+      if (typeof appData !== 'undefined' && appData && Array.isArray(appData.guru)) {
+        appData.guru.forEach(item => {
+          let val = (typeof item === 'object' && item !== null) ? (item.namaGuru || item.nama || '') : item;
+          if (val) {
+            let cleanVal = val.toString().trim();
+            if (cleanVal.includes('(')) cleanVal = cleanVal.split('(')[0].trim();
+            rawList.push(cleanVal);
+          }
+        });
+      }
+    } catch (e) {}
+  }
+
+  // 3. Filter data unik
+  let cleanedList = [];
+  rawList.forEach(text => {
+    if (text && !cleanedList.includes(text)) {
+      cleanedList.push(text);
+    }
+  });
+
+  // 4. Render ke seluruh dropdown target
+  targets.forEach(selectElem => {
+    if (selectElem) {
+      const currentValue = selectElem.value;
+      const isWaliKelas = selectElem.closest('#modal-kelas') || selectElem.name === 'wali_kelas';
+      
+      selectElem.innerHTML = isWaliKelas 
+        ? '<option value="">-- Pilih Wali Kelas --</option>' 
         : '<option value="">-- Pilih Guru Pengajar --</option>';
 
       cleanedList.forEach(guru => {
@@ -947,13 +1004,11 @@ function updateGuruDropdowns() {
     }
   });
 }
-    
-   
-   
-    
 
-    
-    
+// PEMICU SINKRONISASI REAL-TIME
+document.addEventListener('click', function() {
+  setTimeout(updateGuruDropdowns, 150);
+});
     
 function updateMapelDropdowns() {
   const targets = [
@@ -1013,97 +1068,48 @@ document.addEventListener('click', function() {
 
 
     
-// 1. SINKRONISASI DROPDOWN SISWA
-function updateSiswaDropdowns() {
-  const targets = [
-    document.getElementById('nilai-f1') // Target Nama Siswa di Modal Nilai
-  ];
+ function updateSiswaDropdowns() {
+  const select = document.getElementById('nilai-f1');
+  if (!select) return;
 
+  const currentValue = select.value;
   let rawList = [];
 
-  // Ambil Nama Siswa dari kolom ke-2 (#table-siswa)
+  // 1. Ambil HANYA kolom ke-2 (index 1) dari tabel DOM (#table-siswa)
   const rowsSiswa = document.querySelectorAll('#table-siswa tr');
   rowsSiswa.forEach(tr => {
     const tds = tr.querySelectorAll('td');
     if (tds.length >= 2) {
+      // Ambil teks spesifik dari kolom Nama Siswa (index 1)
       let namaSiswa = tds[1] ? tds[1].textContent.trim() : '';
-      if (namaSiswa && !namaSiswa.includes('Tidak ada') && !namaSiswa.includes('Nama Siswa')) {
+      if (namaSiswa && !namaSiswa.includes('Tidak ada') && !namaSiswa.includes('Belum ada')) {
         rawList.push(namaSiswa);
       }
     }
   });
 
-  let cleanedList = [...new Set(rawList)];
-
-  targets.forEach(selectElem => {
-    if (selectElem) {
-      const currentValue = selectElem.value;
-      selectElem.innerHTML = '<option value="">-- Pilih Siswa --</option>';
-      cleanedList.forEach(siswa => {
-        const opt = document.createElement('option');
-        opt.value = siswa;
-        opt.textContent = siswa;
-        if (siswa === currentValue) opt.selected = true;
-        selectElem.appendChild(opt);
-      });
-    }
-  });
-}
-
-
-    
-
-// 2. SINKRONISASI DROPDOWN MATA PELAJARAN
-function updateMapelDropdowns() {
-  const targets = [
-    document.getElementById('modul-mapel'),
-    document.getElementById('nilai-f2'), // Target Mapel di Modal Nilai
-    document.getElementById('guru-f3'),
-    document.getElementById('jadwal-f4')  // Target Mapel di Modal Jadwal
-  ];
-
-  let rawList = [];
-
-  // Ambil Kolom Ke-2 (index 1: Nama Mapel) dari tabel #table-mapel
-  const rowsMapel = document.querySelectorAll('#table-mapel tr');
-  rowsMapel.forEach(tr => {
-    const tds = tr.querySelectorAll('td');
-    if (tds.length >= 2) {
-      let namaMapel = tds[1] ? tds[1].textContent.trim() : '';
-      if (namaMapel && !namaMapel.includes('Tidak ada') && !namaMapel.includes('Belum ada') && !namaMapel.includes('Mata Pelajaran')) {
-        rawList.push(namaMapel);
-      }
-    }
-  });
-
-  // Cadangan dari appData
-  if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.mapel)) {
-    appData.mapel.forEach(item => {
-      let val = (typeof item === 'object' && item !== null) ? (item.namaMapel || item.nama || item.f2 || '') : item;
+  // 2. Cadangan jika tabel DOM belum ter-render
+  if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.siswa)) {
+    appData.siswa.forEach(s => {
+      let val = (typeof s === 'object' && s !== null) ? (s.nama || s.namaSiswa || s.f2 || '') : s;
       if (val) rawList.push(val.toString().trim());
     });
   }
 
+  // 3. Filter unik
   let cleanedList = [...new Set(rawList)];
 
-  targets.forEach(selectElem => {
-    if (selectElem) {
-      const currentValue = selectElem.value;
-      selectElem.innerHTML = '<option value="">-- Pilih Mata Pelajaran --</option>';
-      cleanedList.forEach(mapel => {
-        const opt = document.createElement('option');
-        opt.value = mapel;
-        opt.textContent = mapel;
-        if (mapel === currentValue) opt.selected = true;
-        selectElem.appendChild(opt);
-      });
-    }
+  // 4. Render murni nama siswa
+  select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+  cleanedList.forEach(siswa => {
+    const opt = document.createElement('option');
+    opt.value = siswa;
+    opt.textContent = siswa;
+    if (siswa === currentValue) opt.selected = true;
+    select.appendChild(opt);
   });
 }
 
-
-
-    
 // 2. FUNGSI SINKRONISASI MATA PELAJARAN
 function updateMapelDropdowns() {
   const selectMapel = document.getElementById('nilai-f2');
@@ -1153,8 +1159,24 @@ function updateMapelDropdowns() {
   });
 }
 
-
+// 3. PEMICU OTOMATIS SAAT MODAL DIBUKA
+function toggleModal(modalId, show) {
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    if (show) {
+      modal.classList.remove('hidden');
+      // Langsung jalankan pengisian dropdown saat modal tampil
+      setTimeout(() => {
+        if (typeof updateSiswaDropdowns === 'function') updateSiswaDropdowns();
+        if (typeof updateMapelDropdowns === 'function') updateMapelDropdowns();
+      }, 50);
+    } else {
+      modal.classList.add('hidden');
+    }
+  }
+}
     
+   
     
     // Render Table Data
     function renderTables() {
@@ -1182,41 +1204,23 @@ function updateMapelDropdowns() {
     }
 
     // Add Data Function
-   function addData(e, type) {
-  e.preventDefault();
-  const newItem = { id: Date.now() };
+    function addData(e, type) {
+      e.preventDefault();
+      const newItem = { id: Date.now() };
+      let i = 1;
+      
+      while (document.getElementById(`${type}-f${i}`)) {
+        newItem[`f${i}`] = document.getElementById(`${type}-f${i}`).value;
+        document.getElementById(`${type}-f${i}`).value = '';
+        i++;
+      }
 
-  if (type === 'siswa') {
-    // Penanganan khusus Modal Siswa dengan ID baru
-    newItem['f1'] = document.getElementById('siswa-f1') ? document.getElementById('siswa-f1').value : '';
-    newItem['f2'] = document.getElementById('siswa-f2') ? document.getElementById('siswa-f2').value : '';
-    newItem['f3'] = document.getElementById('siswa-jk') ? document.getElementById('siswa-jk').value : '';
-    newItem['f4'] = document.getElementById('siswa-kelas') ? document.getElementById('siswa-kelas').value : '';
-
-    // Reset input modal siswa
-    if (document.getElementById('siswa-f1')) document.getElementById('siswa-f1').value = '';
-    if (document.getElementById('siswa-f2')) document.getElementById('siswa-f2').value = '';
-    if (document.getElementById('siswa-jk')) document.getElementById('siswa-jk').value = '';
-    if (document.getElementById('siswa-kelas')) document.getElementById('siswa-kelas').value = '';
-  } else {
-    // Modul lainnya tetap menggunakan loop otomatis
-    let i = 1;
-    while (document.getElementById(`${type}-f${i}`)) {
-      newItem[`f${i}`] = document.getElementById(`${type}-f${i}`).value;
-      document.getElementById(`${type}-f${i}`).value = '';
-      i++;
+      appData[type].push(newItem);
+      saveData();
+      renderTables();
+      toggleModal(`modal-${type}`, false);
     }
-  }
 
-  appData[type].push(newItem);
-  saveData();
-  renderTables();
-  toggleModal(`modal-${type}`, false);
-}
-
-
-
-    
     // Delete Data Function
     function deleteData(type, id) {
       if (confirm('Yakin ingin menghapus data ini?')) {
