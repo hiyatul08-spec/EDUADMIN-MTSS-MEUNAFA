@@ -1732,10 +1732,11 @@ function switchTabModul(tabName) {
 
     
 } else if (tabName === 'asesmen') {
-      const kelasText = (data.fase || '').toUpperCase().trim();
+     const kelasText = (data.fase || '').toUpperCase().trim();
             const mapelText = (data.mapel || 'Mata Pelajaran').toUpperCase();
             const babText = data.bab || 'Materi Utama';
             let formatSoalHtml = '';
+            let formatKunciHtml = '';
 
             // 1. Deteksi Kelas 1-3 SD/MI
             const isKelas13 = /\b(KELAS 1|KELAS 2|KELAS 3|KELAS I|KELAS II|KELAS III|FASE A)\b/.test(kelasText) ||
@@ -1746,37 +1747,35 @@ function switchTabModul(tabName) {
                               kelasText.includes('KELAS IV-') || kelasText.includes('KELAS V-') || kelasText.includes('KELAS VI-');
 
             // --- HELPER GENERATOR SOAL KONTEN SPEKTRUM MAPEL & TOPIK ---
-            const buildContextualQuestion = (index, bab, mapel, type) => {
+            const buildContextualQuestion = (index, bab, mapel) => {
                 const isAgama = /AL-QUR'AN|HADIS|FIKIH|PAI|AKIDAH|AKHLAK|SKL|TAJWID/.test(mapel);
                 const isSains = /IPA|BIOLOGI|FISIKA|KIMIA|MATEMATIKA/.test(mapel);
 
-                if (type === 'PG') {
-                    if (isAgama) {
-                        const templates = [
-                            { q: `Siswa yang menerapkan hukum atau kaidah <strong>${bab}</strong> saat membaca Al-Qur'an atau beribadah akan terhindar dari...`, a: `Kesalahan makna dan kekeliruan kaidah`, b: `Pujian dari sesama teman`, c: `Kemudahan dalam menghafal`, d: `Kelancaran membaca tanpa tajwid` },
-                            { q: `Manakah di bawah ini contoh penerapan atau perilaku yang sesuai dengan ajaran <strong>${bab}</strong> dalam kehidupan sehari-hari?`, a: `Menjalankan perintah sesuai kaidah dan penuh tanggung jawab`, b: `Apatis terhadap hukum-hukum pembelajaran`, c: `Melakukan amalan hanya saat diawasi guru`, d: `Mengabaikan keutamaan dan nilai ${bab}` },
-                            { q: `Di bawah ini yang merupakan dalil, prinsip dasar, atau hukum utama dalam pembahasan <strong>${bab}</strong> adalah...`, a: `Menjaga ketepatan dan ketaatan sesuai syariat/prinsip`, b: `Meniru kebiasaan yang tidak ada tuntunannya`, c: `Memilih hukum yang paling mudah tanpa rujukan`, d: `Mengabaikan aturan yang sudah ditetapkan` },
-                            { q: `Ketika menjumpai permasalahan mengenai <strong>${bab}</strong> pada mata pelajaran ${mapel}, sikap yang paling tepat adalah...`, a: `Mempelajari kaidahnya dan bertanya kepada ahli/guru`, b: `Membiarkannya tanpa mencari kebenaran`, c: `Menganggap semua pemahaman adalah sama`, d: `Menghindari topik tersebut` }
-                        ];
-                        return templates[(index - 1) % templates.length];
-                    } else if (isSains) {
-                        const templates = [
-                            { q: `Dalam eksperimen atau analisis materi <strong>${bab}</strong>, faktor utama yang mempengaruhi proses keberhasilannya adalah...`, a: `Ketepatan variabel dan pemahaman konsep ${bab}`, b: `Perkiraan tanpa pengukuran yang valid`, c: `Waktu pengamatan yang acak dan tidak teratur`, d: `Pengabaian terhadap hukum alam/rumus dasar` },
-                            { q: `Penerapan prinsip <strong>${bab}</strong> pada fenomena atau kehidupan nyata dapat ditemui pada peristiwa...`, a: `Proses alami yang mengikuti hukum dan kaidah ${bab}`, b: `Perubahan materi tanpa adanya sebab-akibat`, c: `Gejala spontan yang tidak dapat dijelaskan secara ilmiah`, d: `Sistem tertutup yang tidak memiliki energi` }
-                        ];
-                        return templates[(index - 1) % templates.length];
-                    } else {
-                        const templates = [
-                            { q: `Implementasi nilai-nilai atau konsep <strong>${bab}</strong> dalam konteks kemasyarakatan dan berbangsa bertujuan untuk...`, a: `Menciptakan keharmonisan dan keteraturan sosial`, b: `Menimbulkan persaingan yang tidak sehat`, c: `Membatasi kreativitas warga negara`, d: `Menghapuskan keberagaman aturan` },
-                            { q: `Tantangan terbesar dalam mempertahankan pemahaman <strong>${bab}</strong> di era globalisasi saat ini adalah...`, a: `Pengaruh budaya luar dan minimnya pembiasaan`, b: `Banyaknya literatur resmi yang terbit`, c: `Dukungan penuh dari seluruh lapisan masyarakat`, d: `Kemudahan akses informasi pembelajaran` }
-                        ];
-                        return templates[(index - 1) % templates.length];
-                    }
+                if (isAgama) {
+                    const templates = [
+                        { q: `Siswa yang menerapkan hukum atau kaidah <strong>${bab}</strong> saat membaca Al-Qur'an atau beribadah akan terhindar dari...`, a: `Kesalahan makna dan kekeliruan kaidah`, b: `Pujian dari sesama teman`, c: `Kemudahan dalam menghafal`, d: `Kelancaran membaca tanpa tajwid`, key: `A` },
+                        { q: `Manakah di bawah ini contoh penerapan atau perilaku yang sesuai dengan ajaran <strong>${bab}</strong> dalam kehidupan sehari-hari?`, a: `Menjalankan perintah sesuai kaidah dan penuh tanggung jawab`, b: `Apatis terhadap hukum-hukum pembelajaran`, c: `Melakukan amalan hanya saat diawasi guru`, d: `Mengabaikan keutamaan dan nilai ${bab}`, key: `A` },
+                        { q: `Di bawah ini yang merupakan dalil, prinsip dasar, atau hukum utama dalam pembahasan <strong>${bab}</strong> adalah...`, a: `Menjaga ketepatan dan ketaatan sesuai syariat/prinsip`, b: `Meniru kebiasaan yang tidak ada tuntunannya`, c: `Memilih hukum yang paling mudah tanpa rujukan`, d: `Mengabaikan aturan yang sudah ditetapkan`, key: `A` },
+                        { q: `Ketika menjumpai permasalahan mengenai <strong>${bab}</strong> pada mata pelajaran ${mapel}, sikap yang paling tepat adalah...`, a: `Mempelajari kaidahnya dan bertanya kepada ahli/guru`, b: `Membiarkannya tanpa mencari kebenaran`, c: `Menganggap semua pemahaman adalah sama`, d: `Menghindari topik tersebut`, key: `A` }
+                    ];
+                    return templates[(index - 1) % templates.length];
+                } else if (isSains) {
+                    const templates = [
+                        { q: `Dalam eksperimen atau analisis materi <strong>${bab}</strong>, faktor utama yang mempengaruhi proses keberhasilannya adalah...`, a: `Ketepatan variabel dan pemahaman konsep ${bab}`, b: `Perkiraan tanpa pengukuran yang valid`, c: `Waktu pengamatan yang acak dan tidak teratur`, d: `Pengabaian terhadap hukum alam/rumus dasar`, key: `A` },
+                        { q: `Penerapan prinsip <strong>${bab}</strong> pada fenomena atau kehidupan nyata dapat ditemui pada peristiwa...`, a: `Proses alami yang mengikuti hukum dan kaidah ${bab}`, b: `Perubahan materi tanpa adanya sebab-akibat`, c: `Gejala spontan yang tidak dapat dijelaskan secara ilmiah`, d: `Sistem tertutup yang tidak memiliki energi`, key: `A` }
+                    ];
+                    return templates[(index - 1) % templates.length];
+                } else {
+                    const templates = [
+                        { q: `Implementasi nilai-nilai atau konsep <strong>${bab}</strong> dalam konteks kemasyarakatan dan berbangsa bertujuan untuk...`, a: `Menciptakan keharmonisan dan keteraturan sosial`, b: `Menimbulkan persaingan yang tidak sehat`, c: `Membatasi kreativitas warga negara`, d: `Menghapuskan keberagaman aturan`, key: `A` },
+                        { q: `Tantangan terbesar dalam mempertahankan pemahaman <strong>${bab}</strong> di era globalisasi saat ini adalah...`, a: `Pengaruh budaya luar dan minimnya pembiasaan`, b: `Banyaknya literatur resmi yang terbit`, c: `Dukungan penuh dari seluruh lapisan masyarakat`, d: `Kemudahan akses informasi pembelajaran`, key: `A` }
+                    ];
+                    return templates[(index - 1) % templates.length];
                 }
             };
 
             if (isKelas13) {
-                // KELAS 1-3 SD/MI: 5 Isian Singkat Sederhana & Variatif
+                // KELAS 1-3 SD/MI: 5 Isian Singkat
                 formatSoalHtml = `
                     <div class="mb-4">
                         <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">A. SOAL ISIAN SINGKAT (5 SOAL)</h4>
@@ -1788,11 +1787,27 @@ function switchTabModul(tabName) {
                             <li>Apa yang harus kamu lakukan jika melihat teman belum memahami <strong>${babText}</strong>?</li>
                         </ol>
                     </div>`;
+
+                formatKunciHtml = `
+                    <div class="mt-8 pt-4 border-t-2 border-slate-800 break-before-page">
+                        <h3 class="font-bold text-center text-sm uppercase mb-4 text-slate-900">KUNCI JAWABAN & PEDOMAN PENSKORAN</h3>
+                        <h4 class="font-bold text-xs uppercase mb-2">KUNCI JAWABAN ISIAN SINGKAT:</h4>
+                        <ol class="list-decimal pl-5 text-xs space-y-1.5 text-slate-800">
+                            <li><strong>Pengertian ${babText}:</strong> Konsep/prinsip dasar dalam ${data.mapel || 'pembelajaran'} yang harus dipahami dan diamalkan.</li>
+                            <li><strong>Contoh Perilaku:</strong> Menerapkan aturan ${babText} saat kegiatan belajar di kelas.</li>
+                            <li><strong>Alasan Belajar:</strong> Untuk membentuk pemahaman yang benar dan sikap yang baik sesuai kaidah ${data.mapel || 'pembelajaran'}.</li>
+                            <li><strong>Manfaat:</strong> Mendapat ilmu yang bermanfaat dan terbiasa berbuat jujur/tertib.</li>
+                            <li><strong>Sikap Teman:</strong> Membantu menjelaskan dengan sopan atau mengajak belajar bersama.</li>
+                        </ol>
+                    </div>`;
+
             } else if (isKelas46) {
-                // KELAS 4-6 SD/MI: 10 PG + 5 Isian Singkat Variatif
+                // KELAS 4-6 SD/MI: 10 PG + 5 Isian Singkat
                 let pgList = '';
+                let pgKeys = [];
                 for (let i = 1; i <= 10; i++) {
-                    const item = buildContextualQuestion(i, babText, mapelText, 'PG');
+                    const item = buildContextualQuestion(i, babText, mapelText);
+                    pgKeys.push({ no: i, key: item.key });
                     pgList += `
                         <li class="mb-3">
                             <p class="font-medium text-slate-800">${i}. ${item.q}</p>
@@ -1804,6 +1819,7 @@ function switchTabModul(tabName) {
                             </div>
                         </li>`;
                 }
+
                 formatSoalHtml = `
                     <div class="mb-5">
                         <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">A. PILIHAN GANDA (10 SOAL)</h4>
@@ -1819,11 +1835,38 @@ function switchTabModul(tabName) {
                             <li>Tuliskan langkah konkret kamu dalam mempelajari <strong>${babText}</strong> agar mendapat nilai terbaik!</li>
                         </ol>
                     </div>`;
+
+                let pgGridHtml = '<table class="w-full text-xs border-collapse border border-slate-400 mb-4 text-center"><tr class="bg-slate-100 font-bold"><td class="border border-slate-400 p-1">No</td><td class="border border-slate-400 p-1">Kunci</td><td class="border border-slate-400 p-1">No</td><td class="border border-slate-400 p-1">Kunci</td></tr>';
+                for (let i = 0; i < 5; i++) {
+                    pgGridHtml += `<tr>
+                        <td class="border border-slate-400 p-1 font-semibold">${i+1}</td><td class="border border-slate-400 p-1">${pgKeys[i].key}</td>
+                        <td class="border border-slate-400 p-1 font-semibold">${i+6}</td><td class="border border-slate-400 p-1">${pgKeys[i+5].key}</td>
+                    </tr>`;
+                }
+                pgGridHtml += '</table>';
+
+                formatKunciHtml = `
+                    <div class="mt-8 pt-4 border-t-2 border-slate-800 break-before-page">
+                        <h3 class="font-bold text-center text-sm uppercase mb-4 text-slate-900">KUNCI JAWABAN & PEDOMAN PENSKORAN</h3>
+                        <h4 class="font-bold text-xs uppercase mb-2">A. KUNCI JAWABAN PILIHAN GANDA</h4>
+                        ${pgGridHtml}
+                        <h4 class="font-bold text-xs uppercase mb-2">B. KUNCI JAWABAN ISIAN SINGKAT</h4>
+                        <ol class="list-decimal pl-5 text-xs space-y-1.5 text-slate-800">
+                            <li><strong>Konsep Utama:</strong> Dasar aturan/kaidah ${babText} yang mengatur pemahaman materi ${data.mapel || 'pelajaran'}.</li>
+                            <li><strong>2 Contoh Penerapan:</strong> (1) Menjalankan aturan ${babText} di sekolah; (2) Mempraktikkannya di rumah.</li>
+                            <li><strong>Pentingnya Materi:</strong> Menjadi landasan utama pemahaman siswa pada mata pelajaran ${data.mapel || 'pelajaran'}.</li>
+                            <li><strong>Dampak Negatif:</strong> Terjadi kekeliruan pemahaman dan kesalahan amalan/penerapan.</li>
+                            <li><strong>Langkah Konkret:</strong> Membaca referensi secara rutin dan bertanya pada guru jika mengalami kesulitan.</li>
+                        </ol>
+                    </div>`;
+
             } else {
                 // KELAS 7-12 SMP/MTs/SMA/MA: 40 PG + 10 Essay Analitis
                 let pgList40 = '';
+                let pgKeys = [];
                 for (let i = 1; i <= 40; i++) {
-                    const item = buildContextualQuestion(i, babText, mapelText, 'PG');
+                    const item = buildContextualQuestion(i, babText, mapelText);
+                    pgKeys.push({ no: i, key: item.key });
                     pgList40 += `
                         <li class="mb-3 break-inside-avoid">
                             <p class="font-medium text-slate-800">${i}. ${item.q}</p>
@@ -1836,7 +1879,6 @@ function switchTabModul(tabName) {
                         </li>`;
                 }
 
-                // Generator 10 Soal Essay Variatif
                 const generateEssay = (index, bab, mapel) => {
                     const essayTemplates = [
                         `Jelaskan pengertian secara bahasa dan istilah dari materi <strong>${bab}</strong> serta landasan utama dalam pembelajaran <strong>${mapel}</strong>!`,
@@ -1870,6 +1912,46 @@ function switchTabModul(tabName) {
                         <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">B. SOAL ESSAY / URAIAN (10 SOAL)</h4>
                         <ol class="list-decimal pl-5 space-y-2 text-xs">${essayList10}</ol>
                     </div>`;
+
+                // Tabel Grid Kunci Jawaban 4 Kolom (1-10, 11-20, 21-30, 31-40)
+                let pgGridHtml = '<table class="w-full text-xs border-collapse border border-slate-400 mb-4 text-center"><tr class="bg-slate-100 font-bold"><td class="border border-slate-400 p-1">No</td><td class="border border-slate-400 p-1">Kunci</td><td class="border border-slate-400 p-1">No</td><td class="border border-slate-400 p-1">Kunci</td><td class="border border-slate-400 p-1">No</td><td class="border border-slate-400 p-1">Kunci</td><td class="border border-slate-400 p-1">No</td><td class="border border-slate-400 p-1">Kunci</td></tr>';
+                for (let i = 0; i < 10; i++) {
+                    pgGridHtml += `<tr>
+                        <td class="border border-slate-400 p-1 font-semibold">${i+1}</td><td class="border border-slate-400 p-1">${pgKeys[i].key}</td>
+                        <td class="border border-slate-400 p-1 font-semibold">${i+11}</td><td class="border border-slate-400 p-1">${pgKeys[i+10].key}</td>
+                        <td class="border border-slate-400 p-1 font-semibold">${i+21}</td><td class="border border-slate-400 p-1">${pgKeys[i+20].key}</td>
+                        <td class="border border-slate-400 p-1 font-semibold">${i+31}</td><td class="border border-slate-400 p-1">${pgKeys[i+30].key}</td>
+                    </tr>`;
+                }
+                pgGridHtml += '</table>';
+
+                const essayKeys = [
+                    `<strong>Pengertian ${babText}:</strong> Secara bahasa berarti ketetapan/kaidah; secara istilah adalah prinsip utama dalam ${data.mapel || 'pembelajaran'} yang menjadi panduan sikap/kegiatan.`,
+                    `<strong>Strategi Konkret:</strong> Membiasakan kedisiplinan di sekolah, menjalankan tugas dengan penuh rasa tanggung jawab, dan menerapkan nasihat di rumah.`,
+                    `<strong>Dampak Positif:</strong> Terciptanya keharmonisan, meningkatnya rasa saling percaya, dan terwujudnya lingkungan belajar yang tertib.`,
+                    `<strong>3 Tantangan Era Digital:</strong> (1) Maraknya informasi hoaks/konten negatif; (2) Pengaruh budaya serba instan; (3) Minimnya literasi dan filter diri.`,
+                    `<strong>Studi Kasus & Solusi:</strong> Contoh: Mengabaikan tugas/janji. Solusi: Melakukan edukasi berulang dan evaluasi disiplin secara berkala.`,
+                    `<strong>Pembentukan Karakter:</strong> Pembiasaan sejak dini membentuk integritas moral dan fondasi kepribadian yang kuat hingga dewasa.`,
+                    `<strong>Korelasi Pemahaman:</strong> Semakin tinggi pemahaman terhadap ${babText}, semakin meningkat kualitas perilaku dan kepatuhan aturan.`,
+                    `<strong>Perbandingan Perilaku:</strong> Orang yang komitmen akan konsisten dan dipercaya, sedangkan yang mengabaikan cenderung tidak stabil dan merugikan lingkungan.`,
+                    `<strong>Refleksi Diri:</strong> Penilaian mandiri atas konsistensi penerapan ${babText} dalam kehidupan sehari-hari.`,
+                    `<strong>Rancangan Program Aksi:</strong> Membuat gerakan "Gerakan Pembiasaan ${babText}" di kelas dengan jadwal piket/pengawasan mandiri.`
+                ];
+
+                let essayKeysHtml = '<ol class="list-decimal pl-5 text-xs space-y-2 text-slate-800 text-justify">';
+                essayKeys.forEach((k) => {
+                    essayKeysHtml += `<li class="mb-1">${k}</li>`;
+                });
+                essayKeysHtml += '</ol>';
+
+                formatKunciHtml = `
+                    <div class="mt-8 pt-4 border-t-2 border-slate-800 break-before-page">
+                        <h3 class="font-bold text-center text-sm uppercase mb-4 text-slate-900">KUNCI JAWABAN & PEDOMAN PENSKORAN</h3>
+                        <h4 class="font-bold text-xs uppercase mb-2">A. KUNCI JAWABAN PILIHAN GANDA (40 SOAL)</h4>
+                        ${pgGridHtml}
+                        <h4 class="font-bold text-xs uppercase mb-2 mt-4">B. KUNCI JAWABAN ESSAY / URAIAN (10 SOAL)</h4>
+                        ${essayKeysHtml}
+                    </div>`;
             }
 
             previewBox.innerHTML = `
@@ -1893,6 +1975,8 @@ function switchTabModul(tabName) {
                 <div class="text-xs text-slate-800 leading-relaxed mb-6">
                     ${formatSoalHtml}
                 </div>
+
+                ${formatKunciHtml}
 
                 <div class="pt-6 grid grid-cols-2 text-center text-xs mt-6 border-t border-slate-200">
                     <div>
