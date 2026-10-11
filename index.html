@@ -1735,16 +1735,8 @@ function switchTabModul(tabName) {
             const kelasText = (data.fase || '').toUpperCase();
             let formatSoalHtml = '';
 
-            // Deteksi Logika Kelas (Romawi, Angka, atau Fase)
-            const isKelas13 = kelasText.includes('KELAS 1') || kelasText.includes('KELAS 2') || kelasText.includes('KELAS 3') || 
-                              kelasText.includes('KELAS I-') || kelasText.includes('KELAS II-') || kelasText.includes('KELAS III-') || 
-                              kelasText.includes('FASE A');
-
-            const isKelas46 = kelasText.includes('KELAS 4') || kelasText.includes('KELAS 5') || kelasText.includes('KELAS 6') || 
-                              kelasText.includes('KELAS IV') || kelasText.includes('KELAS V') || kelasText.includes('KELAS VI') || 
-                              kelasText.includes('FASE B') || kelasText.includes('FASE C');
-
-            if (isKelas13) {
+            // Deteksi Jenjang Kelas untuk Variasi Soal
+            if (kelasText.includes('1') || kelasText.includes('2') || kelasText.includes('3') || kelasText.includes('FASE A')) {
                 // KELAS 1-3 SD/MI: 5 Isian Singkat
                 formatSoalHtml = `
                     <div class="mb-4">
@@ -1757,7 +1749,7 @@ function switchTabModul(tabName) {
                             <li>Tuliskan nilai kebaikan yang kamu dapatkan setelah mempelajari materi <strong>${data.bab}</strong>!</li>
                         </ol>
                     </div>`;
-            } else if (isKelas46) {
+            } else if (kelasText.includes('4') || kelasText.includes('5') || kelasText.includes('6') || kelasText.includes('FASE B') || kelasText.includes('FASE C')) {
                 // KELAS 4-6 SD/MI: 10 PG + 5 Isian Singkat
                 let pgList = '';
                 for (let i = 1; i <= 10; i++) {
@@ -1773,7 +1765,7 @@ function switchTabModul(tabName) {
                         <ol class="list-decimal pl-5 space-y-2 text-justify">
                             <li>Jelaskan pengertian <strong>${data.bab}</strong> menurut pemahamanmu sendiri!</li>
                             <li>Sebutkan 2 contoh nyata penerapan <strong>${data.bab}</strong> di lingkungan sekolah!</li>
-                            <li>Mengapa penerapan <strong>${data.bab}</strong> sangat dianjurkan dalam pembelajaran?</li>
+                            <li>Mengapa penerapan <strong>${data.bab}</strong> sangat dianjurkan dalam mata pelajaran <strong>${data.mapel || 'Al-Qur\'an Hadis'}</strong>?</li>
                             <li>Apa manfaat utama yang dirasakan saat kita menerapkan <strong>${data.bab}</strong> secara konsisten?</li>
                             <li>Tuliskan langkah konkret yang akan kamu lakukan untuk meningkatkan pembiasaan <strong>${data.bab}</strong>!</li>
                         </ol>
@@ -1782,7 +1774,7 @@ function switchTabModul(tabName) {
                 // KELAS 7-12 SMP/MTs/SMA/MA: 40 PG + 10 Essay
                 let pgList40 = '';
                 for (let i = 1; i <= 40; i++) {
-                    pgList40 += `<li class="mb-1.5">Soal analisis ke-${i} terkait materi <strong>${data.bab}</strong> pada jenjang lanjutan?<br>A. Opsi Jawaban A &nbsp;&nbsp;&nbsp; B. Opsi Jawaban B &nbsp;&nbsp;&nbsp; C. Opsi Jawaban C &nbsp;&nbsp;&nbsp; D. Opsi Jawaban D</li>`;
+                    pgList40 += `<li class="mb-1.5">Soal analisis/pemahaman ke-${i} terkait materi <strong>${data.bab}</strong> (${data.mapel || 'Mata Pelajaran'}) pada jenjang lanjutan?<br>A. Opsi Jawaban A &nbsp;&nbsp;&nbsp; B. Opsi Jawaban B &nbsp;&nbsp;&nbsp; C. Opsi Jawaban C &nbsp;&nbsp;&nbsp; D. Opsi Jawaban D</li>`;
                 }
                 let essayList10 = '';
                 for (let i = 1; i <= 10; i++) {
@@ -1802,25 +1794,28 @@ function switchTabModul(tabName) {
             previewBox.innerHTML = `
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
                     <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR ASESMEN / EVALUASI PEMBELAJARAN</h2>
-                    <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || '').toUpperCase()} | ${(data.fase || '').toUpperCase()}</p>
-                    <p class="text-xs text-slate-600 mt-0.5">Topik / Bab: ${data.bab} | Semester: ${semesterAktif} | TP: 2026/2027</p>
+                    <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel \vert{}\vert{} '').toUpperCase()} \vert{}${(data.fase || '').toUpperCase()}</p>
+                    <p class="text-xs text-slate-600 mt-0.5">Topik / Bab: ${data.bab} \vert{} Semester:${semesterAktif} | TP: 2026/2027</p>
                 </div>
 
                 <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-4 flex items-center gap-1.5">
                     <span>5. INSTRUMEN ASESMEN SUMATIF / FORMATIF</span>
                 </div>
 
+                <!-- IDENTITAS SISWA -->
                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs mb-4 grid grid-cols-2 gap-2">
                     <p><strong>Nama Siswa:</strong> ...........................................................</p>
-                    <p><strong>Kelas / Semester:</strong> ${(data.fase || '').replace('Fase ', '')} / ${semesterAktif}</p>
+                    <p><strong>Kelas / Semester:</strong> ${(data.fase \vert{}\vert{} '').replace('Fase ', '')} /${semesterAktif}</p>
                     <p><strong>Hari / Tanggal:</strong> ...........................................................</p>
                     <p><strong>Nilai / Paraf Guru:</strong> ...........................................................</p>
                 </div>
 
+                <!-- KONTEN SOAL VARIASI JENJANG -->
                 <div class="text-xs space-y-4 text-slate-800 leading-relaxed mb-6">
                     ${formatSoalHtml}
                 </div>
 
+                <!-- LEMBAR PENGESAHAN -->
                 <div class="pt-6 grid grid-cols-2 text-center text-xs mt-6 border-t border-slate-200">
                     <div>
                         <p>Mengetahui,</p>
