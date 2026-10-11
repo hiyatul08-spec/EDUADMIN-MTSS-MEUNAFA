@@ -799,28 +799,34 @@ function toggleModal(modalId, show) {
 function updateKelasDropdowns() {
   const targets = [
     document.getElementById('modul-jenjang'),
-    document.getElementById('siswa-kelas'), // Target khusus dropdown Kelas di Modal Siswa
-    document.getElementById('jadwal-f3'),  // Target Kelas di Modal Jadwal
-    document.getElementById('modul-f3')    // Target Kelas di Modal Modul
+    document.getElementById('siswa-kelas'), // Target Kelas di Modal Siswa
+    document.getElementById('jadwal-f3'),
+    document.getElementById('modul-f3')
   ];
 
   let rawList = [];
 
-  // 1. Ambil HANYA dari tabel #table-kelas (Kolom ke-2 / index 1 = Nama Kelas)
+  // 1. Ambil HANYA dari tabel #table-kelas
   const rowsKelas = document.querySelectorAll('#table-kelas tr');
   rowsKelas.forEach(tr => {
     const tds = tr.querySelectorAll('td');
+    
+    // Pastikan mengambil Kolom Nama Kelas (biasanya index 1 atau index 0 jika tidak ada kolom nomor/checkbox)
     if (tds.length >= 2) {
       let namaKelas = tds[1] ? tds[1].textContent.trim() : '';
       
-      // Filter agar tidak menyedot header atau teks kosong
+      // Jika tds[1] ternyata wali kelas (ada gelar S.Pd/M.Pd), paksa ambil tds[0] atau kolom nama kelas
+      if (namaKelas.includes('.') || namaKelas.includes('S.Pd') || namaKelas.includes('M.Pd')) {
+        namaKelas = tds[0] ? tds[0].textContent.trim() : '';
+      }
+
       if (namaKelas && !namaKelas.includes('Tidak ada') && !namaKelas.includes('Belum ada') && !namaKelas.includes('Nama Kelas')) {
         rawList.push(namaKelas);
       }
     }
   });
 
-  // 2. Cadangan dari appData.kelas jika tabel DOM belum memuat
+  // 2. Cadangan dari appData jika tabel belum ter-render
   if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.kelas)) {
     appData.kelas.forEach(item => {
       let val = (typeof item === 'object' && item !== null) ? (item.namaKelas || item.nama || item.f1 || '') : item;
@@ -828,7 +834,7 @@ function updateKelasDropdowns() {
     });
   }
 
-  // 3. Render ke seluruh dropdown target
+  // 3. Render ke dropdown
   let cleanedList = [...new Set(rawList)];
 
   targets.forEach(selectElem => {
