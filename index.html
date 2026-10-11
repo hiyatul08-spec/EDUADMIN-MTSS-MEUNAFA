@@ -1333,9 +1333,25 @@ function switchTabModul(tabName) {
 
         const data = updatePreviewContent();
 
-        // Ambil data Kepala Sekolah/Madrasah dari Pengaturan System
-        const namaKepala = localStorage.getItem('sysKepala') || document.getElementById('sys-kepala')?.value || document.querySelector('input[placeholder*="Kepala"]')?.value || 'Darmawan Sudarso';
-        const nipKepala = localStorage.getItem('sysNipKepala') || document.getElementById('sys-nip-kepala')?.value || document.querySelector('input[placeholder*="NIP"]')?.value || '19750812 200003 1 002';
+        // Ambil data Kepala Sekolah & NIP dari Pengaturan System
+        const sysKepalaInput = document.getElementById('sys-kepala') || document.querySelector('#pengaturan input[placeholder*="Kepala"]');
+        const sysNipInput = document.getElementById('sys-nip-kepala') || document.getElementById('sys-nip') || document.querySelector('#pengaturan input[placeholder*="NIP"]');
+
+        let namaKepala = localStorage.getItem('sysKepala') || 
+                         localStorage.getItem('sys_kepala') || 
+                         (sysKepalaInput ? sysKepalaInput.value : '') || 
+                         'Darmawan Sudarso';
+
+        let nipKepala = localStorage.getItem('sysNipKepala') || 
+                        localStorage.getItem('sys_nip_kepala') || 
+                        (sysNipInput ? sysNipInput.value : '') || 
+                        '-';
+
+        // Ambil NIP Guru dari sidebar Modul Ajar
+        let nipGuru = document.getElementById('modul-nip-guru')?.value || 
+                      document.getElementById('nip-guru')?.value || 
+                      '-';
+
         if (tabName === 'modul') {
             previewBox.innerHTML = `
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
@@ -1440,12 +1456,13 @@ function switchTabModul(tabName) {
                             <p class="font-semibold">Guru Mata Pelajaran</p>
                             <div class="h-16"></div>
                             <p class="font-bold underline">${data.guru || '-'}</p>
-                            <p>NIP. ${document.getElementById('modul-nip-guru')?.value || '-'}</p>
+                            <p>NIP. ${nipGuru}</p>
                         </div>
                     </div>
                 </div>
             `;
-     
+
+          
       } else if (tabName === 'atp') {
     previewBox.innerHTML = `
       <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
