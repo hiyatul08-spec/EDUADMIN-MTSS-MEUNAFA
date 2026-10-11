@@ -892,26 +892,25 @@ function updateMapelDropdowns() {
   });
 }
 
+
+
+    
 // 3. SINKRONISASI GURU
 function updateGuruDropdowns() {
   const targets = [
     document.getElementById('modul-guru'),
     document.getElementById('jadwal-f5'),
-    document.querySelector('#modal-kelas select[name="wali_kelas"]')
+    document.getElementById('kelas-f2') // Target Wali Kelas di Modal Kelas
   ];
 
   let rawList = [];
 
-  // 1. Ambil HANYA dari Kolom Ke-2 (index 1 = Nama Guru) di tabel #table-guru
+  // 1. Ambil HANYA dari Kolom ke-2 (index 1 = Nama Guru 'JAPUL') di #table-guru
   const rowsGuru = document.querySelectorAll('#table-guru tr');
   rowsGuru.forEach(tr => {
     const tds = tr.querySelectorAll('td');
-    // Minimal harus ada 2 kolom (NIP/No & Nama Guru)
     if (tds.length >= 2) {
-      // Index 1 adalah kolom Nama Guru murni
       let namaGuru = tds[1] ? tds[1].textContent.trim() : '';
-      
-      // Filter agar tidak mengambil teks header, tombol aksi, atau 'Tidak ada'
       if (namaGuru && !namaGuru.includes('Tidak ada') && !namaGuru.includes('Belum ada') && !namaGuru.includes('Nama Guru')) {
         if (namaGuru.includes('(')) namaGuru = namaGuru.split('(')[0].trim();
         rawList.push(namaGuru);
@@ -919,7 +918,7 @@ function updateGuruDropdowns() {
     }
   });
 
-  // 2. Cadangan dari appData jika tabel DOM belum memuat
+  // 2. Cadangan dari appData
   if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.guru)) {
     appData.guru.forEach(item => {
       let val = (typeof item === 'object' && item !== null) ? (item.namaGuru || item.nama || item.f2 || '') : item;
@@ -931,13 +930,18 @@ function updateGuruDropdowns() {
     });
   }
 
-  // 3. Hilangkan duplikat dan render ke dropdown
+  // 3. Render ke dropdown Wali Kelas dan Guru Pengajar
   let cleanedList = [...new Set(rawList)];
 
   targets.forEach(selectElem => {
     if (selectElem) {
       const currentValue = selectElem.value;
-      selectElem.innerHTML = '<option value="">-- Pilih Guru Pengajar --</option>';
+      const isWali = selectElem.id === 'kelas-f2';
+      
+      selectElem.innerHTML = isWali 
+        ? '<option value="">-- Pilih Wali Kelas --</option>'
+        : '<option value="">-- Pilih Guru Pengajar --</option>';
+
       cleanedList.forEach(guru => {
         const opt = document.createElement('option');
         opt.value = guru;
@@ -948,15 +952,8 @@ function updateGuruDropdowns() {
     }
   });
 }
-// PEMICU UTAMA
-document.addEventListener('click', function() {
-  setTimeout(() => {
-    updateKelasDropdowns();
-    updateMapelDropdowns();
-    updateGuruDropdowns();
-  }, 100);
-});
     
+   
    
     
 
