@@ -1732,7 +1732,7 @@ function switchTabModul(tabName) {
 
     
 } else if (tabName === 'asesmen') {
-       const kelasText = (data.fase || '').toUpperCase().trim();
+      const kelasText = (data.fase || '').toUpperCase().trim();
             const mapelText = (data.mapel || 'Mata Pelajaran').toUpperCase();
             const babText = data.bab || 'Materi Utama';
             let formatSoalHtml = '';
@@ -1745,44 +1745,38 @@ function switchTabModul(tabName) {
             const isKelas46 = /\b(KELAS 4|KELAS 5|KELAS 6|KELAS IV|KELAS V|KELAS VI|FASE B|FASE C)\b/.test(kelasText) ||
                               kelasText.includes('KELAS IV-') || kelasText.includes('KELAS V-') || kelasText.includes('KELAS VI-');
 
-            // --- ENGINE GENERATOR SOAL KONTEN SPEKTRUM MAPEL & TOPIK ---
+            // --- HELPER GENERATOR SOAL KONTEN SPEKTRUM MAPEL & TOPIK ---
             const buildContextualQuestion = (index, bab, mapel, type) => {
                 const isAgama = /AL-QUR'AN|HADIS|FIKIH|PAI|AKIDAH|AKHLAK|SKL|TAJWID/.test(mapel);
                 const isSains = /IPA|BIOLOGI|FISIKA|KIMIA|MATEMATIKA/.test(mapel);
-                const isSosial = /IPS|PKN|PPKN|SEJARAH|BAHASA/.test(mapel);
 
                 if (type === 'PG') {
-                    let qText = '', a = '', b = '', c = '', d = '';
-
                     if (isAgama) {
                         const templates = [
                             { q: `Siswa yang menerapkan hukum atau kaidah <strong>${bab}</strong> saat membaca Al-Qur'an atau beribadah akan terhindar dari...`, a: `Kesalahan makna dan kekeliruan kaidah`, b: `Pujian dari sesama teman`, c: `Kemudahan dalam menghafal`, d: `Kelancaran membaca tanpa tajwid` },
                             { q: `Manakah di bawah ini contoh penerapan atau perilaku yang sesuai dengan ajaran <strong>${bab}</strong> dalam kehidupan sehari-hari?`, a: `Menjalankan perintah sesuai kaidah dan penuh tanggung jawab`, b: `Apatis terhadap hukum-hukum pembelajaran`, c: `Melakukan amalan hanya saat diawasi guru`, d: `Mengabaikan keutamaan dan nilai ${bab}` },
                             { q: `Di bawah ini yang merupakan dalil, prinsip dasar, atau hukum utama dalam pembahasan <strong>${bab}</strong> adalah...`, a: `Menjaga ketepatan dan ketaatan sesuai syariat/prinsip`, b: `Meniru kebiasaan yang tidak ada tuntunannya`, c: `Memilih hukum yang paling mudah tanpa rujukan`, d: `Mengabaikan aturan yang sudah ditetapkan` },
-                            { q: `Ketika menjumpai permasalahan mengenai <strong>${bab}</strong> pada mata pelajaran ${data.mapel || 'Agama'}, sikap yang paling tepat adalah...`, a: `Mempelajari kaidahnya dan bertanya kepada ahli/guru`, b: `Membiarkannya tanpa mencari kebenaran`, c: `Menganggap semua pemahaman adalah sama`, d: `Menghindari topik tersebut` }
+                            { q: `Ketika menjumpai permasalahan mengenai <strong>${bab}</strong> pada mata pelajaran ${mapel}, sikap yang paling tepat adalah...`, a: `Mempelajari kaidahnya dan bertanya kepada ahli/guru`, b: `Membiarkannya tanpa mencari kebenaran`, c: `Menganggap semua pemahaman adalah sama`, d: `Menghindari topik tersebut` }
                         ];
-                        const t = templates[(index - 1) % templates.length];
-                        return { q: t.q, a: t.a, b: t.b, c: t.c, d: t.d };
+                        return templates[(index - 1) % templates.length];
                     } else if (isSains) {
                         const templates = [
                             { q: `Dalam eksperimen atau analisis materi <strong>${bab}</strong>, faktor utama yang mempengaruhi proses keberhasilannya adalah...`, a: `Ketepatan variabel dan pemahaman konsep ${bab}`, b: `Perkiraan tanpa pengukuran yang valid`, c: `Waktu pengamatan yang acak dan tidak teratur`, d: `Pengabaian terhadap hukum alam/rumus dasar` },
                             { q: `Penerapan prinsip <strong>${bab}</strong> pada fenomena atau kehidupan nyata dapat ditemui pada peristiwa...`, a: `Proses alami yang mengikuti hukum dan kaidah ${bab}`, b: `Perubahan materi tanpa adanya sebab-akibat`, c: `Gejala spontan yang tidak dapat dijelaskan secara ilmiah`, d: `Sistem tertutup yang tidak memiliki energi` }
                         ];
-                        const t = templates[(index - 1) % templates.length];
-                        return { q: t.q, a: t.a, b: t.b, c: t.c, d: t.d };
+                        return templates[(index - 1) % templates.length];
                     } else {
                         const templates = [
                             { q: `Implementasi nilai-nilai atau konsep <strong>${bab}</strong> dalam konteks kemasyarakatan dan berbangsa bertujuan untuk...`, a: `Menciptakan keharmonisan dan keteraturan sosial`, b: `Menimbulkan persaingan yang tidak sehat`, c: `Membatasi kreativitas warga negara`, d: `Menghapuskan keberagaman aturan` },
                             { q: `Tantangan terbesar dalam mempertahankan pemahaman <strong>${bab}</strong> di era globalisasi saat ini adalah...`, a: `Pengaruh budaya luar dan minimnya pembiasaan`, b: `Banyaknya literatur resmi yang terbit`, c: `Dukungan penuh dari seluruh lapisan masyarakat`, d: `Kemudahan akses informasi pembelajaran` }
                         ];
-                        const t = templates[(index - 1) % templates.length];
-                        return { q: t.q, a: t.a, b: t.b, c: t.c, d: t.d };
+                        return templates[(index - 1) % templates.length];
                     }
                 }
             };
 
             if (isKelas13) {
-                // KELAS 1-3 SD/MI: 5 Isian Singkat Sederhana
+                // KELAS 1-3 SD/MI: 5 Isian Singkat Sederhana & Variatif
                 formatSoalHtml = `
                     <div class="mb-4">
                         <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">A. SOAL ISIAN SINGKAT (5 SOAL)</h4>
@@ -1795,7 +1789,7 @@ function switchTabModul(tabName) {
                         </ol>
                     </div>`;
             } else if (isKelas46) {
-                // KELAS 4-6 SD/MI: 10 PG + 5 Isian Singkat
+                // KELAS 4-6 SD/MI: 10 PG + 5 Isian Singkat Variatif
                 let pgList = '';
                 for (let i = 1; i <= 10; i++) {
                     const item = buildContextualQuestion(i, babText, mapelText, 'PG');
@@ -1841,7 +1835,8 @@ function switchTabModul(tabName) {
                             </div>
                         </li>`;
                 }
-               // Generator 10 Soal Essay Variatif Kontekstual
+
+                // Generator 10 Soal Essay Variatif
                 const generateEssay = (index, bab, mapel) => {
                     const essayTemplates = [
                         `Jelaskan pengertian secara bahasa dan istilah dari materi <strong>${bab}</strong> serta landasan utama dalam pembelajaran <strong>${mapel}</strong>!`,
@@ -1865,7 +1860,7 @@ function switchTabModul(tabName) {
                             ${generateEssay(i, babText, data.mapel || 'Mata Pelajaran')}
                         </li>`;
                 }
-                }
+
                 formatSoalHtml = `
                     <div class="mb-6">
                         <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">A. PILIHAN GANDA (40 SOAL)</h4>
