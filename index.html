@@ -902,12 +902,12 @@ function updateGuruDropdowns() {
   const targets = [
     document.getElementById('modul-guru'),
     document.getElementById('jadwal-f5'),
-    document.getElementById('kelas-f2') // Target Wali Kelas di Modal Kelas
+    document.getElementById('kelas-f2') // HANYA Wali Kelas
   ];
 
   let rawList = [];
 
-  // 1. Ambil HANYA dari Kolom ke-2 (index 1 = Nama Guru 'JAPUL') di #table-guru
+  // Ambil hanya dari tabel guru
   const rowsGuru = document.querySelectorAll('#table-guru tr');
   rowsGuru.forEach(tr => {
     const tds = tr.querySelectorAll('td');
@@ -920,19 +920,6 @@ function updateGuruDropdowns() {
     }
   });
 
-  // 2. Cadangan dari appData
-  if (rawList.length === 0 && typeof appData !== 'undefined' && appData && Array.isArray(appData.guru)) {
-    appData.guru.forEach(item => {
-      let val = (typeof item === 'object' && item !== null) ? (item.namaGuru || item.nama || item.f2 || '') : item;
-      if (val) {
-        let cleanVal = val.toString().trim();
-        if (cleanVal.includes('(')) cleanVal = cleanVal.split('(')[0].trim();
-        rawList.push(cleanVal);
-      }
-    });
-  }
-
-  // 3. Render ke dropdown Wali Kelas dan Guru Pengajar
   let cleanedList = [...new Set(rawList)];
 
   targets.forEach(selectElem => {
