@@ -473,7 +473,7 @@
 
       <div>
         <label class="text-xs font-semibold block mb-1">Jenis Kelamin</label>
-        <select id="siswa-jk" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
+        <select id="siswa-f3" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
           <option value="">-- Pilih Jenis Kelamin --</option>
           <option value="Laki-laki">Laki-laki</option>
           <option value="Perempuan">Perempuan</option>
@@ -482,7 +482,7 @@
 
       <div>
         <label class="text-xs font-semibold block mb-1">Kelas</label>
-        <select id="siswa-f3" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
+        <select id="siswa-f4" required class="w-full border rounded-lg p-2 text-sm outline-none bg-white">
           <option value="">-- Pilih Kelas --</option>
         </select>
       </div>
@@ -800,7 +800,7 @@ function toggleModal(modalId, show) {
 function updateKelasDropdowns() {
   const targets = [
     document.getElementById('modul-jenjang'),
-    document.getElementById('siswa-f3'),   // Dropdown Kelas di Modal Siswa
+    document.getElementById('siswa-f4'),   // Dropdown Kelas di Modal Siswa
     document.getElementById('jadwal-f3'),  // Dropdown Kelas di Modal Jadwal
     document.getElementById('modul-f3')    // Dropdown Kelas di Modal Modul
   ];
