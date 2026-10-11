@@ -1382,13 +1382,14 @@ function switchTabModul(tabName) {
                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs mb-4 space-y-1">
                     <h3 class="font-bold text-slate-900 border-b pb-1 mb-2">I. INFORMASI UMUM</h3>
                     <div class="grid grid-cols-2 gap-x-4 gap-y-1">
-                        <p><strong>Nama Penyusun:</strong> ${data.guru || '-'}</p>
-                        <p><strong>Satuan Pendidikan:</strong> ${data.satuan || 'MTs Meunafa'}</p>
-                        <p><strong>Mata Pelajaran:</strong> ${data.mapel || '-'}</p>
-                        <p><strong>Jenjang / Kelas:</strong> ${data.fase || '-'}</p>
-                        <p><strong>Model Learning:</strong> ${data.model || '-'}</p>
-                        <p><strong>Alokasi Waktu:</strong> ${data.waktu || '-'}</p>
-                    </div>
+                    <p><strong>Nama Penyusun:</strong> ${data.guru || '-'}</p>
+                    <p><strong>Satuan Pendidikan:</strong> ${data.satuan || 'MTs Meunafa'}</p>
+                    <p><strong>MATA PELAJARAN:</strong> ${data.mapel || '-'}</p>
+                    <p><strong>Semester:</strong> ${semesterAktif}</p>
+                    <p><strong>Jenjang / Kelas:</strong> ${data.fase || '-'}</p>
+                    <p><strong>Model Learning:</strong> ${data.model || '-'}</p>
+                    <p><strong>Alokasi Waktu:</strong> ${data.waktu || '-'}</p>
+                </div>
                 </div>
 
                 <!-- II. KOMPONEN INTI -->
@@ -1586,7 +1587,7 @@ function switchTabModul(tabName) {
                 <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs mb-4 space-y-2">
                     <div class="grid grid-cols-2 gap-4">
                         <p><strong>Nama Kelompok:</strong> ...........................................................</p>
-                        <p><strong>Kelas / Semester:</strong> ${(data.fase || '').replace('Fase ', '')} / Ganjil</p>
+                       <p><strong>Kelas / Semester:</strong> ${(data.fase || '').replace('Fase ', '')} / ${semesterAktif}</p>
                     </div>
                     <div>
                         <p><strong>Anggota Kelompok:</strong></p>
