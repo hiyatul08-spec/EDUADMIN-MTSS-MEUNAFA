@@ -1841,12 +1841,30 @@ function switchTabModul(tabName) {
                             </div>
                         </li>`;
                 }
+               // Generator 10 Soal Essay Variatif Kontekstual
+                const generateEssay = (index, bab, mapel) => {
+                    const essayTemplates = [
+                        `Jelaskan pengertian secara bahasa dan istilah dari materi <strong>${bab}</strong> serta landasan utama dalam pembelajaran <strong>${mapel}</strong>!`,
+                        `Bagaimana strategi konkret seorang siswa dalam menerapkan nilai-nilai <strong>${bab}</strong> di lingkungan sekolah dan keluarga?`,
+                        `Analisislah dampak positif yang timbul apabila suatu kelompok masyarakat konsisten memegang teguh prinsip <strong>${bab}</strong>!`,
+                        `Sebutkan dan jelaskan 3 bentuk tantangan atau hambatan utama dalam mempertahankan sikap <strong>${bab}</strong> di era digital saat ini!`,
+                        `Berikan sebuah contoh studi kasus nyata tentang pelanggaran terhadap nilai <strong>${bab}</strong>, lalu tuliskan solusi penyelesaiannya menurut pandangan <strong>${mapel}</strong>!`,
+                        `Mengapa pembiasaan materi <strong>${bab}</strong> harus dipupuk sejak dini? Jelaskan alasannya dari sudut pandang pembentukan karakter siswa!`,
+                        `Bagaimana hubungan korelasi antara pemahaman materi <strong>${bab}</strong> dengan peningkatan kualitas ibadah/perilaku sosial sehari-hari?`,
+                        `Bandingkan perbedaan antara orang yang memiliki komitmen terhadap <strong>${bab}</strong> dengan orang yang mengabaikannya!`,
+                        `Tuliskan sebuah refleksi diri singkat mengenai sejauh mana kamu telah menerapkan prinsip <strong>${bab}</strong> dalam kehidupanmu sendiri!`,
+                        `Buatlah sebuah rancangan program aksi sederhana (action plan) yang bisa kamu lakukan di kelas untuk mengajak teman-temanmu membiasakan nilai <strong>${bab}</strong>!`
+                    ];
+                    return essayTemplates[(index - 1) % essayTemplates.length];
+                };
+
                 let essayList10 = '';
                 for (let i = 1; i <= 10; i++) {
                     essayList10 += `
-                        <li class="mb-2 text-justify">
-                            Lakukan analisis kritis mengenai permasalahan ke-${i} terkait penerapan kaidah/prinsip <strong>${babText}</strong> (${data.mapel || 'Mata Pelajaran'}) pada tantangan era modern beserta solusinya!
+                        <li class="mb-3 text-justify">
+                            ${generateEssay(i, babText, data.mapel || 'Mata Pelajaran')}
                         </li>`;
+                }
                 }
                 formatSoalHtml = `
                     <div class="mb-6">
