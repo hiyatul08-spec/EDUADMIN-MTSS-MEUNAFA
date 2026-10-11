@@ -1329,9 +1329,9 @@ function switchTabModul(tabName) {
   });
 
   const previewBox = document.getElementById('preview-content-modul');
-  if (!previewBox) return;
+        if (!previewBox) return;
 
-const data = updatePreviewContent();
+        const data = updatePreviewContent();
 
         // Ambil data Kepala Sekolah/Madrasah dari Pengaturan System
         const namaKepala = document.getElementById('sys-kepala')?.value || document.querySelector('input[placeholder*="Kepala"]')?.value || 'Drs. H. Ahmad Dahlan, M.Pd.';
@@ -1445,7 +1445,8 @@ const data = updatePreviewContent();
                         </div>
                     </div>
                 </div>
-            `;       
+            `;
+     
       } else if (tabName === 'atp') {
     previewBox.innerHTML = `
       <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
