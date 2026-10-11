@@ -1180,29 +1180,46 @@ function toggleModal(modalId, show) {
     
     // Render Table Data
     function renderTables() {
-      Object.keys(appData).forEach(key => {
-        const tbody = document.getElementById(`table-${key}`);
-        if (!tbody) return;
-        
-        tbody.innerHTML = '';
-        appData[key].forEach(item => {
-          const tr = document.createElement('tr');
-          tr.className = 'hover:bg-slate-50 transition';
-          
-          let content = '';
-          Object.keys(item).forEach(k => {
-            if (k !== 'id') {
-              content += `<td class="p-4">${item[k]}</td>`;
-            }
-          });
-          
-          content += `<td class="p-4"><button onclick="deleteData('${key}', ${item.id})" class="text-red-500 hover:text-red-700 text-xs font-semibold"><i class="fa-solid fa-trash"></i> Hapus</button></td>`;
-          tr.innerHTML = content;
-          tbody.appendChild(tr);
-        });
-      });
-    }
+  Object.keys(appData).forEach(key => {
+    const tbody = document.getElementById(`table-${key}`);
+    if (!tbody) return;
 
+    tbody.innerHTML = '';
+    
+    appData[key].forEach(item => {
+      const tr = document.createElement('tr');
+      tr.className = 'hover:bg-slate-50 transition';
+
+      let content = '';
+
+      if (key === 'siswa') {
+        // Khusus Siswa: Kunci urutan 4 kolom (NISN, Nama, Jenis Kelamin, Kelas)
+        content += `<td class="p-3">${item.f1 || ''}</td>`;
+        content += `<td class="p-3">${item.f2 || ''}</td>`;
+        content += `<td class="p-3">${item.f3 || ''}</td>`;
+        content += `<td class="p-3">${item.f4 || ''}</td>`;
+      } else {
+        // Modul lain tetap dinamis
+        Object.keys(item).forEach(k => {
+          if (k !== 'id') {
+            content += `<td class="p-3">${item[k]}</td>`;
+          }
+        });
+      }
+
+      // Tombol Aksi Hapus
+      content += `<td class="p-3"><button onclick="deleteData('${key}', ${item.id})" class="text-red-500 hover:text-red-700 text-xs font-semibold"><i class="fa-solid fa-trash"></i> Hapus</button></td>`;
+      
+      tr.innerHTML = content;
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+
+
+
+    
     // Add Data Function
     function addData(e, type) {
       e.preventDefault();
