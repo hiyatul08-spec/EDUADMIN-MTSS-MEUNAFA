@@ -2374,7 +2374,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-      // Fungsi Cetak Khusus Lembar Dokumen
+     // Fungsi Cetak Khusus Lembar Dokumen
         function printDocument() {
             const previewElement = document.getElementById('preview-content-modul');
             if (!previewElement) {
@@ -2383,11 +2383,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             const printWindow = window.open('', '_blank');
-            printWindow.document.write('<html><head><title>Cetak Dokumen - EduAdmin</title><script src="https://cdn.tailwindcss.com"></script><style>@page { size: A4; margin: 15mm; } body { font-family: sans-serif; background: #fff; color: #000; }</style></head><body class="p-6">');
-            printWindow.document.write(previewElement.innerHTML);
-            printWindow.document.write('</body></html>');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Cetak Dokumen - EduAdmin</title>
+                        <script src="https://cdn.tailwindcss.com"></script>
+                        <style>
+                            @page { size: A4; margin: 15mm; }
+                            body { font-family: sans-serif; background: #fff; color: #000; }
+                        </style>
+                    </head>
+                    <body class="p-6">
+                        ${previewElement.innerHTML}
+                    </body>
+                </html>
+            `);
             printWindow.document.close();
-            
+
             setTimeout(() => {
                 printWindow.print();
                 printWindow.close();
