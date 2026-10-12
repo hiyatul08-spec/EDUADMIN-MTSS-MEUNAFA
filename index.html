@@ -1338,7 +1338,7 @@ function updatePreviewContent() {
 
 // Function Switch Tab Preview Modul Ajar
 function switchTabModul(tabName) {
- const tabs = ['modul', 'atp', 'lkpd', 'bahan', 'asesmen', 'remedial'];
+  const tabs = ['modul', 'atp', 'lkpd', 'bahan', 'asesmen'];
   
   tabs.forEach(t => {
     const btn = document.getElementById(`tab-${t}`);
@@ -2020,102 +2020,9 @@ function switchTabModul(tabName) {
         </td>
     </tr>
 </table>
-`;
-
-
-    } else if (tabName === 'remedial') {
-        previewBox.innerHTML = `
-            <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
-                <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR PROGRAM REMEDIAL & PENGAYAAN</h2>
-                <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${mapelText} | ${(data.fase || '').toUpperCase()}</p>
-                <p class="text-slate-600 italic">Topik / Bab: ${babText} | Semester: ${semesterAktif} | TP: 2026/2027</p>
-            </div>
-
-            <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase mb-4 inline-block">
-                6. PROGRAM REMEDIAL & PENGAYAAN
-            </div>
-
-            <!-- PROGRAM REMEDIAL -->
-            <div class="mb-6">
-                <h3 class="font-bold text-slate-800 text-sm border-b pb-1 mb-2">A. PROGRAM REMEDIAL (Bagi Peserta Didik Belum Tuntas)</h3>
-                <p class="text-xs text-slate-700 mb-2"><strong>Bentuk Intervensi:</strong> Bimbingan perorangan / pembelajaran ulang / pemanfaatan tutor sebaya terkait materi <strong>${babText}</strong>.</p>
-                <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px;" border="1" cellpadding="6">
-                    <thead>
-                        <tr style="background-color: #f1f5f9; text-align: center;">
-                            <th style="width: 5%;">No</th>
-                            <th style="width: 30%;">Nama Siswa</th>
-                            <th style="width: 15%;">Nilai Awal</th>
-                            <th style="width: 30%;">Bentuk Kegiatan Remedial</th>
-                            <th style="width: 20%;">Nilai Akhir</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="text-align: center;">1</td>
-                            <td>................................................</td>
-                            <td style="text-align: center;">.........</td>
-                            <td>Penjelasan ulang materi & soal latihan terpadu</td>
-                            <td style="text-align: center;">.........</td>
-                        </tr>
-                        <tr>
-                            <td style="text-align: center;">2</td>
-                            <td>................................................</td>
-                            <td style="text-align: center;">.........</td>
-                            <td>Tutor sebaya & penugasan mandiri</td>
-                            <td style="text-align: center;">.........</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- PROGRAM PENGAYAAN -->
-            <div class="mb-6">
-                <h3 class="font-bold text-slate-800 text-sm border-b pb-1 mb-2">B. PROGRAM PENGAYAAN (Bagi Peserta Didik Tuntas)</h3>
-                <p class="text-xs text-slate-700 mb-2"><strong>Bentuk Kegiatan:</strong> Pemberian tugas penguatan harian & eksplorasi studi kasus lanjutan mengenai penerapan <strong>${babText}</strong> dalam kehidupan bermasyarakat.</p>
-                <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px;" border="1" cellpadding="6">
-                    <thead>
-                        <tr style="background-color: #f1f5f9; text-align: center;">
-                            <th style="width: 5%;">No</th>
-                            <th style="width: 35%;">Nama Siswa</th>
-                            <th style="width: 20%;">Nilai Capaian</th>
-                            <th style="width: 40%;">Bentuk Pengayaan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td style="text-align: center;">1</td>
-                            <td>................................................</td>
-                            <td style="text-align: center;">.........</td>
-                            <td>Analisis studi kasus tingkat lanjut & proyek ringkas</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- LEMBAR PENGESAHAN TAB 6 -->
-            <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse; page-break-inside: avoid;">
-                <tr style="border: none;">
-                    <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
-                        <p style="margin: 0;">Mengetahui,</p>
-                        <p style="margin: 0; font-weight: 600;">Kepala Sekolah / Madrasah</p>
-                        <p style="margin: 0;"><br><br><br><br></p>
-                        <p style="margin: 0; font-weight: bold; text-decoration: underline;">${namaKepala}</p>
-                        <p style="margin: 0;">NIP. ${nipKepala}</p>
-                    </td>
-                    <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
-                        <p style="margin: 0;">Dibuat Oleh,</p>
-                        <p style="margin: 0; font-weight: 600;">Guru Mata Pelajaran</p>
-                        <p style="margin: 0;"><br><br><br><br></p>
-                        <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.guru || '-'}</p>
-                        <p style="margin: 0;">NIP. ${nipGuru}</p>
-                    </td>
-                </tr>
-            </table>
-        `;
+           `;
+        }
     }
-}
-    
-      
         
         
                 
@@ -2490,104 +2397,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.innerHTML = originalContent;
             location.reload();
         }
-
-
-function renderRemedial() {
-    const preview = document.getElementById('preview-content-modul');
-    if (!preview) return;
-
-    preview.innerHTML = `
-        <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
-            <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR PROGRAM REMEDIAL & PENGAYAAN</h2>
-            <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${data.matpel || '-'} | ${data.kelas || '-'}</p>
-            <p class="text-slate-600 italic">Topik / Bab: ${data.bab || '-'} | Semester: ${data.semester || 'Ganjil'} | TP: ${data.tp || '2026/2027'}</p>
-        </div>
-
-        <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase mb-4 inline-block">
-            6. PROGRAM REMEDIAL & PENGAYAAN
-        </div>
-
-        <!-- PROGRAM REMEDIAL -->
-        <div class="mb-6">
-            <h3 class="font-bold text-slate-800 text-sm border-b pb-1 mb-2">A. PROGRAM REMEDIAL (Bagi Peserta Didik Belum Tuntas)</h3>
-            <p class="text-xs text-slate-700 mb-2"><strong>Bentuk Intervensi:</strong> Bimbingan perorangan / pembelajaran ulang / pemanfaatan tutor sebaya terkait materi <strong>${data.bab || 'Amanah'}</strong>.</p>
-            <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px;" border="1" cellpadding="6">
-                <thead>
-                    <tr style="background-color: #f1f5f9; text-align: center;">
-                        <th style="width: 5%;">No</th>
-                        <th style="width: 30%;">Nama Siswa</th>
-                        <th style="width: 15%;">Nilai Awal</th>
-                        <th style="width: 30%;">Bentuk Kegiatan Remedial</th>
-                        <th style="width: 20%;">Nilai Akhir</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="text-align: center;">1</td>
-                        <td>................................................</td>
-                        <td style="text-align: center;">.........</td>
-                        <td>Penjelasan ulang materi & soal latihan terpadu</td>
-                        <td style="text-align: center;">.........</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center;">2</td>
-                        <td>................................................</td>
-                        <td style="text-align: center;">.........</td>
-                        <td>Tutor sebaya & penugasan mandiri</td>
-                        <td style="text-align: center;">.........</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- PROGRAM PENGAYAAN -->
-        <div class="mb-6">
-            <h3 class="font-bold text-slate-800 text-sm border-b pb-1 mb-2">B. PROGRAM PENGAYAAN (Bagi Peserta Didik Tuntas)</h3>
-            <p class="text-xs text-slate-700 mb-2"><strong>Bentuk Kegiatan:</strong> Pemberian tugas penguatan harian & eksplorasi studi kasus lanjutan mengenai penerapan <strong>${data.bab || 'Amanah'}</strong> dalam kehidupan bermasyarakat.</p>
-            <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px;" border="1" cellpadding="6">
-                <thead>
-                    <tr style="background-color: #f1f5f9; text-align: center;">
-                        <th style="width: 5%;">No</th>
-                        <th style="width: 35%;">Nama Siswa</th>
-                        <th style="width: 20%;">Nilai Capaian</th>
-                        <th style="width: 40%;">Bentuk Pengayaan</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="text-align: center;">1</td>
-                        <td>................................................</td>
-                        <td style="text-align: center;">.........</td>
-                        <td>Analisis studi kasus tingkat lanjut & proyek ringkas</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- LEMBAR PENGESAHAN TAB 6 -->
-        <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse; page-break-inside: avoid;">
-            <tr style="border: none;">
-                <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
-                    <p style="margin: 0;">Mengetahui,</p>
-                    <p style="margin: 0; font-weight: 600;">Kepala Sekolah / Madrasah</p>
-                    <p style="margin: 0;"><br><br><br><br></p>
-                    <p style="margin: 0; font-weight: bold; text-decoration: underline;">${namaKepala}</p>
-                    <p style="margin: 0;">NIP. ${nipKepala}</p>
-                </td>
-                <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
-                    <p style="margin: 0;">Dibuat Oleh,</p>
-                    <p style="margin: 0; font-weight: 600;">Guru Mata Pelajaran</p>
-                    <p style="margin: 0;"><br><br><br><br></p>
-                    <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.guru || '-'}</p>
-                    <p style="margin: 0;">NIP. ${nipGuru}</p>
-                </td>
-            </tr>
-        </table>
-    `;
-
-
-    
-    
     </script>
 </body>
 </html>
