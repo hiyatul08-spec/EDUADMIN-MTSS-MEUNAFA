@@ -1995,24 +1995,24 @@ function switchTabModul(tabName) {
 
                 ${formatKunciHtml}
 
-       <table style="width:100% !important; max-width:100% !important; border:none !important; border-collapse:collapse !important; margin-top:24px !important; table-layout:fixed !important;">
-            <tr style="border:none !important;">
-                <td style="width:50% !important; border:none !important; text-align:center !important; vertical-align:top !important; padding:0 !important; font-size:11px !important; line-height:1.4 !important;">
-                    Mengetahui,<br>
-                    <strong>Kepala Sekolah / Madrasah</strong>
-                    <br><br><br><br>
-                    <u><strong>${namaKepala}</strong></u><br>
-                    NIP. ${nipKepala}
-                </td>
-                <td style="width:50% !important; border:none !important; text-align:center !important; vertical-align:top !important; padding:0 !important; font-size:11px !important; line-height:1.4 !important;">
-                    Dibuat Oleh,<br>
-                    <strong>Guru Mata Pelajaran</strong>
-                    <br><br><br><br>
-                    <u><strong>${data.guru || '-'}</strong></u><br>
-                    NIP. ${nipGuru}
-                </td>
-            </tr>
-        </table>
+       <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse;">
+    <tr style="border: none;">
+        <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
+            <p style="margin: 0;">Mengetahui,</p>
+            <p style="margin: 0; font-weight: 600;">Kepala Sekolah / Madrasah</p>
+            <div style="height: 50px;"></div>
+            <p style="margin: 0; font-weight: bold; text-decoration: underline;">${namaKepala}</p>
+            <p style="margin: 0;">NIP. ${nipKepala}</p>
+        </td>
+        <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
+            <p style="margin: 0;">Dibuat Oleh,</p>
+            <p style="margin: 0; font-weight: 600;">Guru Mata Pelajaran</p>
+            <div style="height: 50px;"></div>
+            <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.guru || '-'}</p>
+            <p style="margin: 0;">NIP. ${nipGuru}</p>
+        </td>
+    </tr>
+</table>
            `;
         }
     }
