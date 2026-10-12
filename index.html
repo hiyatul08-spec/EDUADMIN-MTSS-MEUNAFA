@@ -2372,7 +2372,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        // Fungsi Cetak Khusus Lembar Dokumen
+
+    
+      // Fungsi Cetak Khusus Lembar Dokumen
         function printDocument() {
             const previewElement = document.getElementById('preview-content-modul');
             if (!previewElement) {
@@ -2380,13 +2382,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            const printContent = previewElement.innerHTML;
-            const originalContent = document.body.innerHTML;
+            const printWindow = window.open('', '_blank');
+            const docContent = previewElement.innerHTML;
+            
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Cetak Dokumen - EduAdmin</title>
+                        <script src="https://cdn.tailwindcss.com"></script>
+                        <style>
+                            @page { size: A4; margin: 12mm; }
+                            body { font-family: Arial, sans-serif; background: #fff; color: #000; padding: 10px; }
+                            table { border-collapse: collapse !important; width: 100% !important; margin-bottom: 12px; }
+                            th, td { border: 1px solid #000 !important; padding: 5px 8px !important; font-size: 10pt; }
+                            /* Pengecualian border untuk tabel tanda tangan */
+                            table tr td[style*="border: none"] { border: none !important; }
+                            .no-border, .no-border td { border: none !important; }
+                        </style>
+                    </head>
+                    <body>
+                        ${docContent}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
 
-            document.body.innerHTML = printContent;
-            window.print();
-            document.body.innerHTML = originalContent;
-            location.reload();
+            // Beri jeda agar CSS Tailwind ter-load sempurna sebelum print
+            setTimeout(function() {
+                printWindow.print();
+                printWindow.close();
+            }, 700);
         }
     </script>
 </body>
