@@ -2382,9 +2382,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     
- // Fungsi Cetak Khusus Lembar Dokumen
-    function printDocument() {
-        window.print();
-    }    </script>
+  // Fungsi Cetak Khusus Lembar Dokumen
+        function printDocument() {
+            const previewElement = document.getElementById('preview-content-modul');
+            if (!previewElement) {
+                alert('Dokumen pratinjau tidak ditemukan!');
+                return;
+            }
+
+            const printContent = previewElement.innerHTML;
+            const originalContent = document.body.innerHTML;
+
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+            location.reload();
+        }
+    </script>
 </body>
 </html>
