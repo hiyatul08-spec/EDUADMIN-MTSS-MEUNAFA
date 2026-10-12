@@ -1996,22 +1996,24 @@ function switchTabModul(tabName) {
 
                 ${formatKunciHtml}
 
-                <div class="pt-6 grid grid-cols-2 text-center text-xs mt-6 border-t border-slate-200">
-                    <div>
-                        <p>Mengetahui,</p>
-                        <p class="font-semibold">Kepala Sekolah / Madrasah</p>
-                        <div class="h-16"></div>
-                        <p class="font-bold underline">${namaKepala}</p>
-                        <p>NIP. ${nipKepala}</p>
-                    </div>
-                    <div>
-                        <p>Dibuat Oleh,</p>
-                        <p class="font-semibold">Guru Mata Pelajaran</p>
-                        <div class="h-16"></div>
-                        <p class="font-bold underline">${data.guru || '-'}</p>
-                        <p>NIP. ${nipGuru}</p>
-                    </div>
-                </div>
+               <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse;">
+    <tr style="border: none;">
+        <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
+            <p style="margin: 0;">Mengetahui,</p>
+            <p style="margin: 0; font-weight: 600;">Kepala Sekolah / Madrasah</p>
+            <div style="height: 50px;"></div>
+            <p style="margin: 0; font-weight: bold; text-decoration: underline;">${namaKepala}</p>
+            <p style="margin: 0;">NIP. ${nipKepala}</p>
+        </td>
+        <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
+            <p style="margin: 0;">Dibuat Oleh,</p>
+            <p style="margin: 0; font-weight: 600;">Guru Mata Pelajaran</p>
+            <div style="height: 50px;"></div>
+            <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.guru || '-'}</p>
+            <p style="margin: 0;">NIP. ${nipGuru}</p>
+        </td>
+    </tr>
+</table>
            `;
         }
     }
