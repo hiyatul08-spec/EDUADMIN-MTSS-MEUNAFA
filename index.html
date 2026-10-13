@@ -2027,24 +2027,21 @@ function switchTabModul(tabName) {
            `;
        
 } else if (tabName === 'remedial') {
-        const mapelNama = data.mapel || document.getElementById('mapelSelect')?.options[document.getElementById('mapelSelect')?.selectedIndex]?.text || 'MATA PELAJARAN';
-        const babNama = data.bab || document.getElementById('babInput')?.value || 'TOPIK / BAB';
-        
         previewBox.innerHTML = `
             <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
                 <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR PROGRAM REMEDIAL & PENGAYAAN</h2>
-                <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${mapelNama} | ${(data.fase || '').toUpperCase()}</p>
-                <p class="text-slate-600 italic">Topik / Bab: ${babNama} | Semester: ${data.semester || 'Ganjil'} | TP: 2026/2027</p>
+                <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || '').toUpperCase()} | ${(data.fase || '').toUpperCase()}</p>
+                <p class="text-xs text-slate-600 mt-0.5">Topik / Bab: ${data.bab || '-'} | Semester: ${data.semester || 'Ganjil'} | TP: ${data.tahun || '2026/2027'}</p>
             </div>
 
-            <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase mb-4 inline-block">
-                6. PROGRAM REMEDIAL & PENGAYAAN
+            <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-3 flex items-center gap-1.5">
+                <span>6. PROGRAM REMEDIAL & PENGAYAAN</span>
             </div>
 
             <!-- PROGRAM REMEDIAL -->
             <div class="mb-6">
                 <h3 class="font-bold text-slate-800 text-sm border-b pb-1 mb-2">A. PROGRAM REMEDIAL (Bagi Peserta Didik Belum Tuntas)</h3>
-                <p class="text-xs text-slate-700 mb-2"><strong>Bentuk Intervensi:</strong> Bimbingan perorangan / pembelajaran ulang / pemanfaatan tutor sebaya terkait materi <strong>${babNama}</strong>.</p>
+                <p class="text-xs text-slate-700 mb-2"><strong>Bentuk Intervensi:</strong> Bimbingan perorangan / pembelajaran ulang / pemanfaatan tutor sebaya terkait materi <strong>${data.bab || '-'}</strong>.</p>
                 <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px;" border="1" cellpadding="6">
                     <thead>
                         <tr style="background-color: #f1f5f9; text-align: center;">
@@ -2077,7 +2074,7 @@ function switchTabModul(tabName) {
             <!-- PROGRAM PENGAYAAN -->
             <div class="mb-6">
                 <h3 class="font-bold text-slate-800 text-sm border-b pb-1 mb-2">B. PROGRAM PENGAYAAN (Bagi Peserta Didik Tuntas)</h3>
-                <p class="text-xs text-slate-700 mb-2"><strong>Bentuk Kegiatan:</strong> Pemberian tugas penguatan harian & eksplorasi studi kasus lanjutan mengenai penerapan <strong>${babNama}</strong> dalam kehidupan bermasyarakat.</p>
+                <p class="text-xs text-slate-700 mb-2"><strong>Bentuk Kegiatan:</strong> Pemberian tugas penguatan harian & eksplorasi studi kasus lanjutan mengenai penerapan <strong>${data.bab || '-'}</strong> dalam kehidupan bermasyarakat.</p>
                 <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 8px;" border="1" cellpadding="6">
                     <thead>
                         <tr style="background-color: #f1f5f9; text-align: center;">
@@ -2098,22 +2095,22 @@ function switchTabModul(tabName) {
                 </table>
             </div>
 
-        <!-- LEMBAR PENGESAHAN TAB 6 -->
+            <!-- LEMBAR PENGESAHAN DINAMIS TAB 6 -->
             <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse; page-break-inside: avoid;">
                 <tr style="border: none;">
                     <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
                         <p style="margin: 0;">Mengetahui,</p>
                         <p style="margin: 0; font-weight: 600;">Kepala Sekolah / Madrasah</p>
                         <p style="margin: 0;"><br><br><br><br></p>
-                        <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.kepalaSekolah || data.kepala || 'Darmawan Sudarso'}</p>
-                        <p style="margin: 0;">NIP. ${data.nipKepalaSekolah || data.nipKepala || '19801975'}</p>
+                        <p style="margin: 0; font-weight: bold; text-decoration: underline;">${namaKepala}</p>
+                        <p style="margin: 0;">NIP. ${nipKepala}</p>
                     </td>
                     <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
                         <p style="margin: 0;">Dibuat Oleh,</p>
                         <p style="margin: 0; font-weight: 600;">Guru Mata Pelajaran</p>
                         <p style="margin: 0;"><br><br><br><br></p>
                         <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.guru || '-'}</p>
-                        <p style="margin: 0;">NIP. ${data.nipGuru || '-'}</p>
+                        <p style="margin: 0;">NIP. ${nipGuru}</p>
                     </td>
                 </tr>
             </table>
