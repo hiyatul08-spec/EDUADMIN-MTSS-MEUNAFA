@@ -2026,12 +2026,12 @@ function switchTabModul(tabName) {
 </table>
            `;
        
-  } else if (tabName === 'remedial') {
+ } else if (tabName === 'remedial') {
         previewBox.innerHTML = `
             <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
                 <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR PROGRAM REMEDIAL & PENGAYAAN</h2>
                 <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${mapelText} | ${(data.fase || '').toUpperCase()}</p>
-                <p class="text-slate-600 italic">Topik / Bab: ${babText} | Semester: ${semesterAktif} | TP: 2026/2027</p>
+                <p class="text-slate-600 italic">Topik / Bab: ${babText} | Semester: ${data.semester || 'Ganjil'} | TP: 2026/2027</p>
             </div>
 
             <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase mb-4 inline-block">
@@ -2115,9 +2115,8 @@ function switchTabModul(tabName) {
                 </tr>
             </table>
         `;
-  
-  }
     }
+}
         
         
                 
