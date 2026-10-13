@@ -1839,7 +1839,6 @@ function switchTabModul(tabName) {
         if (cachedContent) {
             previewBox.innerHTML = renderHTML(cachedContent);
         } else {
-            // Jika belum ada, tampilkan template lokal dan tombol generate
             previewBox.innerHTML = renderHTML(`
                 <div class="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded text-xs mb-4">
                     💡 Klik tombol <strong>"Generate Ulang Soal AI"</strong> di atas jika ingin meracik soal otomatis via Gemini AI.
@@ -1849,11 +1848,10 @@ function switchTabModul(tabName) {
                     <li>Jelaskan pemahaman dasar mengenai materi <strong>${babNama}</strong> dalam mata pelajaran ${mapelNama}!</li>
                     <li>Sebutkan 3 contoh penerapan nyata dari <strong>${babNama}</strong> di kehidupan sehari-hari!</li>
                     <li>Mengapa sikap <strong>${babNama}</strong> sangat penting diterapkan dalam lingkungan sekolah?</li>
-              </ol>
-        `);
+                </ol>
+          );
+        }
     }
-}
-}
 
 // ---------------------------------------------------
 // TAB 6: REMEDIAL & PENGAYAAN
