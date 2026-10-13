@@ -1786,52 +1786,62 @@ function switchTabModul(tabName) {
 // TAB 5: ASESMEN
 // ==========================================  
 } else if (tabName === 'asesmen') {
-        const jenisAsesmen = document.getElementById('jenisAsesmenSelect')?.value || 'Pilihan Ganda';
-        const mapelNama = data.mapel || 'MATA PELAJARAN';
-        const babNama = data.bab || 'TOPIK / BAB';
-        const kelasNama = data.fase || 'Kelas VII';
-        
-        const cacheKey = 'asesmen_' + mapelNama + '_' + babNama + '_' + jenisAsesmen;
-        const cachedContent = localStorage.getItem(cacheKey);
+    const jenisAsesmen = document.getElementById('jenisAsesmenSelect')?.value || 'Pilihan Ganda';
+    const mapelNama = data.mapel || 'MATA PELAJARAN';
+    const babNama = data.bab || 'TOPIK / BAB';
+    const kelasNama = data.fase || 'Kelas VII';
 
-        const headerHtml = `
-            <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
-                <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR ASESMEN / EVALUASI PEMBELAJARAN</h2>
-                <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${mapelNama.toUpperCase()} | ${kelasNama.toUpperCase()}</p>
-                <p class="text-slate-600 italic text-xs">Topik / Bab: ${babNama} | Semester: ${data.semester || 'Ganjil'} | TP: ${data.tahun || '2026/2027'}</p>
-            </div>
-            <div class="flex items-center justify-between mb-4">
-                <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase">
-                    5. INSTRUMEN ASESMEN (${jenisAsesmen.toUpperCase()})
-                </div>
-                <button id="btn-generate-ai" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1 rounded font-medium transition">
-                    🔄 Generate Ulang Soal AI
-                </button>
-            </div>
-            <div id="ai-content-box" class="prose max-w-none text-xs text-slate-800 space-y-3 leading-relaxed mb-6">`;
+    // Cek Simpanan (Cache)
+    const cacheKey = 'asesmen_' + mapelNama + '_' + babNama + '_' + jenisAsesmen;
+    const cachedContent = localStorage.getItem(cacheKey);
 
-        const footerHtml = `
-            </div>
-            <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse; page-break-inside: avoid;">
-                <tr style="border: none;">
-                    <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
-                        <p style="margin: 0;">Mengetahui,</p>
-                        <p style="margin: 0; font-weight: 600;">Kepala Sekolah / Madrasah</p>
-                        <p style="margin: 0;"><br><br><br><br></p>
-                        <p style="margin: 0; font-weight: bold; text-decoration: underline;">${namaKepala}</p>
-                        <p style="margin: 0;">NIP. ${nipKepala}</p>
-                    </td>
-                    <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
-                        <p style="margin: 0;">Dibuat Oleh,</p>
-                        <p style="margin: 0; font-weight: 600;">Guru Mata Pelajaran</p>
-                        <p style="margin: 0;"><br><br><br><br></p>
-                        <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.guru || '-'}</p>
-                        <p style="margin: 0;">NIP. ${nipGuru}</p>
-                    </td>
-                </tr>
-            </table>`;
+    // Template Konten Utama
+    const renderTampilan = (isiSoal) => `
+        <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+            <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR ASESMEN / EVALUASI PEMBELAJARAN</h2>
+            <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || '').toUpperCase()} | ${(data.fase || '').toUpperCase()}</p>
+            <p class="text-slate-600 italic text-xs">Topik / Bab: ${babNama} | Semester: ${data.semester || 'Ganjil'} | TP: ${data.tahun || '2026/2027'}</p>
+        </div>
 
-        const defaultBody = `
+        <div class="flex items-center justify-between mb-4">
+            <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit">
+                5. INSTRUMEN ASESMEN (${jenisAsesmen.toUpperCase()})
+            </div>
+            <button id="btn-generate-ai" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1 rounded font-medium transition">
+                🔄 Generate Ulang Soal AI
+            </button>
+        </div>
+
+        <div id="ai-content-box" class="prose max-w-none text-xs text-slate-800 space-y-3 leading-relaxed mb-6">
+            ${isiSoal}
+        </div>
+
+        <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse; page-break-inside: avoid;">
+            <tr style="border: none;">
+                <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
+                    <p style="margin: 0;">Mengetahui,</p>
+                    <p style="margin: 0; font-weight: 600;">Kepala Sekolah / Madrasah</p>
+                    <p style="margin: 0;"><br><br><br><br></p>
+                    <p style="margin: 0; font-weight: bold; text-decoration: underline;">${namaKepala}</p>
+                    <p style="margin: 0;">NIP. ${nipKepala}</p>
+                </td>
+                <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
+                    <p style="margin: 0;">Dibuat Oleh,</p>
+                    <p style="margin: 0; font-weight: 600;">Guru Mata Pelajaran</p>
+                    <p style="margin: 0;"><br><br><br><br></p>
+                    <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.guru || '-'}</p>
+                    <p style="margin: 0;">NIP. ${nipGuru}</p>
+                </td>
+            </tr>
+        </table>
+    `;
+
+    // Jika sudah ada simpanan, tampilkan langsung
+    if (cachedContent) {
+        previewBox.innerHTML = renderTampilan(cachedContent);
+    } else {
+        // Jika belum ada, tampilkan template lokal gratisan dulu
+        previewBox.innerHTML = renderTampilan(`
             <div class="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded text-xs mb-4">
                 💡 Klik tombol <strong>"Generate Ulang Soal AI"</strong> di atas jika ingin meracik soal otomatis via Gemini AI.
             </div>
@@ -1840,20 +1850,20 @@ function switchTabModul(tabName) {
                 <li>Jelaskan pemahaman dasar mengenai materi <strong>${babNama}</strong> dalam mata pelajaran ${mapelNama}!</li>
                 <li>Sebutkan 3 contoh penerapan nyata dari <strong>${babNama}</strong> di kehidupan sehari-hari!</li>
                 <li>Mengapa sikap <strong>${babNama}</strong> sangat penting diterapkan dalam lingkungan sekolah?</li>
-            </ol>`;
+            </ol>
+        `);
+    }
 
-        previewBox.innerHTML = headerHtml + (cachedContent || defaultBody) + footerHtml;
+    // Aktifkan fungsi tombol Generate saat diklik
+    setTimeout(() => {
+        const btn = document.getElementById('btn-generate-ai');
+        if (btn) {
+            btn.onclick = function() {
+                generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey);
+            };
+        }
+    }, 50);        
 
-        // Pasang event listener tombol secara terpisah agar aman dari syntax error
-        setTimeout(() => {
-            const btn = document.getElementById('btn-generate-ai');
-            if (btn) {
-                btn.onclick = function() {
-                    generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey);
-                };
-            }
-        }, 50);
-    }        
 
     
 // ---------------------------------------------------
