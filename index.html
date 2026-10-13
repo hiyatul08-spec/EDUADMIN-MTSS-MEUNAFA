@@ -2354,16 +2354,11 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
         `;
     }
 
-    let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+    let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
     let headers = { 'Content-Type': 'application/json' };
 
-    // DETEKSI FORMAT KEY: AQ (OAuth Bearer Token) vs AIza (API Key)
-    if (apiKey.startsWith('AQ')) {
-        headers['Authorization'] = `Bearer ${apiKey}`;
-    } else {
-        url += `?key=${apiKey}`;
-    }
 
+  
     const promptText = `
         Kamu adalah pakar pembuat soal Kurikulum Merdeka. 
         Buatkan instrumen asesmen pembelajaran untuk:
