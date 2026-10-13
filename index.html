@@ -2354,9 +2354,16 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
         `;
     }
 
- apiKey = localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6JFAGG61egjOhxs-x1t22bLB988Ce0ZhLUUzqYhciQUag';
-    let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
+ let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
     let headers = { 'Content-Type': 'application/json' };
+
+    let apiKey = localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6JFAGG61egjOhxs-x1t22bLB988Ce0ZhLUUzqYhciQUag';
+
+    if (apiKey.startsWith('AQ')) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
+    } else {
+        url += `?key=${apiKey}`;
+    }
 
   
     const promptText = `
