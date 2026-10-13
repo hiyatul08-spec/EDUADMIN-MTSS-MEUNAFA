@@ -1784,7 +1784,6 @@ function switchTabModul(tabName) {
             const savedSettings = JSON.parse(localStorage.getItem('eduSettings') || '{}');
             const apiKey = (savedSettings.apiKey || document.getElementById('geminiApiKey')?.value || '').trim();
 
-            // KONTEN FALLBACK JIKA BELUM ADA API KEY
             if (!apiKey) {
                 return `
                     <div class="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded text-xs mb-4">
@@ -1792,14 +1791,13 @@ function switchTabModul(tabName) {
                     </div>
                     <div class="mb-4 font-bold text-slate-800">A. SOAL ${jenisAsesmen.toUpperCase()} (TEMPLATE LOKAL)</div>
                     <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700">
-                        <li>Jelaskan pemahaman dasar mengenai materi <strong>${babNama}</strong> dalam mata pelajaran${mapelNama}!</li>
+                        <li>Jelaskan pemahaman dasar mengenai materi <strong>${babNama}</strong> dalam mata pelajaran ${mapelNama}!</li>
                         <li>Sebutkan 3 contoh penerapan nyata dari <strong>${babNama}</strong> di kehidupan sehari-hari!</li>
                         <li>Mengapa sikap <strong>${babNama}</strong> sangat penting diterapkan dalam lingkungan sekolah?</li>
                     </ol>
                 `;
             }
 
-            // DUKUNGAN UNTUK API KEY FORMAT AQ... DAN AIza...
             let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
             let headers = { 'Content-Type': 'application/json' };
 
@@ -1820,7 +1818,7 @@ function switchTabModul(tabName) {
                 Ketentuan Soal:
                 1. Jika Jenis Asesmen adalah "Pilihan Ganda", buatkan 5 soal pilihan ganda (opsi A, B, C, D) lengkap dengan Kunci Jawaban.
                 2. Jika Jenis Asesmen adalah "Essay / Uraian", buatkan 5 soal uraian HOTS lengkap dengan Kunci Jawaban & Rubrik Penskoran.
-                3. Format output harus menggunakan HTML sederhana tanpa markdown codeblock (tanpa \`\`\`html). Gunakan tag <h3>, <ol>, <li>, <p>, dan <strong> agar rapi.
+                3. Format output harus menggunakan HTML sederhana tanpa markdown codeblock. Gunakan tag <h3>, <ol>, <li>, <p>, dan <strong> agar rapi.
             `;
 
             try {
@@ -1839,14 +1837,12 @@ function switchTabModul(tabName) {
                 }
 
                 let generatedText = resultData.candidates[0].content.parts[0].text;
-                generatedText = generatedText.replace(/```html/g, '').replace(/```/g, '');
-                return generatedText;
+                return generatedText.replace(/```html/g, '').replace(/```/g, '');
             } catch (err) {
                 return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Koneksi Error: Gagal terhubung ke Gemini API.</div>`;
             }
         }
 
-        // JALANKAN PEMANGGILAN DAN UPDATE PREVIEW
         fetchGeminiAsesmen().then(aiContent => {
             previewBox.innerHTML = `
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
@@ -1863,7 +1859,6 @@ function switchTabModul(tabName) {
                     ${aiContent}
                 </div>
 
-                <!-- LEMBAR PENGESAHAN DINAMIS TAB 5 -->
                 <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse; page-break-inside: avoid;">
                     <tr style="border: none;">
                         <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
@@ -1882,7 +1877,9 @@ function switchTabModul(tabName) {
                         </td>
                     </tr>
                 </table>
-                `;
+            `;
+        });
+    }
        
 
         // ==========================================
