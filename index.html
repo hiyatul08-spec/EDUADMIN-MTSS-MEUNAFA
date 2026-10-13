@@ -1770,7 +1770,7 @@ function switchTabModul(tabName) {
         const babNama = data.bab || 'TOPIK / BAB';
         const kelasNama = data.fase || 'Kelas VII';
 
-        // TAMPILAN LOADING SAAT GENERATE DENGAN AI
+        // TAMPILAN LOADING
         previewBox.innerHTML = `
             <div class="text-center py-12">
                 <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-600 border-t-transparent mb-3"></div>
@@ -1779,71 +1779,8 @@ function switchTabModul(tabName) {
             </div>
         `;
 
-        // FUNGSI PEMANGGIL AI GEMINI
-        async function fetchGeminiAsesmen() {
-            const savedSettings = JSON.parse(localStorage.getItem('eduSettings') || '{}');
-            const apiKey = (savedSettings.apiKey || document.getElementById('geminiApiKey')?.value || '').trim();
-
-            if (!apiKey) {
-                return `
-                    <div class="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded text-xs mb-4">
-                        💡 <strong>Petunjuk AI:</strong> Masukkan Gemini API Key di menu <strong>Pengaturan System</strong> untuk membuat soal AI otomatis real-time.
-                    </div>
-                    <div class="mb-4 font-bold text-slate-800">A. SOAL ${jenisAsesmen.toUpperCase()} (TEMPLATE LOKAL)</div>
-                    <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700">
-                        <li>Jelaskan pemahaman dasar mengenai materi <strong>${babNama}</strong> dalam mata pelajaran ${mapelNama}!</li>
-                        <li>Sebutkan 3 contoh penerapan nyata dari <strong>${babNama}</strong> di kehidupan sehari-hari!</li>
-                        <li>Mengapa sikap <strong>${babNama}</strong> sangat penting diterapkan dalam lingkungan sekolah?</li>
-                    </ol>
-                `;
-            }
-
-            let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
-            let headers = { 'Content-Type': 'application/json' };
-
-            if (apiKey.startsWith('AQ')) {
-                headers['Authorization'] = `Bearer ${apiKey}`;
-            } else {
-                url += `?key=${apiKey}`;
-            }
-
-            const promptText = `
-                Kamu adalah pakar pembuat soal Kurikulum Merdeka. 
-                Buatkan instrumen asesmen pembelajaran untuk:
-                - Mata Pelajaran: ${mapelNama}
-                - Kelas/Fase: ${kelasNama}
-                - Topik/Bab: ${babNama}
-                - Jenis Asesmen: ${jenisAsesmen}
-
-                Ketentuan Soal:
-                1. Jika Jenis Asesmen adalah "Pilihan Ganda", buatkan 5 soal pilihan ganda (opsi A, B, C, D) lengkap dengan Kunci Jawaban.
-                2. Jika Jenis Asesmen adalah "Essay / Uraian", buatkan 5 soal uraian HOTS lengkap dengan Kunci Jawaban & Rubrik Penskoran.
-                3. Format output harus menggunakan HTML sederhana tanpa markdown codeblock. Gunakan tag <h3>, <ol>, <li>, <p>, dan <strong> agar rapi.
-            `;
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: headers,
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: promptText }] }]
-                    })
-                });
-
-                const resultData = await response.json();
-
-                if (resultData.error) {
-                    return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Gagal AI: ${resultData.error.message}</div>`;
-                }
-
-                let generatedText = resultData.candidates[0].content.parts[0].text;
-                return generatedText.replace(/```html/g, '').replace(/```/g, '');
-            } catch (err) {
-                return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Koneksi Error: Gagal terhubung ke Gemini API.</div>`;
-            }
-        }
-
-        fetchGeminiAsesmen().then(aiContent => {
+        // PANGGIL AI DAN RENDER
+        fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama).then(aiContent => {
             previewBox.innerHTML = `
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
                     <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR ASESMEN / EVALUASI PEMBELAJARAN</h2>
@@ -1879,7 +1816,6 @@ function switchTabModul(tabName) {
                 </table>
             `;
         });
-    }
        
 
         // ==========================================
@@ -2350,6 +2286,71 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.innerHTML = originalContent;
             location.reload();
         }
+
+// FUNGSI GLOBAL GEMINI AI (BERDIRI SENDIRI)
+async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
+    const savedSettings = JSON.parse(localStorage.getItem('eduSettings') || '{}');
+    const apiKey = (savedSettings.apiKey || document.getElementById('geminiApiKey')?.value || '').trim();
+
+    if (!apiKey) {
+        return `
+            <div class="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded text-xs mb-4">
+                💡 <strong>Petunjuk AI:</strong> Masukkan Gemini API Key di menu <strong>Pengaturan System</strong> untuk membuat soal AI otomatis real-time.
+            </div>
+            <div class="mb-4 font-bold text-slate-800">A. SOAL ${jenisAsesmen.toUpperCase()} (TEMPLATE LOKAL)</div>
+            <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700">
+                <li>Jelaskan pemahaman dasar mengenai materi <strong>${babNama}</strong> dalam mata pelajaran ${mapelNama}!</li>
+                <li>Sebutkan 3 contoh penerapan nyata dari <strong>${babNama}</strong> di kehidupan sehari-hari!</li>
+                <li>Mengapa sikap <strong>${babNama}</strong> sangat penting diterapkan dalam lingkungan sekolah?</li>
+            </ol>
+        `;
+    }
+
+    let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+    let headers = { 'Content-Type': 'application/json' };
+
+    if (apiKey.startsWith('AQ')) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
+    } else {
+        url += `?key=${apiKey}`;
+    }
+
+    const promptText = `
+        Kamu adalah pakar pembuat soal Kurikulum Merdeka. 
+        Buatkan instrumen asesmen pembelajaran untuk:
+        - Mata Pelajaran: ${mapelNama}
+        - Kelas/Fase: ${kelasNama}
+        - Topik/Bab: ${babNama}
+        - Jenis Asesmen: ${jenisAsesmen}
+
+        Ketentuan Soal:
+        1. Jika Jenis Asesmen adalah "Pilihan Ganda", buatkan 5 soal pilihan ganda (opsi A, B, C, D) lengkap dengan Kunci Jawaban.
+        2. Jika Jenis Asesmen adalah "Essay / Uraian", buatkan 5 soal uraian HOTS lengkap dengan Kunci Jawaban & Rubrik Penskoran.
+        3. Format output harus menggunakan HTML sederhana tanpa markdown codeblock. Gunakan tag <h3>, <ol>, <li>, <p>, dan <strong> agar rapi.
+    `;
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: promptText }] }]
+            })
+        });
+
+        const resultData = await response.json();
+
+        if (resultData.error) {
+            return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Gagal AI: ${resultData.error.message}</div>`;
+        }
+
+        let generatedText = resultData.candidates[0].content.parts[0].text;
+        return generatedText.replace(/```html/g, '').replace(/```/g, '');
+    } catch (err) {
+        return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Koneksi Error: Gagal terhubung ke Gemini API.</div>`;
+    }
+}
+  
     </script>
 </body>
 </html>
