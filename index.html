@@ -1382,7 +1382,9 @@ function switchTabModul(tabName) {
 
 
   
-  
+// ==========================================
+// TAB 1: MODUL AJAR
+// ========================================== 
   if (tabName === 'modul') {
             previewBox.innerHTML = `
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
@@ -1495,7 +1497,10 @@ function switchTabModul(tabName) {
 </table>
             `;
 
-          
+    
+// ==========================================
+// TAB 2: ATP
+// ========================================== 
       } else if (tabName === 'atp') {
             previewBox.innerHTML = `
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
@@ -1589,7 +1594,9 @@ function switchTabModul(tabName) {
 </table>
             `;
 
-    
+// ==========================================
+// TAB 3: LKPD
+// ========================================== 
  } else if (tabName === 'lkpd') {
             previewBox.innerHTML = `
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
@@ -1682,9 +1689,10 @@ function switchTabModul(tabName) {
             `;
         
 
-
-    
- } else if (tabName === 'bahan') {
+// ==========================================
+// TAB 4: BAHAN AJAR
+// ========================================== 
+     } else if (tabName === 'bahan') {
             previewBox.innerHTML = `
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
                     <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">PERANGKAT AJAR KURIKULUM MERDEKA</h2>
@@ -1753,280 +1761,134 @@ function switchTabModul(tabName) {
         
 
 
-
-    
+// ==========================================
+// TAB 5: ASESMEN
+// ==========================================  
 } else if (tabName === 'asesmen') {
-     const kelasText = (data.fase || '').toUpperCase().trim();
-            const mapelText = (data.mapel || 'Mata Pelajaran').toUpperCase();
-            const babText = data.bab || 'Materi Utama';
-            let formatSoalHtml = '';
-            let formatKunciHtml = '';
+        const jenisAsesmen = document.getElementById('jenisAsesmenSelect')?.value || 'Pilihan Ganda';
+        const mapelNama = data.mapel || 'MATA PELAJARAN';
+        const babNama = data.bab || 'TOPIK / BAB';
+        const kelasNama = data.fase || 'Kelas VII';
 
-            // 1. Deteksi Kelas 1-3 SD/MI
-            const isKelas13 = /\b(KELAS 1|KELAS 2|KELAS 3|KELAS I|KELAS II|KELAS III|FASE A)\b/.test(kelasText) ||
-                              kelasText.includes('KELAS I-') || kelasText.includes('KELAS II-') || kelasText.includes('KELAS III-');
+        // TAMPILAN LOADING SAAT GENERATE DENGAN AI
+        previewBox.innerHTML = `
+            <div class="text-center py-12">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-600 border-t-transparent mb-3"></div>
+                <h3 class="font-bold text-slate-800 text-sm">Sedang Meracik Soal dengan Gemini AI...</h3>
+                <p class="text-xs text-slate-500 mt-1">Menyusun soal ${jenisAsesmen} materi <strong>${babNama}</strong></p>
+            </div>
+        `;
 
-            // 2. Deteksi Kelas 4-6 SD/MI
-            const isKelas46 = /\b(KELAS 4|KELAS 5|KELAS 6|KELAS IV|KELAS V|KELAS VI|FASE B|FASE C)\b/.test(kelasText) ||
-                              kelasText.includes('KELAS IV-') || kelasText.includes('KELAS V-') || kelasText.includes('KELAS VI-');
+        // FUNGSI PEMANGGIL AI GEMINI
+        async function fetchGeminiAsesmen() {
+            const savedSettings = JSON.parse(localStorage.getItem('eduSettings') || '{}');
+            const apiKey = (savedSettings.apiKey || document.getElementById('geminiApiKey')?.value || '').trim();
 
-            // --- HELPER GENERATOR SOAL KONTEN SPEKTRUM MAPEL & TOPIK ---
-            const buildContextualQuestion = (index, bab, mapel) => {
-                const isAgama = /AL-QUR'AN|HADIS|FIKIH|PAI|AKIDAH|AKHLAK|SKL|TAJWID/.test(mapel);
-                const isSains = /IPA|BIOLOGI|FISIKA|KIMIA|MATEMATIKA/.test(mapel);
-
-                if (isAgama) {
-                    const templates = [
-                        { q: `Siswa yang menerapkan hukum atau kaidah <strong>${bab}</strong> saat membaca Al-Qur'an atau beribadah akan terhindar dari...`, a: `Kesalahan makna dan kekeliruan kaidah`, b: `Pujian dari sesama teman`, c: `Kemudahan dalam menghafal`, d: `Kelancaran membaca tanpa tajwid`, key: `A` },
-                        { q: `Manakah di bawah ini contoh penerapan atau perilaku yang sesuai dengan ajaran <strong>${bab}</strong> dalam kehidupan sehari-hari?`, a: `Menjalankan perintah sesuai kaidah dan penuh tanggung jawab`, b: `Apatis terhadap hukum-hukum pembelajaran`, c: `Melakukan amalan hanya saat diawasi guru`, d: `Mengabaikan keutamaan dan nilai ${bab}`, key: `A` },
-                        { q: `Di bawah ini yang merupakan dalil, prinsip dasar, atau hukum utama dalam pembahasan <strong>${bab}</strong> adalah...`, a: `Menjaga ketepatan dan ketaatan sesuai syariat/prinsip`, b: `Meniru kebiasaan yang tidak ada tuntunannya`, c: `Memilih hukum yang paling mudah tanpa rujukan`, d: `Mengabaikan aturan yang sudah ditetapkan`, key: `A` },
-                        { q: `Ketika menjumpai permasalahan mengenai <strong>${bab}</strong> pada mata pelajaran ${mapel}, sikap yang paling tepat adalah...`, a: `Mempelajari kaidahnya dan bertanya kepada ahli/guru`, b: `Membiarkannya tanpa mencari kebenaran`, c: `Menganggap semua pemahaman adalah sama`, d: `Menghindari topik tersebut`, key: `A` }
-                    ];
-                    return templates[(index - 1) % templates.length];
-                } else if (isSains) {
-                    const templates = [
-                        { q: `Dalam eksperimen atau analisis materi <strong>${bab}</strong>, faktor utama yang mempengaruhi proses keberhasilannya adalah...`, a: `Ketepatan variabel dan pemahaman konsep ${bab}`, b: `Perkiraan tanpa pengukuran yang valid`, c: `Waktu pengamatan yang acak dan tidak teratur`, d: `Pengabaian terhadap hukum alam/rumus dasar`, key: `A` },
-                        { q: `Penerapan prinsip <strong>${bab}</strong> pada fenomena atau kehidupan nyata dapat ditemui pada peristiwa...`, a: `Proses alami yang mengikuti hukum dan kaidah ${bab}`, b: `Perubahan materi tanpa adanya sebab-akibat`, c: `Gejala spontan yang tidak dapat dijelaskan secara ilmiah`, d: `Sistem tertutup yang tidak memiliki energi`, key: `A` }
-                    ];
-                    return templates[(index - 1) % templates.length];
-                } else {
-                    const templates = [
-                        { q: `Implementasi nilai-nilai atau konsep <strong>${bab}</strong> dalam konteks kemasyarakatan dan berbangsa bertujuan untuk...`, a: `Menciptakan keharmonisan dan keteraturan sosial`, b: `Menimbulkan persaingan yang tidak sehat`, c: `Membatasi kreativitas warga negara`, d: `Menghapuskan keberagaman aturan`, key: `A` },
-                        { q: `Tantangan terbesar dalam mempertahankan pemahaman <strong>${bab}</strong> di era globalisasi saat ini adalah...`, a: `Pengaruh budaya luar dan minimnya pembiasaan`, b: `Banyaknya literatur resmi yang terbit`, c: `Dukungan penuh dari seluruh lapisan masyarakat`, d: `Kemudahan akses informasi pembelajaran`, key: `A` }
-                    ];
-                    return templates[(index - 1) % templates.length];
-                }
-            };
-
-            if (isKelas13) {
-                // KELAS 1-3 SD/MI: 5 Isian Singkat
-                formatSoalHtml = `
-                    <div class="mb-4">
-                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">A. SOAL ISIAN SINGKAT (5 SOAL)</h4>
-                        <ol class="list-decimal pl-5 space-y-3 text-justify text-xs">
-                            <li>Apakah arti atau pengertian sederhana dari <strong>${babText}</strong>?</li>
-                            <li>Tuliskan 1 contoh perbuatan yang mencerminkan materi <strong>${babText}</strong> di sekolah!</li>
-                            <li>Mengapa kita harus belajar topik <strong>${babText}</strong> pada pelajaran <strong>${data.mapel || 'Mata Pelajaran'}</strong>?</li>
-                            <li>Sebutkan manfaat yang kamu dapatkan jika rajin menerapkan <strong>${babText}</strong>!</li>
-                            <li>Apa yang harus kamu lakukan jika melihat teman belum memahami <strong>${babText}</strong>?</li>
-                        </ol>
-                    </div>`;
-
-                formatKunciHtml = `
-                    <div class="mt-8 pt-4 border-t-2 border-slate-800 break-before-page">
-                        <h3 class="font-bold text-center text-sm uppercase mb-4 text-slate-900">KUNCI JAWABAN & PEDOMAN PENSKORAN</h3>
-                        <h4 class="font-bold text-xs uppercase mb-2">KUNCI JAWABAN ISIAN SINGKAT:</h4>
-                        <ol class="list-decimal pl-5 text-xs space-y-1.5 text-slate-800">
-                            <li><strong>Pengertian ${babText}:</strong> Konsep/prinsip dasar dalam ${data.mapel || 'pembelajaran'} yang harus dipahami dan diamalkan.</li>
-                            <li><strong>Contoh Perilaku:</strong> Menerapkan aturan ${babText} saat kegiatan belajar di kelas.</li>
-                            <li><strong>Alasan Belajar:</strong> Untuk membentuk pemahaman yang benar dan sikap yang baik sesuai kaidah ${data.mapel || 'pembelajaran'}.</li>
-                            <li><strong>Manfaat:</strong> Mendapat ilmu yang bermanfaat dan terbiasa berbuat jujur/tertib.</li>
-                            <li><strong>Sikap Teman:</strong> Membantu menjelaskan dengan sopan atau mengajak belajar bersama.</li>
-                        </ol>
-                    </div>`;
-
-
-              
-
-              
-            } else if (isKelas46) {
-                // KELAS 4-6 SD/MI: 10 PG + 5 Isian Singkat
-                let pgList = '';
-                let pgKeys = [];
-                for (let i = 1; i <= 10; i++) {
-                    const item = buildContextualQuestion(i, babText, mapelText);
-                    pgKeys.push({ no: i, key: item.key });
-                    pgList += `
-                        <li class="mb-3">
-                            <p class="font-medium text-slate-800">${i}. ${item.q}</p>
-                            <div class="grid grid-cols-2 gap-x-4 gap-y-1 mt-1 pl-2 text-slate-700">
-                                <div>A. ${item.a}</div>
-                                <div>B. ${item.b}</div>
-                                <div>C. ${item.c}</div>
-                                <div>D. ${item.d}</div>
-                            </div>
-                        </li>`;
-                }
-
-                formatSoalHtml = `
-                    <div class="mb-5">
-                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">A. PILIHAN GANDA (10 SOAL)</h4>
-                        <ul class="space-y-1 text-xs">${pgList}</ul>
+            // KONTEN FALLBACK JIKA BELUM ADA API KEY
+            if (!apiKey) {
+                return `
+                    <div class="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded text-xs mb-4">
+                        💡 <strong>Petunjuk AI:</strong> Masukkan Gemini API Key di menu <strong>Pengaturan System</strong> untuk membuat soal AI otomatis real-time.
                     </div>
-                    <div class="mb-4">
-                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">B. SOAL ISIAN SINGKAT (5 SOAL)</h4>
-                        <ol class="list-decimal pl-5 space-y-3 text-justify text-xs">
-                            <li>Jelaskan secara ringkas hukum/konsep utama dari <strong>${babText}</strong>!</li>
-                            <li>Sebutkan 2 contoh penerapan <strong>${babText}</strong> dalam kegiatan sehari-hari!</li>
-                            <li>Mengapa materi <strong>${babText}</strong> sangat penting pada mata pelajaran <strong>${data.mapel || 'Mata Pelajaran'}</strong>?</li>
-                            <li>Apa dampak negatif jika seseorang mengabaikan prinsip <strong>${babText}</strong>?</li>
-                            <li>Tuliskan langkah konkret kamu dalam mempelajari <strong>${babText}</strong> agar mendapat nilai terbaik!</li>
-                        </ol>
-                    </div>`;
-
-                let pgGridHtml = '<table class="w-full text-xs border-collapse border border-slate-400 mb-4 text-center"><tr class="bg-slate-100 font-bold"><td class="border border-slate-400 p-1">No</td><td class="border border-slate-400 p-1">Kunci</td><td class="border border-slate-400 p-1">No</td><td class="border border-slate-400 p-1">Kunci</td></tr>';
-                for (let i = 0; i < 5; i++) {
-                    pgGridHtml += `<tr>
-                        <td class="border border-slate-400 p-1 font-semibold">${i+1}</td><td class="border border-slate-400 p-1">${pgKeys[i].key}</td>
-                        <td class="border border-slate-400 p-1 font-semibold">${i+6}</td><td class="border border-slate-400 p-1">${pgKeys[i+5].key}</td>
-                    </tr>`;
-                }
-                pgGridHtml += '</table>';
-
-                formatKunciHtml = `
-                    <div class="mt-8 pt-4 border-t-2 border-slate-800 break-before-page">
-                        <h3 class="font-bold text-center text-sm uppercase mb-4 text-slate-900">KUNCI JAWABAN & PEDOMAN PENSKORAN</h3>
-                        <h4 class="font-bold text-xs uppercase mb-2">A. KUNCI JAWABAN PILIHAN GANDA</h4>
-                        ${pgGridHtml}
-                        <h4 class="font-bold text-xs uppercase mb-2">B. KUNCI JAWABAN ISIAN SINGKAT</h4>
-                        <ol class="list-decimal pl-5 text-xs space-y-1.5 text-slate-800">
-                            <li><strong>Konsep Utama:</strong> Dasar aturan/kaidah ${babText} yang mengatur pemahaman materi ${data.mapel || 'pelajaran'}.</li>
-                            <li><strong>2 Contoh Penerapan:</strong> (1) Menjalankan aturan ${babText} di sekolah; (2) Mempraktikkannya di rumah.</li>
-                            <li><strong>Pentingnya Materi:</strong> Menjadi landasan utama pemahaman siswa pada mata pelajaran ${data.mapel || 'pelajaran'}.</li>
-                            <li><strong>Dampak Negatif:</strong> Terjadi kekeliruan pemahaman dan kesalahan amalan/penerapan.</li>
-                            <li><strong>Langkah Konkret:</strong> Membaca referensi secara rutin dan bertanya pada guru jika mengalami kesulitan.</li>
-                        </ol>
-                    </div>`;
-
-            } else {
-                // KELAS 7-12 SMP/MTs/SMA/MA: 40 PG + 10 Essay Analitis
-                let pgList40 = '';
-                let pgKeys = [];
-                for (let i = 1; i <= 40; i++) {
-                    const item = buildContextualQuestion(i, babText, mapelText);
-                    pgKeys.push({ no: i, key: item.key });
-                    pgList40 += `
-                        <li class="mb-3 break-inside-avoid">
-                            <p class="font-medium text-slate-800">${i}. ${item.q}</p>
-                            <div class="grid grid-cols-2 gap-x-4 gap-y-1 mt-1 pl-2 text-slate-700">
-                                <div>A. ${item.a}</div>
-                                <div>B. ${item.b}</div>
-                                <div>C. ${item.c}</div>
-                                <div>D. ${item.d}</div>
-                            </div>
-                        </li>`;
-                }
-
-                const generateEssay = (index, bab, mapel) => {
-                    const essayTemplates = [
-                        `Jelaskan pengertian secara bahasa dan istilah dari materi <strong>${bab}</strong> serta landasan utama dalam pembelajaran <strong>${mapel}</strong>!`,
-                        `Bagaimana strategi konkret seorang siswa dalam menerapkan nilai-nilai <strong>${bab}</strong> di lingkungan sekolah dan keluarga?`,
-                        `Analisislah dampak positif yang timbul apabila suatu kelompok masyarakat konsisten memegang teguh prinsip <strong>${bab}</strong>!`,
-                        `Sebutkan dan jelaskan 3 bentuk tantangan atau hambatan utama dalam mempertahankan sikap <strong>${bab}</strong> di era digital saat ini!`,
-                        `Berikan sebuah contoh studi kasus nyata tentang pelanggaran terhadap nilai <strong>${bab}</strong>, lalu tuliskan solusi penyelesaiannya menurut pandangan <strong>${mapel}</strong>!`,
-                        `Mengapa pembiasaan materi <strong>${bab}</strong> harus dipupuk sejak dini? Jelaskan alasannya dari sudut pandang pembentukan karakter siswa!`,
-                        `Bagaimana hubungan korelasi antara pemahaman materi <strong>${bab}</strong> dengan peningkatan kualitas ibadah/perilaku sosial sehari-hari?`,
-                        `Bandingkan perbedaan antara orang yang memiliki komitmen terhadap <strong>${bab}</strong> dengan orang yang mengabaikannya!`,
-                        `Tuliskan sebuah refleksi diri singkat mengenai sejauh mana kamu telah menerapkan prinsip <strong>${bab}</strong> dalam kehidupanmu sendiri!`,
-                        `Buatlah sebuah rancangan program aksi sederhana (action plan) yang bisa kamu lakukan di kelas untuk mengajak teman-temanmu membiasakan nilai <strong>${bab}</strong>!`
-                    ];
-                    return essayTemplates[(index - 1) % essayTemplates.length];
-                };
-
-                let essayList10 = '';
-                for (let i = 1; i <= 10; i++) {
-                    essayList10 += `
-                        <li class="mb-3 text-justify">
-                            ${generateEssay(i, babText, data.mapel || 'Mata Pelajaran')}
-                        </li>`;
-                }
-
-                formatSoalHtml = `
-                    <div class="mb-6">
-                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">A. PILIHAN GANDA (40 SOAL)</h4>
-                        <ul class="text-xs space-y-1">${pgList40}</ul>
-                    </div>
-                    <div class="mb-4">
-                        <h4 class="font-bold text-slate-900 border-b pb-1 mb-3 text-xs uppercase">B. SOAL ESSAY / URAIAN (10 SOAL)</h4>
-                        <ol class="list-decimal pl-5 space-y-2 text-xs">${essayList10}</ol>
-                    </div>`;
-
-                // Tabel Grid Kunci Jawaban 4 Kolom (1-10, 11-20, 21-30, 31-40)
-                let pgGridHtml = '<table class="w-full text-xs border-collapse border border-slate-400 mb-4 text-center"><tr class="bg-slate-100 font-bold"><td class="border border-slate-400 p-1">No</td><td class="border border-slate-400 p-1">Kunci</td><td class="border border-slate-400 p-1">No</td><td class="border border-slate-400 p-1">Kunci</td><td class="border border-slate-400 p-1">No</td><td class="border border-slate-400 p-1">Kunci</td><td class="border border-slate-400 p-1">No</td><td class="border border-slate-400 p-1">Kunci</td></tr>';
-                for (let i = 0; i < 10; i++) {
-                    pgGridHtml += `<tr>
-                        <td class="border border-slate-400 p-1 font-semibold">${i+1}</td><td class="border border-slate-400 p-1">${pgKeys[i].key}</td>
-                        <td class="border border-slate-400 p-1 font-semibold">${i+11}</td><td class="border border-slate-400 p-1">${pgKeys[i+10].key}</td>
-                        <td class="border border-slate-400 p-1 font-semibold">${i+21}</td><td class="border border-slate-400 p-1">${pgKeys[i+20].key}</td>
-                        <td class="border border-slate-400 p-1 font-semibold">${i+31}</td><td class="border border-slate-400 p-1">${pgKeys[i+30].key}</td>
-                    </tr>`;
-                }
-                pgGridHtml += '</table>';
-
-                const essayKeys = [
-                    `<strong>Pengertian ${babText}:</strong> Secara bahasa berarti ketetapan/kaidah; secara istilah adalah prinsip utama dalam ${data.mapel || 'pembelajaran'} yang menjadi panduan sikap/kegiatan.`,
-                    `<strong>Strategi Konkret:</strong> Membiasakan kedisiplinan di sekolah, menjalankan tugas dengan penuh rasa tanggung jawab, dan menerapkan nasihat di rumah.`,
-                    `<strong>Dampak Positif:</strong> Terciptanya keharmonisan, meningkatnya rasa saling percaya, dan terwujudnya lingkungan belajar yang tertib.`,
-                    `<strong>3 Tantangan Era Digital:</strong> (1) Maraknya informasi hoaks/konten negatif; (2) Pengaruh budaya serba instan; (3) Minimnya literasi dan filter diri.`,
-                    `<strong>Studi Kasus & Solusi:</strong> Contoh: Mengabaikan tugas/janji. Solusi: Melakukan edukasi berulang dan evaluasi disiplin secara berkala.`,
-                    `<strong>Pembentukan Karakter:</strong> Pembiasaan sejak dini membentuk integritas moral dan fondasi kepribadian yang kuat hingga dewasa.`,
-                    `<strong>Korelasi Pemahaman:</strong> Semakin tinggi pemahaman terhadap ${babText}, semakin meningkat kualitas perilaku dan kepatuhan aturan.`,
-                    `<strong>Perbandingan Perilaku:</strong> Orang yang komitmen akan konsisten dan dipercaya, sedangkan yang mengabaikan cenderung tidak stabil dan merugikan lingkungan.`,
-                    `<strong>Refleksi Diri:</strong> Penilaian mandiri atas konsistensi penerapan ${babText} dalam kehidupan sehari-hari.`,
-                    `<strong>Rancangan Program Aksi:</strong> Membuat gerakan "Gerakan Pembiasaan ${babText}" di kelas dengan jadwal piket/pengawasan mandiri.`
-                ];
-
-                let essayKeysHtml = '<ol class="list-decimal pl-5 text-xs space-y-2 text-slate-800 text-justify">';
-                essayKeys.forEach((k) => {
-                    essayKeysHtml += `<li class="mb-1">${k}</li>`;
-                });
-                essayKeysHtml += '</ol>';
-
-                formatKunciHtml = `
-                    <div class="mt-8 pt-4 border-t-2 border-slate-800 break-before-page">
-                        <h3 class="font-bold text-center text-sm uppercase mb-4 text-slate-900">KUNCI JAWABAN & PEDOMAN PENSKORAN</h3>
-                        <h4 class="font-bold text-xs uppercase mb-2">A. KUNCI JAWABAN PILIHAN GANDA (40 SOAL)</h4>
-                        ${pgGridHtml}
-                        <h4 class="font-bold text-xs uppercase mb-2 mt-4">B. KUNCI JAWABAN ESSAY / URAIAN (10 SOAL)</h4>
-                        ${essayKeysHtml}
-                    </div>`;
+                    <div class="mb-4 font-bold text-slate-800">A. SOAL ${jenisAsesmen.toUpperCase()} (TEMPLATE LOKAL)</div>
+                    <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700">
+                        <li>Jelaskan pemahaman dasar mengenai materi <strong>${babNama}</strong> dalam mata pelajaran${mapelNama}!</li>
+                        <li>Sebutkan 3 contoh penerapan nyata dari <strong>${babNama}</strong> di kehidupan sehari-hari!</li>
+                        <li>Mengapa sikap <strong>${babNama}</strong> sangat penting diterapkan dalam lingkungan sekolah?</li>
+                    </ol>
+                `;
             }
 
+            // DUKUNGAN UNTUK API KEY FORMAT AQ... DAN AIza...
+            let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+            let headers = { 'Content-Type': 'application/json' };
+
+            if (apiKey.startsWith('AQ')) {
+                headers['Authorization'] = `Bearer ${apiKey}`;
+            } else {
+                url += `?key=${apiKey}`;
+            }
+
+            const promptText = `
+                Kamu adalah pakar pembuat soal Kurikulum Merdeka. 
+                Buatkan instrumen asesmen pembelajaran untuk:
+                - Mata Pelajaran: ${mapelNama}
+                - Kelas/Fase: ${kelasNama}
+                - Topik/Bab: ${babNama}
+                - Jenis Asesmen: ${jenisAsesmen}
+
+                Ketentuan Soal:
+                1. Jika Jenis Asesmen adalah "Pilihan Ganda", buatkan 5 soal pilihan ganda (opsi A, B, C, D) lengkap dengan Kunci Jawaban.
+                2. Jika Jenis Asesmen adalah "Essay / Uraian", buatkan 5 soal uraian HOTS lengkap dengan Kunci Jawaban & Rubrik Penskoran.
+                3. Format output harus menggunakan HTML sederhana tanpa markdown codeblock (tanpa \`\`\`html). Gunakan tag <h3>, <ol>, <li>, <p>, dan <strong> agar rapi.
+            `;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: promptText }] }]
+                    })
+                });
+
+                const resultData = await response.json();
+
+                if (resultData.error) {
+                    return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Gagal AI: ${resultData.error.message}</div>`;
+                }
+
+                let generatedText = resultData.candidates[0].content.parts[0].text;
+                generatedText = generatedText.replace(/```html/g, '').replace(/```/g, '');
+                return generatedText;
+            } catch (err) {
+                return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Koneksi Error: Gagal terhubung ke Gemini API.</div>`;
+            }
+        }
+
+        // JALANKAN PEMANGGILAN DAN UPDATE PREVIEW
+        fetchGeminiAsesmen().then(aiContent => {
             previewBox.innerHTML = `
                 <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
                     <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR ASESMEN / EVALUASI PEMBELAJARAN</h2>
-                    <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${mapelText} | ${(data.fase || '').toUpperCase()}</p>
-                    <p class="text-xs text-slate-600 mt-0.5">Topik / Bab: ${babText} | Semester: ${semesterAktif} | TP: 2026/2027</p>
+                    <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || '').toUpperCase()} | ${(data.fase || '').toUpperCase()}</p>
+                    <p class="text-slate-600 italic text-xs">Topik / Bab: ${babNama} | Semester: ${data.semester || 'Ganjil'} | TP: ${data.tahun || '2026/2027'}</p>
                 </div>
 
-                <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-4 flex items-center gap-1.5">
-                    <span>5. INSTRUMEN ASESMEN SUMATIF / FORMATIF</span>
+                <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-4">
+                    5. INSTRUMEN ASESMEN (${jenisAsesmen.toUpperCase()})
                 </div>
 
-                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs mb-4 grid grid-cols-2 gap-2">
-                    <p><strong>Nama Siswa:</strong> ...........................................................</p>
-                    <p><strong>Kelas / Semester:</strong> ${(data.fase || '').replace('Fase ', '')} / ${semesterAktif}</p>
-                    <p><strong>Hari / Tanggal:</strong> ...........................................................</p>
-                    <p><strong>Nilai / Paraf Guru:</strong> ...........................................................</p>
+                <div class="prose max-w-none text-xs text-slate-800 space-y-3 leading-relaxed mb-6">
+                    ${aiContent}
                 </div>
 
-                <div class="text-xs text-slate-800 leading-relaxed mb-6">
-                    ${formatSoalHtml}
-                </div>
-
-                ${formatKunciHtml}
-
-   <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse;">
-    <tr style="border: none;">
-        <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
-            <p style="margin: 0;">Mengetahui,</p>
-            <p style="margin: 0; font-weight: 600;">Kepala Sekolah / Madrasah</p>
-            <p style="margin: 0;"><br><br><br><br></p>
-            <p style="margin: 0; font-weight: bold; text-decoration: underline;">${namaKepala}</p>
-            <p style="margin: 0;">NIP. ${nipKepala}</p>
-        </td>
-        <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
-            <p style="margin: 0;">Dibuat Oleh,</p>
-            <p style="margin: 0; font-weight: 600;">Guru Mata Pelajaran</p>
-            <p style="margin: 0;"><br><br><br><br></p>
-            <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.guru || '-'}</p>
-            <p style="margin: 0;">NIP. ${nipGuru}</p>
-        </td>
-    </tr>
-</table>
-           `;
+                <!-- LEMBAR PENGESAHAN DINAMIS TAB 5 -->
+                <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse; page-break-inside: avoid;">
+                    <tr style="border: none;">
+                        <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
+                            <p style="margin: 0;">Mengetahui,</p>
+                            <p style="margin: 0; font-weight: 600;">Kepala Sekolah / Madrasah</p>
+                            <p style="margin: 0;"><br><br><br><br></p>
+                            <p style="margin: 0; font-weight: bold; text-decoration: underline;">${namaKepala}</p>
+                            <p style="margin: 0;">NIP. ${nipKepala}</p>
+                        </td>
+                        <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
+                            <p style="margin: 0;">Dibuat Oleh,</p>
+                            <p style="margin: 0; font-weight: 600;">Guru Mata Pelajaran</p>
+                            <p style="margin: 0;"><br><br><br><br></p>
+                            <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.guru || '-'}</p>
+                            <p style="margin: 0;">NIP. ${nipGuru}</p>
+                        </td>
+                    </tr>
+                </table>
+                `;
        
-} else if (tabName === 'remedial') {
+
+        // ==========================================
+        // TAB 6: REMEDIAL & PENGAYAAN
+        // ==========================================
+        } else if (tabName === 'remedial') {
         previewBox.innerHTML = `
             <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
                 <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR PROGRAM REMEDIAL & PENGAYAAN</h2>
