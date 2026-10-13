@@ -1790,53 +1790,69 @@ function switchTabModul(tabName) {
         const mapelNama = data.mapel || 'MATA PELAJARAN';
         const babNama = data.bab || 'TOPIK / BAB';
         const kelasNama = data.fase || 'Kelas VII';
+        
+        // Cek apakah sudah ada hasil AI yang tersimpan di memori lokal
+        const cacheKey = `asesmen_${mapelNama}_${babNama}_${jenisAsesmen}`;
+        const cachedContent = localStorage.getItem(cacheKey);
 
-        // TAMPILAN LOADING
-        previewBox.innerHTML = `
-            <div class="text-center py-12">
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-indigo-600 border-t-transparent mb-3"></div>
-                <h3 class="font-bold text-slate-800 text-sm">Sedang Meracik Soal dengan Gemini AI...</h3>
-                <p class="text-xs text-slate-500 mt-1">Menyusun soal ${jenisAsesmen} materi <strong>${babNama}</strong></p>
+        const renderHTML = (content) => `
+            <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+                <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR ASESMEN / EVALUASI PEMBELAJARAN</h2>
+                <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || '').toUpperCase()} | ${(data.fase || '').toUpperCase()}</p>
+                <p class="text-slate-600 italic text-xs">Topik / Bab: ${babNama} | Semester: ${data.semester || 'Ganjil'} | TP: ${data.tahun || '2026/2027'}</p>
             </div>
-        `;
 
-        // PANGGIL AI DAN RENDER
-        fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama).then(aiContent => {
-            previewBox.innerHTML = `
-                <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
-                    <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR ASESMEN / EVALUASI PEMBELAJARAN</h2>
-                    <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || '').toUpperCase()} | ${(data.fase || '').toUpperCase()}</p>
-                    <p class="text-slate-600 italic text-xs">Topik / Bab: ${babNama} | Semester: ${data.semester || 'Ganjil'} | TP: ${data.tahun || '2026/2027'}</p>
-                </div>
-
-                <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit mb-4">
+            <div class="flex items-center justify-between mb-4">
+                <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase">
                     5. INSTRUMEN ASESMEN (${jenisAsesmen.toUpperCase()})
                 </div>
+                <button onclick="generateSoalAIMAanual('${jenisAsesmen}', '${mapelNama}', '${babNama}', '${kelasNama}', '${cacheKey}')" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1 rounded font-medium transition">
+                    🔄 Generate Ulang Soal AI
+                </button>
+            </div>
 
-                <div class="prose max-w-none text-xs text-slate-800 space-y-3 leading-relaxed mb-6">
-                    ${aiContent}
+            <div id="ai-content-box" class="prose max-w-none text-xs text-slate-800 space-y-3 leading-relaxed mb-6">
+                ${content}
+            </div>
+
+            <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse; page-break-inside: avoid;">
+                <tr style="border: none;">
+                    <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
+                        <p style="margin: 0;">Mengetahui,</p>
+                        <p style="margin: 0; font-weight: 600;">Kepala Sekolah / Madrasah</p>
+                        <p style="margin: 0;"><br><br><br><br></p>
+                        <p style="margin: 0; font-weight: bold; text-decoration: underline;">${namaKepala}</p>
+                        <p style="margin: 0;">NIP. ${nipKepala}</p>
+                    </td>
+                    <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
+                        <p style="margin: 0;">Dibuat Oleh,</p>
+                        <p style="margin: 0; font-weight: 600;">Guru Mata Pelajaran</p>
+                        <p style="margin: 0;"><br><br><br><br></p>
+                        <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.guru || '-'}</p>
+                        <p style="margin: 0;">NIP. ${nipGuru}</p>
+                    </td>
+                </tr>
+            </table>
+        `;
+
+        // Jika sudah ada simpanan, pakai simpanan (Hemat Kuota)
+        if (cachedContent) {
+            previewBox.innerHTML = renderHTML(cachedContent);
+        } else {
+            // Jika belum ada, tampilkan template lokal dan tombol generate
+            previewBox.innerHTML = renderHTML(`
+                <div class="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded text-xs mb-4">
+                    💡 Klik tombol <strong>"Generate Ulang Soal AI"</strong> di atas jika ingin meracik soal otomatis via Gemini AI.
                 </div>
-
-                <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse; page-break-inside: avoid;">
-                    <tr style="border: none;">
-                        <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
-                            <p style="margin: 0;">Mengetahui,</p>
-                            <p style="margin: 0; font-weight: 600;">Kepala Sekolah / Madrasah</p>
-                            <p style="margin: 0;"><br><br><br><br></p>
-                            <p style="margin: 0; font-weight: bold; text-decoration: underline;">${namaKepala}</p>
-                            <p style="margin: 0;">NIP. ${nipKepala}</p>
-                        </td>
-                        <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
-                            <p style="margin: 0;">Dibuat Oleh,</p>
-                            <p style="margin: 0; font-weight: 600;">Guru Mata Pelajaran</p>
-                            <p style="margin: 0;"><br><br><br><br></p>
-                            <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.guru || '-'}</p>
-                            <p style="margin: 0;">NIP. ${nipGuru}</p>
-                        </td>
-                    </tr>
-                </table>
-            `;
-        });
+                <div class="mb-4 font-bold text-slate-800">A. SOAL ${jenisAsesmen.toUpperCase()} (TEMPLATE LOKAL)</div>
+                <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700">
+                    <li>Jelaskan pemahaman dasar mengenai materi <strong>${babNama}</strong> dalam mata pelajaran ${mapelNama}!</li>
+                    <li>Sebutkan 3 contoh penerapan nyata dari <strong>${babNama}</strong> di kehidupan sehari-hari!</li>
+                    <li>Mengapa sikap <strong>${babNama}</strong> sangat penting diterapkan dalam lingkungan sekolah?</li>
+                </ol>
+            `);
+        }
+    }
        
 
         // ==========================================
@@ -2372,7 +2388,24 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
         return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Koneksi Error: Gagal terhubung ke Gemini API.</div>`;
     }
 }
-  
+
+
+// FUNGSI PEMICU MANUAL & CACHING (HEMAT KUOTA)
+async function generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey) {
+    const box = document.getElementById('ai-content-box');
+    if (box) {
+        box.innerHTML = `<div class="text-center py-6 text-indigo-600 font-bold">Sedang memproses soal baru via Gemini AI...</div>`;
+    }
+    const result = await fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama);
+    
+    // Simpan ke localStorage agar tidak panggil API berulang kali
+    localStorage.setItem(cacheKey, result);
+    
+    if (box) {
+        box.innerHTML = result;
+    }
+}
+    
     </script>
 </body>
 </html>
