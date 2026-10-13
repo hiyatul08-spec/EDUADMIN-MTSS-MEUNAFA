@@ -2311,7 +2311,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // FUNGSI GLOBAL GEMINI AI (BERDIRI SENDIRI)
 async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
     const savedSettings = JSON.parse(localStorage.getItem('eduSettings') || '{}');
-    const apiKey = (savedSettings.apiKey || document.getElementById('geminiApiKey')?.value || '').trim();
+    let apiKey = (savedSettings.apiKey || localStorage.getItem('cfgApiKey') || '').trim();
 
     if (!apiKey) {
         return `
@@ -2330,6 +2330,7 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
     let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
     let headers = { 'Content-Type': 'application/json' };
 
+    // DETEKSI FORMAT KEY: AQ (OAuth Bearer Token) vs AIza (API Key)
     if (apiKey.startsWith('AQ')) {
         headers['Authorization'] = `Bearer ${apiKey}`;
     } else {
@@ -2346,8 +2347,8 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
 
         Ketentuan Soal:
         1. Jika Jenis Asesmen adalah "Pilihan Ganda", buatkan 5 soal pilihan ganda (opsi A, B, C, D) lengkap dengan Kunci Jawaban.
-        2. Jika Jenis Asesmen adalah "Essay / Uraian", buatkan 5 soal uraian HOTS lengkap dengan Kunci Jawaban & Rubrik Penskoran.
-        3. Format output harus menggunakan HTML sederhana tanpa markdown codeblock. Gunakan tag <h3>, <ol>, <li>, <p>, dan <strong> agar rapi.
+        2. Jika Jenis Asesmen adalah "Essay / Uraian" atau "Isian Singkat", buatkan 5 soal HOTS lengkap dengan Kunci Jawaban.
+        3. Format output wajib HTML sederhana (Gunakan tag <h3>, <ol>, <li>, <p>, <strong>) tanpa markdown codeblock.
     `;
 
     try {
