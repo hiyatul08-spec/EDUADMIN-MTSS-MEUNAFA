@@ -2354,16 +2354,16 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
         `;
     }
 
-let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
-    let headers = { 'Content-Type': 'application/json' };
+// Ambil API Key dari localStorage atau gunakan fallback default
+apiKey = localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6KxDz5AAnwFnHY5kMEVJZq2nhVM2q56VCULnFTMZ0FZaA';
 
-    apiKey = localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6KxDz5AAnwFnHY5kMEVJZq2nhVM2q56VCULnFTMZ0FZaA';
+// URL Endpoint Gemini API dengan query parameter ?key=
+let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
-    if (apiKey.startsWith('AQ')) {
-        headers['Authorization'] = `Bearer ${apiKey}`;
-    } else {
-        url += `?key=${apiKey}`;
-    }
+// Header tidak memerlukan Authorization Bearer
+let headers = { 
+    'Content-Type': 'application/json' 
+};
 
   
     const promptText = `
