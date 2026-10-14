@@ -2354,16 +2354,40 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
         `;
     }
 
-// Ambil API Key dari localStorage atau gunakan fallback default
-apiKey = localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6KxDz5AAnwFnHY5kMEVJZq2nhVM2q56VCULnFTMZ0FZaA';
+// 1. Ambil API Key dan bersihkan dari spasi/karakter tak terlihat
+let apiKey = (localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6KxDz5AAnwFnHY5kMEVJZq2nhVM2q56VCULnFTMZ0FZaA').trim();
 
-// URL Endpoint Gemini API dengan query parameter ?key=
-let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+// 2. Pastikan Endpoint menggunakan model yang valid dan parameter ?key=
+let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
 
-// Header tidak memerlukan Authorization Bearer
-let headers = { 
-    'Content-Type': 'application/json' 
-};
+// 3. Eksekusi Request
+try {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      contents: [{
+        parts: [{ text: promptText }]
+      }]
+    })
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    console.error('Error Response:', data);
+    alert(`Gagal AI (${response.status}): ${data.error?.message || 'Terjadi kesalahan'}`);
+  } else {
+    // Berhasil - Ambil hasil teks dari Gemini
+    const resultText = data.candidates[0].content.parts[0].text;
+    console.log('Hasil AI:', resultText);
+  }
+} catch (err) {
+  console.error('Network/Fetch Error:', err);
+  alert('Gagal menghubungi server Gemini API. Periksa koneksi atau API Key.');
+}
 
   
     const promptText = `
