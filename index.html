@@ -2429,21 +2429,22 @@ async function generateSoalAI() {
 
   
 // FUNGSI PEMICU MANUAL & CACHING (HEMAT KUOTA)
-async function generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey) {
+async function generateSoalAIManual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey) {
     const box = document.getElementById('ai-content-box');
     if (box) {
-        box.innerHTML = `<div class="text-center py-6 text-indigo-600 font-bold">Sedang memproses soal baru via Gemini AI...</div>`;
+        box.innerHTML = '<div class="text-center py-6 text-indigo-600 font-bold">Sedang memproses soal baru via Gemini AI...</div>';
     }
+
     const result = await fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama);
-    
+
     // Simpan ke localStorage agar tidak panggil API berulang kali
     localStorage.setItem(cacheKey, result);
-    
+
     if (box) {
         box.innerHTML = result;
     }
-}
-    
-    </script>
+} // <-- Kurung penutup fungsi ini yang tadi hilang!
+
+</script>
 </body>
 </html>
