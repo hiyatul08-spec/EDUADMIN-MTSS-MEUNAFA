@@ -2354,7 +2354,18 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
         `;
     }
 
-const promptText = `
+// ---------------------------------------------------
+// GENERATE SOAL
+// ---------------------------------------------------
+async function generateSoalAI() {
+    // 1. Ambil data dari form input halaman web
+    const mapelNama = document.getElementById('mapelSelect')?.value || 'Al-Qur\'an Hadis';
+    const kelasNama = document.getElementById('kelasSelect')?.value || 'VII A';
+    const babNama = document.getElementById('babInput')?.value || 'JUJUR';
+    const jenisAsesmen = document.getElementById('jenisAsesmenSelect')?.value || 'Pilihan Ganda (PG)';
+
+    // 2. Susun prompt sesuai kebutuhan instrumen asesmen
+    const promptText = `
         Kamu adalah pakar pembuat soal Kurikulum Merdeka. 
         Buatkan instrumen asesmen pembelajaran untuk:
         - Mata Pelajaran: ${mapelNama}
@@ -2363,13 +2374,20 @@ const promptText = `
         - Jenis Asesmen: ${jenisAsesmen}
 
         Ketentuan Soal:
-        1. Jika Jenis Asesmen adalah "Pilihan Ganda", buatkan 5 soal pilihan ganda (opsi A, B, C, D) lengkap dengan Kunci Jawaban.
+        1. Jika Jenis Asesmen adalah "Pilihan Ganda", buatkan 5 soal pilihan ganda (opsi A, B, C, D) lengkap dengan Kunci Jawaban di bagian bawah.
         2. Jika Jenis Asesmen adalah "Essay / Uraian" atau "Isian Singkat", buatkan 5 soal HOTS lengkap dengan Kunci Jawaban.
-        3. Format output wajib HTML sederhana (Gunakan tag <h3>, <ol>, <li>, <p>, <strong>) tanpa markdown codeblock.
+        3. Format output wajib berupa struktur HTML sederhana (gunakan tag <h3>, <ol>, <li>, <p>, <strong>) dan DILARANG menggunakan tanda markdown seperti \`\`\`html atau \`\`\`.
     `;
 
-    apiKey = (localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6KxDz5AAnwFnHY5kMEVJZq2nhVM2q56VCULnFTMZ0F2aA').trim();
-    let url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    // 3. Elemen container tempat hasil soal akan ditampilkan di layar
+    const containerHasil = document.getElementById('areaHasilSoal') || document.querySelector('.lembar-asesmen-content');
+    if (containerHasil) {
+        containerHasil.innerHTML = '<div class="p-4 text-center text-blue-600">⏳ Sedang membuat soal asesmen dengan AI... Mohon tunggu.</div>';
+    }
+
+    // 4. Ambil API Key dari localStorage atau default
+    const apiKey = (localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6KxDz5AAnwFnHY5kMEVJZq2nhVM2q56VCULnFTMZ0F2aA').trim();
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
     try {
         const response = await fetch(url, {
@@ -2385,16 +2403,27 @@ const promptText = `
         const resultData = await response.json();
 
         if (!response.ok || resultData.error) {
-            console.error('Error AI:', resultData);
-            return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Gagal AI: ${resultData.error?.message || 'Terjadi kesalahan'}</div>`;
+            console.error('Error Gemini API:', resultData);
+            const errorMsg = `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Gagal AI: ${resultData.error?.message || 'Terjadi kesalahan saat memproses'}</div>`;
+            if (containerHasil) containerHasil.innerHTML = errorMsg;
+            return errorMsg;
         }
 
+        // 5. Bersihkan hasil dari markdown codeblock dan tampilkan ke layar
         let generatedText = resultData.candidates[0].content.parts[0].text;
-        return generatedText.replace(/```html/g, '').replace(/```/g, '');
+        generatedText = generatedText.replace(/```html/gi, '').replace(/```/gi, '').trim();
+
+        if (containerHasil) {
+            containerHasil.innerHTML = generatedText;
+        }
+
+        return generatedText;
 
     } catch (err) {
         console.error('Fetch Error:', err);
-        return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Koneksi Error: Gagal terhubung ke Gemini API.</div>`;
+        const netErrorMsg = `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Koneksi Error: Gagal terhubung ke Gemini API. Periksa koneksi internet Anda.</div>`;
+        if (containerHasil) containerHasil.innerHTML = netErrorMsg;
+        return netErrorMsg;
     }
 }
 
