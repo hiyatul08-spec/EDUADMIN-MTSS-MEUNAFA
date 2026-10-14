@@ -2354,8 +2354,18 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
         `;
     }
 
+let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+    let headers = { 'Content-Type': 'application/json' };
 
-  // 1. Definisikan promptText LEBIH DULU
+    apiKey = localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6KxDz5AAnwFnHY5kMEVJZq2nhVM2q56VCULnFTMZ0FZaA';
+
+    if (apiKey.startsWith('AQ')) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
+    } else {
+        url += `?key=${apiKey}`;
+    }
+
+  
     const promptText = `
         Kamu adalah pakar pembuat soal Kurikulum Merdeka. 
         Buatkan instrumen asesmen pembelajaran untuk:
@@ -2370,20 +2380,10 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
         3. Format output wajib HTML sederhana (Gunakan tag <h3>, <ol>, <li>, <p>, <strong>) tanpa markdown codeblock.
     `;
 
-  
-    // 2. Ambil API Key dan bersihkan dari spasi
-    apiKey = (localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6KxDz5AAnwFnHY5kMEVJZq2nhVM2q56VCULnFTMZ0FZaA').trim();
-
-    // 3. Endpoint Gemini API
-    let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
-
-    // 4. Eksekusi Request HANYA SATU KALI
     try {
         const response = await fetch(url, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: headers,
             body: JSON.stringify({
                 contents: [{ parts: [{ text: promptText }] }]
             })
@@ -2391,23 +2391,18 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
 
         const resultData = await response.json();
 
-        if (!response.ok || resultData.error) {
-            console.error('Error AI:', resultData);
-            return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Gagal AI: ${resultData.error?.message || 'Terjadi kesalahan pada respon server'}</div>`;
+        if (resultData.error) {
+            return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Gagal AI: ${resultData.error.message}</div>`;
         }
 
-        // Ambil hasil teks dan bersihkan jika ada markdown html
         let generatedText = resultData.candidates[0].content.parts[0].text;
         return generatedText.replace(/```html/g, '').replace(/```/g, '');
-
     } catch (err) {
-        console.error('Fetch Error:', err);
         return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Koneksi Error: Gagal terhubung ke Gemini API.</div>`;
     }
 }
-  
 
-    
+
 // FUNGSI PEMICU MANUAL & CACHING (HEMAT KUOTA)
 async function generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey) {
     const box = document.getElementById('ai-content-box');
