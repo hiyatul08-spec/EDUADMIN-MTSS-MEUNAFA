@@ -2428,7 +2428,62 @@ async function generateSoalAI() {
 }
 
   
-// FUNGSI PEMICU MANUAL & CACHING (HEMAT KUOTA)
+// --------------------------------------------------
+// GENERATE SOAL AI
+// --------------------------------------------------
+async function generateSoalAI() {
+    const mapelNama = document.getElementById('mapelSelect')?.value || 'Al-Qur\'an Hadis';
+    const kelasNama = document.getElementById('kelasSelect')?.value || 'VII A';
+    const babNama = document.getElementById('babInput')?.value || 'JUJUR';
+    const jenisAsesmen = document.getElementById('jenisAsesmenSelect')?.value || 'Pilihan Ganda (PG)';
+
+    const promptText = `
+        Kamu adalah pakar pembuat soal Kurikulum Merdeka. 
+        Buatkan instrumen asesmen pembelajaran untuk:
+        - Mata Pelajaran: ${mapelNama}
+        - Kelas/Fase: ${kelasNama}
+        - Topik/Bab: ${babNama}
+        - Jenis Asesmen: ${jenisAsesmen}
+
+        Ketentuan Soal:
+        1. Jika Jenis Asesmen adalah "Pilihan Ganda", buatkan 5 soal pilihan ganda (opsi A, B, C, D) lengkap dengan Kunci Jawaban.
+        2. Jika Jenis Asesmen adalah "Essay / Uraian" atau "Isian Singkat", buatkan 5 soal HOTS lengkap dengan Kunci Jawaban.
+        3. Format output wajib HTML sederhana (Gunakan tag <h3>, <ol>, <li>, <p>, <strong>) tanpa markdown codeblock.
+    `;
+
+    const apiKey = (localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6KxDz5AAnwFnHY5kMEVJZq2nhVM2q56VCULnFTMZ0F2aA').trim();
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: promptText }] }]
+            })
+        });
+
+        const resultData = await response.json();
+
+        if (!response.ok || resultData.error) {
+            console.error('Error Gemini API:', resultData);
+            return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Gagal AI: ${resultData.error?.message || 'Terjadi kesalahan'}</div>`;
+        }
+
+        let generatedText = resultData.candidates[0].content.parts[0].text;
+        return generatedText.replace(/```html/gi, '').replace(/```/gi, '').trim();
+
+    } catch (err) {
+        console.error('Fetch Error:', err);
+        return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Koneksi Error: Gagal terhubung ke Gemini API.</div>`;
+    }
+}
+
+// --------------------------------------------------
+// FUNGSI PEMICU MANUAL & CACHING
+// --------------------------------------------------
 async function generateSoalAIManual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey) {
     const box = document.getElementById('ai-content-box');
     if (box) {
@@ -2437,13 +2492,12 @@ async function generateSoalAIManual(jenisAsesmen, mapelNama, babNama, kelasNama,
 
     const result = await fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama);
 
-    // Simpan ke localStorage agar tidak panggil API berulang kali
     localStorage.setItem(cacheKey, result);
 
     if (box) {
         box.innerHTML = result;
     }
-} // <-- Kurung penutup fungsi ini yang tadi hilang!
+}
 
 </script>
 </body>
