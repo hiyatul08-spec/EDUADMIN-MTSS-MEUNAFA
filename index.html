@@ -2354,42 +2354,49 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
         `;
     }
 
-// 1. Ambil API Key tanpa spasi
-apiKey = (localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6KxDz5AAnwFnHY5kMEVJZq2nhVM2q56VCULnFTMZ0FZaA').trim();
+const promptText = `
+        Kamu adalah pakar pembuat soal Kurikulum Merdeka. 
+        Buatkan instrumen asesmen pembelajaran untuk:
+        - Mata Pelajaran: ${mapelNama}
+        - Kelas/Fase: ${kelasNama}
+        - Topik/Bab: ${babNama}
+        - Jenis Asesmen: ${jenisAsesmen}
 
-// 2. Gunakan Endpoint v1 Resmi (Bukan v1beta)
-let url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        Ketentuan Soal:
+        1. Jika Jenis Asesmen adalah "Pilihan Ganda", buatkan 5 soal pilihan ganda (opsi A, B, C, D) lengkap dengan Kunci Jawaban.
+        2. Jika Jenis Asesmen adalah "Essay / Uraian" atau "Isian Singkat", buatkan 5 soal HOTS lengkap dengan Kunci Jawaban.
+        3. Format output wajib HTML sederhana (Gunakan tag <h3>, <ol>, <li>, <p>, <strong>) tanpa markdown codeblock.
+    `;
 
-// 3. Pastikan Header HANYA Content-Type
-try {
-    const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            contents: [{
-                parts: [{ text: promptText }]
-            }]
-        })
-    });
+    apiKey = (localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6KxDz5AAnwFnHY5kMEVJZq2nhVM2q56VCULnFTMZ0F2aA').trim();
+    let url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
-    const resultData = await response.json();
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: promptText }] }]
+            })
+        });
 
-    if (!response.ok) {
-        console.error('Error Response:', resultData);
-        alert(`Error AI (${response.status}): ${resultData.error?.message || 'Terjadi kesalahan'}`);
-        return;
+        const resultData = await response.json();
+
+        if (!response.ok || resultData.error) {
+            console.error('Error AI:', resultData);
+            return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Gagal AI: ${resultData.error?.message || 'Terjadi kesalahan'}</div>`;
+        }
+
+        let generatedText = resultData.candidates[0].content.parts[0].text;
+        return generatedText.replace(/```html/g, '').replace(/```/g, '');
+
+    } catch (err) {
+        console.error('Fetch Error:', err);
+        return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Koneksi Error: Gagal terhubung ke Gemini API.</div>`;
     }
-
-    // Berhasil - Tampilkan hasil teks
-    let generatedText = resultData.candidates[0].content.parts[0].text;
-    console.log('Hasil AI Berhasil:', generatedText);
-
-} catch (err) {
-    console.error('Fetch Error:', err);
 }
-
 
   
 // FUNGSI PEMICU MANUAL & CACHING (HEMAT KUOTA)
