@@ -2355,11 +2355,10 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
     }
 
 // 1. Ambil API Key dan bersihkan dari spasi/karakter tak terlihat
-let apiKey = (localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6KxDz5AAnwFnHY5kMEVJZq2nhVM2q56VCULnFTMZ0FZaA').trim();
+        let apiKey = (localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6KxDz5AAnwFnHY5kMEVJZq2nhVM2q56VCULnFTMZ0FZaA').trim();
 
-// 2. Pastikan Endpoint menggunakan model yang valid dan parameter ?key=
-let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
-
+        // 2. Pastikan Endpoint menggunakan model yang valid dan parameter ?key=
+        let url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`;
 // 3. Eksekusi Request
 try {
   const response = await fetch(url, {
