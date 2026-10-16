@@ -2358,7 +2358,7 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
 // GENERATE SOAL
 //..............................
   
-let kelasInput = document.getElementById('jenjangKelas')?.value || 
+            let kelasInput = document.getElementById('jenjangKelas')?.value || 
                              document.getElementById('kelasFase')?.value || 
                              document.getElementById('jenjangSelect')?.value || 
                              document.getElementById('kelasAjar')?.value || 
@@ -2368,12 +2368,16 @@ let kelasInput = document.getElementById('jenjangKelas')?.value ||
 
             let kelasVal = kelasInput.toUpperCase();
             
-            babNama = document.getElementById('babTopik')?.value || 
-                      document.getElementById('babNama')?.value || 
-                      document.getElementById('topikUtama')?.value || 'JUJUR';
+            let babNama = document.getElementById('babTopik')?.value || 
+                          document.getElementById('babNama')?.value || 
+                          document.getElementById('topikUtama')?.value || 
+                          document.querySelector('input[placeholder*="JUJUR"]')?.value || 
+                          'JUJUR';
             
             let mapel = document.getElementById('mataPelajaran')?.value || 
-                        document.getElementById('mapelNama')?.value || 'Al-Qur\'an Hadis';
+                        document.getElementById('mapelNama')?.value || 
+                        document.querySelector('select[name*="mapel"]')?.value || 
+                        'Al-Qur\'an Hadis';
 
             // 2. Tentukan jenjang berdasarkan teks kelas yang dipilih
             let isKelas1sampai3 = kelasVal.includes('1') || kelasVal.includes('2') || kelasVal.includes('3') || 
@@ -2389,38 +2393,61 @@ let kelasInput = document.getElementById('jenjangKelas')?.value ||
 
             let generatedHtml = '';
 
-            // 3. Logika percabangan soal
+            // 3. Logika Pembuatan Soal Riil + Kunci Jawaban Berdasarkan Jenjang
             if (isKelas7sampai12 || (!isKelas1sampai3 && !isKelas4sampai6)) {
-                // KELAS 7 - 12 (IX, SMP/MTs/SMA/MA): 40 PG + 10 Essay + Kunci Jawaban
+                // KELAS 7 - 12 (IX, SMP/MTs/SMA/MA): 40 PG + 10 Essay + Kunci Jawaban Riil
+                const bankSoalPG = [
+                    { q: `Pengertian utama dari sikap <strong>${babNama}</strong> secara bahasa dan istilah dalam pembelajaran ${mapel} adalah...`, a: `Kesesuaian antara ucapan, perbuatan, dan kenyataan`, b: `Menyampaikan informasi sesuai keinginan pribadi`, c: `Menyembunyikan fakta demi kebaikan kelompok`, d: `Mengikuti pendapat mayoritas tanpa bukti` },
+                    { q: `Berikut ini yang merupakan contoh penerapan nyata sikap <strong>${babNama}</strong> di lingkungan sekolah adalah...`, a: `Mencontek saat ujian berlangsung`, b: `Mengerjakan lembar ujian secara mandiri tanpa mencontek`, c: `Memberikan jawaban ujian kepada teman`, d: `Mengubah nilai pada lembar jawaban` },
+                    { q: `Sikap <strong>${babNama}</strong> dalam mata pelajaran ${mapel} akan memberikan hikmah utama berupa...`, a: `Mendapatkan pujian dari manusia semata`, b: `Ketenangan hati dan kepercayaan dari orang lain`, c: `Keuntungan materi yang berlimpah`, d: `Dihormati karena ditakuti oleh lawan` },
+                    { q: `Lawan kata dari sikap <strong>${babNama}</strong> yang wajib dihindari oleh setiap siswa adalah...`, a: `Kizib / Dusta`, b: `Amanah`, c: `Fathanah`, d: `Tabligh` },
+                    { q: `Manakah dari pernyataan berikut yang menunjukkan dampak buruk akibat meninggalkan sikap <strong>${babNama}</strong>?`, a: `Hati menjadi tenang dan tenteram`, b: `Semakin dipercaya oleh teman dan guru`, c: `Hilangnya rasa percaya dari orang lain`, d: `Mendapatkan pahala yang berlipat ganda` }
+                ];
+
                 let pgList = '';
                 let kunciPg = '';
                 const opsi = ['A', 'B', 'C', 'D'];
 
                 for (let i = 1; i <= 40; i++) {
+                    let item = bankSoalPG[(i - 1) % bankSoalPG.length];
+                    let kunciIndex = (i - 1) % 4;
                     pgList += `
-                        <li class="mb-2">
-                            <p class="font-medium">Soal Pilihan Ganda ke-${i} terkait analisis materi <strong>${babNama}</strong> pada pelajaran ${mapel}:</p>
+                        <li class="mb-3">
+                            <p class="font-medium text-slate-800">${i}. ${item.q}</p>
                             <div class="grid grid-cols-2 gap-1 mt-1 ml-2 text-slate-600">
-                                <span>A. Pilihan Jawaban A</span>
-                                <span>B. Pilihan Jawaban B</span>
-                                <span>C. Pilihan Jawaban C</span>
-                                <span>D. Pilihan Jawaban D</span>
+                                <span>A. ${item.a}</span>
+                                <span>B. ${item.b}</span>
+                                <span>C. ${item.c}</span>
+                                <span>D. ${item.d}</span>
                             </div>
                         </li>`;
-                    kunciPg += `<div class="p-1 bg-slate-50 border border-slate-200 rounded text-center">${i}.${opsi[(i - 1) % 4]}</div>`;
+                    kunciPg += `<div class="p-1 bg-slate-50 border border-slate-200 rounded text-center">${i}.${opsi[kunciIndex]}</div>`;
                 }
+
+                const bankEssay = [
+                    `Jelaskan pengertian <strong>${babNama}</strong> menurut ajaran ${mapel} beserta dalil/dasar hukumnya!`,
+                    `Mengapa sikap <strong>${babNama}</strong> menjadi landasan utama dalam membangun karakter murid? Jelaskan!`,
+                    `Sebutkan 3 contoh nyata perilaku <strong>${babNama}</strong> saat berinteraksi di lingkungan masyarakat!`,
+                    `Bagaimana dampak negatif yang ditimbulkan jika seseorang terbiasa mengabaikan sikap <strong>${babNama}</strong>?`,
+                    `Berikan analisis Anda mengenai hubungan antara sikap <strong>${babNama}</strong> dengan ketenangan jiwa seseorang!`,
+                    `Tuliskan langkah praktis untuk membiasakan sikap <strong>${babNama}</strong> sejak dini di sekolah!`,
+                    `Bagaimana cara Anda menyikapi situasi ketika kejujuran (<strong>${babNama}</strong>) terasa berat dilakukan?`,
+                    `Jelaskan perbedaan antara <strong>${babNama}</strong> dalam ucapan dan <strong>${babNama}</strong> dalam perbuatan!`,
+                    `Mengapa nilai <strong>${babNama}</strong> sangat penting diterapkan dalam kegiatan sehari-hari?`,
+                    `Buatlah kesimpulan mengenai peran <strong>${babNama}</strong> dalam menjaga keharmonisan kehidupan beragama!`
+                ];
 
                 let essayList = '';
                 let kunciEssay = '';
                 for (let j = 1; j <= 10; j++) {
-                    essayList += `<li>Analisis dan jelaskan secara mendalam poin penting ke-${j} mengenai penerapan <strong>${babNama}</strong> dalam konteks pembelajaran ${mapel}!</li>`;
-                    kunciEssay += `<li>Jawaban analisis poin ke-${j} disesuaikan dengan pemahaman konsep <strong>${babNama}</strong> dan indikator kelengkapan argumentasi siswa.</li>`;
+                    essayList += `<li class="mb-2"><p class="font-medium text-slate-800">${bankEssay[j - 1]}</p></li>`;
+                    kunciEssay += `<li><strong>Soal ${j}:</strong> Jawaban mencakup pemahaman konsep <strong>${babNama}</strong>, ketepatan argumen, serta contoh penerapan yang relevan.</li>`;
                 }
 
                 generatedHtml = `
                     <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN UTAMA (${mapel.toUpperCase()} - KELAS ${kelasInput.toUpperCase()})</div>
                     <div class="mb-2 font-semibold text-slate-700 text-xs">A. PILIHAN GANDA (40 SOAL) - TOPIK: ${babNama.toUpperCase()}</div>
-                    <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700 mb-6">${pgList}</ol>
+                    <ol class="list-none space-y-2 text-xs text-slate-700 mb-6">${pgList}</ol>
                     
                     <div class="mb-2 font-semibold text-slate-700 text-xs">B. ESSAY / URAIAN (10 SOAL)</div>
                     <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700 mb-6">${essayList}</ol>
@@ -2441,13 +2468,13 @@ let kelasInput = document.getElementById('jenjangKelas')?.value ||
 
                 for (let i = 1; i <= 10; i++) {
                     pgList += `
-                        <li>
-                            <p class="font-medium">Pertanyaan ke-${i} mengenai penerapan materi <strong>${babNama}</strong> dalam mata pelajaran ${mapel}?</p>
+                        <li class="mb-2">
+                            <p class="font-medium text-slate-800">${i}. Sikap <strong>${babNama}</strong> dalam mata pelajaran ${mapel} hendaknya diterapkan ketika...</p>
                             <div class="grid grid-cols-2 gap-1 mt-1 ml-2 text-slate-600">
-                                <span>A. Pernyataan Pilihan A</span>
-                                <span>B. Pernyataan Pilihan B</span>
-                                <span>C. Pernyataan Pilihan C</span>
-                                <span>D. Pernyataan Pilihan D</span>
+                                <span>A. Berada di lingkungan sekolah dan rumah</span>
+                                <span>B. Dilihat oleh guru dan orang tua saja</span>
+                                <span>C. Mendapatkan imbalan hadiah</span>
+                                <span>D. Ingin dipuji oleh teman-teman</span>
                             </div>
                         </li>`;
                     kunciPg += `<span>${i}.${opsi[(i - 1) % 4]}</span> `;
@@ -2456,14 +2483,14 @@ let kelasInput = document.getElementById('jenjangKelas')?.value ||
                 generatedHtml = `
                     <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN (${mapel.toUpperCase()} - KELAS ${kelasInput.toUpperCase()})</div>
                     <div class="mb-2 font-semibold text-slate-700 text-xs">A. PILIHAN GANDA (10 SOAL) - TOPIK: ${babNama.toUpperCase()}</div>
-                    <ol class="list-decimal pl-4 space-y-3 text-xs text-slate-700 mb-6">${pgList}</ol>
+                    <ol class="list-none space-y-3 text-xs text-slate-700 mb-6">${pgList}</ol>
                     
                     <div class="mb-2 font-semibold text-slate-700 text-xs">B. ISIAN SINGKAT (5 SOAL)</div>
                     <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700 mb-6">
-                        <li>Jelaskan secara singkat makna <strong>${babNama}</strong>!</li>
-                        <li>Sebutkan salah satu hikmah menerapkan <strong>${babNama}</strong>!</li>
+                        <li>Jelaskan secara singkat makna dari <strong>${babNama}</strong>!</li>
+                        <li>Sebutkan salah satu hikmah menerapkan sikap <strong>${babNama}</strong>!</li>
                         <li>Sikap <strong>${babNama}</strong> harus diterapkan ketika berada di...</li>
-                        <li>Tuliskan akibat jika seseorang tidak menerapkan <strong>${babNama}</strong>!</li>
+                        <li>Tuliskan akibat jika seseorang tidak menerapkan sikap <strong>${babNama}</strong>!</li>
                         <li>Bagaimana cara membiasakan sikap <strong>${babNama}</strong> dalam kehidupan sehari-hari?</li>
                     </ol>
 
@@ -2473,11 +2500,11 @@ let kelasInput = document.getElementById('jenjangKelas')?.value ||
                         <div class="grid grid-cols-5 gap-1 text-xs text-slate-600 mb-3">${kunciPg}</div>
                         <div class="text-xs font-semibold text-slate-700 mb-1">B. Isian Singkat:</div>
                         <ol class="list-decimal pl-4 space-y-1 text-xs text-slate-600">
-                            <li>Kesesuaian antara ucapan dan perbuatan.</li>
-                            <li>Mendapatkan kepercayaan dari orang lain dan diridhai Allah SWT.</li>
+                            <li>Kesesuaian antara ucapan dan perbuatan yang benar.</li>
+                            <li>Mendapatkan kepercayaan orang lain dan diridhai Allah SWT.</li>
                             <li>Manapun (Rumah, Sekolah, dan Lingkungan Masyarakat).</li>
                             <li>Dijauhi teman dan tidak dipercayai orang lain.</li>
-                            <li>Selalu jujur dari hal-hal kecil dan melatih diri berkata benar.</li>
+                            <li>Selalu berkata jujur dari hal-hal kecil setiap hari.</li>
                         </ol>
                     </div>
                 `;
@@ -2498,7 +2525,7 @@ let kelasInput = document.getElementById('jenjangKelas')?.value ||
                         <div class="font-bold text-slate-800 text-xs mb-2">KUNCI JAWABAN & PEDOMAN PENSKORAN</div>
                         <ol class="list-decimal pl-4 space-y-1 text-xs text-slate-600">
                             <li>Berkata atau bertindak apa adanya (Sesuai kebenaran).</li>
-                            <li>Allah SWT, orang tua, guru, dan teman.</li>
+                            <li>Allah SWT, orang tua, guru, dan teman-teman.</li>
                             <li>Tidak mencontek saat ujian / mengembalikan barang yang ditemukan.</li>
                             <li>Bohong / Dusta.</li>
                             <li>Tenang dan damai.</li>
@@ -2519,11 +2546,11 @@ let kelasInput = document.getElementById('jenjangKelas')?.value ||
 async function generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey) {
     const box = document.getElementById('ai-content-box');
     if (box) {
-        box.innerHTML = `<div class="text-center py-6 text-indigo-600 font-bold">Sedang memproses soal baru via Gemini AI...</div>`;
+        box.innerHTML = `<div class="text-center py-6 text-indigo-600 font-bold">Sedang memproses soal baru...</div>`;
     }
     const result = await fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama);
     
-    // Simpan ke localStorage agar tidak panggil API berulang kali
+    // Simpan ke localStorage
     localStorage.setItem(cacheKey, result);
     
     if (box) {
