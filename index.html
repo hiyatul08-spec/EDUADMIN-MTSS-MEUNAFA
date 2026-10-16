@@ -2358,7 +2358,8 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
 // GENERATE SOAL
 //..............................
   
-babNama = document.getElementById('babTopik')?.value || 
+// 1. Ambil nilai input dari form
+            babNama = document.getElementById('babTopik')?.value || 
                       document.getElementById('babNama')?.value || 
                       document.getElementById('topikUtama')?.value || 'JUJUR';
             
@@ -2412,7 +2413,7 @@ babNama = document.getElementById('babTopik')?.value ||
                                 <span>D. Pernyataan Pilihan D</span>
                             </div>
                         </li>`;
-                    kunciPg += `<span>${i}. ${opsi[(i - 1) % 4]}</span> `;
+                    kunciPg += `<span>${i}.${opsi[(i - 1) % 4]}</span> `;
                 }
 
                 generatedHtml = `
@@ -2489,9 +2490,11 @@ babNama = document.getElementById('babTopik')?.value ||
             }
 
             // 3. Tampilkan ke dalam kontainer
-            document.getElementById('preview-content-modul').innerHTML = generatedHtml;
-            return
-              ;
+            const targetContainer = document.getElementById('preview-content-modul') || document.getElementById('ai-content-box');
+            if (targetContainer) {
+                targetContainer.innerHTML = generatedHtml;
+            }
+            return;
   
 
 // FUNGSI PEMICU MANUAL & CACHING (HEMAT KUOTA)
