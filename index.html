@@ -2358,6 +2358,7 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
 // GENERATE SOAL
 //..............................
   
+            // 1. Ambil nilai input dari form secara presisi
             let kelasInput = document.getElementById('jenjangKelas')?.value || 
                              document.getElementById('kelasFase')?.value || 
                              document.getElementById('jenjangSelect')?.value || 
@@ -2368,11 +2369,12 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
 
             let kelasVal = kelasInput.toUpperCase();
             
-            let babNama = document.getElementById('babTopik')?.value || 
-                          document.getElementById('babNama')?.value || 
-                          document.getElementById('topikUtama')?.value || 
-                          document.querySelector('input[placeholder*="JUJUR"]')?.value || 
-                          'JUJUR';
+            // Perbarui nilai babNama tanpa deklarasi ulang 'let'
+            babNama = document.getElementById('babTopik')?.value || 
+                      document.getElementById('babNama')?.value || 
+                      document.getElementById('topikUtama')?.value || 
+                      document.querySelector('input[placeholder*="JUJUR"]')?.value || 
+                      'JUJUR';
             
             let mapel = document.getElementById('mataPelajaran')?.value || 
                         document.getElementById('mapelNama')?.value || 
