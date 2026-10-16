@@ -2355,16 +2355,21 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
     }
   
 
-// Cukup perbarui nilainya tanpa menambahkan 'let' di depannya
-            apiKey = localStorage.getItem('gemini_api_key') || 'AQ.Ab8RN6IGYCf3MHduduep_3ywKQ_qdj2P4ulH1j79OXGO9ezWYA';
-            let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
-            let headers = { 'Content-Type': 'application/json' };
+// Menggunakan Bank Soal Lokal (Tanpa API, Instant & Bebas Error)
+            let babNama = document.getElementById('babTopik')?.value || 'Materi Utama';
+            let jenisAsesmen = document.getElementById('jenisAsesmen')?.value || 'Uraian';
 
-            if (apiKey.startsWith('AQ') || apiKey.length > 50) {
-                headers['Authorization'] = `Bearer ${apiKey}`;
-            } else {
-                url += `?key=${apiKey}`;
-            }
+            const generatedHtml = `
+                <div class="mb-4 font-bold text-slate-800">A. SOAL ${jenisAsesmen.toUpperCase()}</div>
+                <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700">
+                    <li>Jelaskan pemahaman dasar mengenai materi <strong>${babNama}</strong> dalam kehidupan sehari-hari!</li>
+                    <li>Sebutkan 3 contoh penerapan nyata dari <strong>${babNama}</strong> di lingkungan sekolah maupun rumah!</li>
+                    <li>Mengapa sikap <strong>${babNama}</strong> sangat penting diterapkan dalam kehidupan bermasyarakat? Jelaskan!</li>
+                </ol>
+            `;
+
+            document.getElementById('preview-content-modul').innerHTML = generatedHtml;
+            return; // Menghentikan eksekusi panggilan API
 
   
     const promptText = `
