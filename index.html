@@ -2356,8 +2356,8 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
   
 
 // Menggunakan Bank Soal Lokal (Tanpa API, Instant & Bebas Error)
-            let babNama = document.getElementById('babTopik')?.value || 'Materi Utama';
-            let jenisAsesmen = document.getElementById('jenisAsesmen')?.value || 'Uraian';
+            babNama = document.getElementById('babTopik')?.value || 'Materi Utama';
+            jenisAsesmen = document.getElementById('jenisAsesmen')?.value || 'Uraian';
 
             const generatedHtml = `
                 <div class="mb-4 font-bold text-slate-800">A. SOAL ${jenisAsesmen.toUpperCase()}</div>
@@ -2370,7 +2370,6 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
 
             document.getElementById('preview-content-modul').innerHTML = generatedHtml;
             return; // Menghentikan eksekusi panggilan API
-
   
     const promptText = `
         Kamu adalah pakar pembuat soal Kurikulum Merdeka. 
