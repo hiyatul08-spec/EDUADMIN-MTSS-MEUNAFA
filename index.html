@@ -2354,59 +2354,145 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
         `;
     }
   
-
-// Menggunakan Bank Soal Lokal (Tanpa API, Instant & Bebas Error)
-            babNama = document.getElementById('babTopik')?.value || 'Materi Utama';
-            jenisAsesmen = document.getElementById('jenisAsesmen')?.value || 'Uraian';
-
-            const generatedHtml = `
-                <div class="mb-4 font-bold text-slate-800">A. SOAL ${jenisAsesmen.toUpperCase()}</div>
-                <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700">
-                    <li>Jelaskan pemahaman dasar mengenai materi <strong>${babNama}</strong> dalam kehidupan sehari-hari!</li>
-                    <li>Sebutkan 3 contoh penerapan nyata dari <strong>${babNama}</strong> di lingkungan sekolah maupun rumah!</li>
-                    <li>Mengapa sikap <strong>${babNama}</strong> sangat penting diterapkan dalam kehidupan bermasyarakat? Jelaskan!</li>
-                </ol>
-            `;
-
-            document.getElementById('preview-content-modul').innerHTML = generatedHtml;
-            return; // Menghentikan eksekusi panggilan API
+//..............................
+// GENERATE SOAL
+//..............................
   
-    const promptText = `
-        Kamu adalah pakar pembuat soal Kurikulum Merdeka. 
-        Buatkan instrumen asesmen pembelajaran untuk:
-        - Mata Pelajaran: ${mapelNama}
-        - Kelas/Fase: ${kelasNama}
-        - Topik/Bab: ${babNama}
-        - Jenis Asesmen: ${jenisAsesmen}
+babNama = document.getElementById('babTopik')?.value || 
+                      document.getElementById('babNama')?.value || 
+                      document.getElementById('topikUtama')?.value || 'JUJUR';
+            
+            let mapel = document.getElementById('mataPelajaran')?.value || 
+                        document.getElementById('mapelNama')?.value || 'Al-Qur\'an Hadis';
+            
+            let kelas = document.getElementById('jenjangKelas')?.value || 
+                        document.getElementById('kelasFase')?.value || 'Kelas 1';
 
-        Ketentuan Soal:
-        1. Jika Jenis Asesmen adalah "Pilihan Ganda", buatkan 5 soal pilihan ganda (opsi A, B, C, D) lengkap dengan Kunci Jawaban.
-        2. Jika Jenis Asesmen adalah "Essay / Uraian" atau "Isian Singkat", buatkan 5 soal HOTS lengkap dengan Kunci Jawaban.
-        3. Format output wajib HTML sederhana (Gunakan tag <h3>, <ol>, <li>, <p>, <strong>) tanpa markdown codeblock.
-    `;
+            let generatedHtml = '';
+            
+            // 2. Logika Pembuatan Soal & Kunci Jawaban Berdasarkan Jenjang
+            if (kelas.includes('1') || kelas.includes('2') || kelas.includes('3') || kelas.toLowerCase().includes('kelas i') || kelas.toLowerCase().includes('kelas ii') || kelas.toLowerCase().includes('kelas iii')) {
+                // KELAS 1 - 3 SD/MI: 5 Isian Singkat + Kunci Jawaban
+                generatedHtml = `
+                    <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN (${mapel.toUpperCase()} - ${kelas.toUpperCase()})</div>
+                    <div class="mb-2 font-semibold text-slate-700 text-xs">A. ISIAN SINGKAT (TOPIK: ${babNama.toUpperCase()})</div>
+                    <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700 mb-6">
+                        <li>Arti dari sikap <strong>${babNama}</strong> adalah...</li>
+                        <li>Anak yang memiliki sikap <strong>${babNama}</strong> akan disukai oleh...</li>
+                        <li>Contoh perilaku <strong>${babNama}</strong> saat di sekolah adalah...</li>
+                        <li>Lawan kata dari sikap <strong>${babNama}</strong> adalah...</li>
+                        <li>Jika kita membiasakan sikap <strong>${babNama}</strong>, hati kita akan merasa...</li>
+                    </ol>
 
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: promptText }] }]
-            })
-        });
+                    <div class="mt-6 pt-4 border-t border-dashed border-slate-300">
+                        <div class="font-bold text-slate-800 text-xs mb-2">KUNCI JAWABAN & PEDOMAN PENSKORAN</div>
+                        <ol class="list-decimal pl-4 space-y-1 text-xs text-slate-600">
+                            <li>Berkata atau bertindak apa adanya (Sesuai kebenaran).</li>
+                            <li>Allah SWT, orang tua, guru, dan teman.</li>
+                            <li>Tidak mencontek saat ujian / mengembalikan barang yang ditemukan.</li>
+                            <li>Bohong / Dusta.</li>
+                            <li>Tenang dan damai.</li>
+                        </ol>
+                    </div>
+                `;
+            } else if (kelas.includes('4') || kelas.includes('5') || kelas.includes('6') || kelas.toLowerCase().includes('kelas iv') || kelas.toLowerCase().includes('kelas v') || kelas.toLowerCase().includes('kelas vi')) {
+                // KELAS 4 - 6 SD/MI: 10 PG + 5 Isian Singkat + Kunci Jawaban
+                let pgList = '';
+                let kunciPg = '';
+                const opsi = ['A', 'B', 'C', 'D'];
 
-        const resultData = await response.json();
+                for (let i = 1; i <= 10; i++) {
+                    pgList += `
+                        <li>
+                            <p class="font-medium">Pertanyaan ke-${i} mengenai penerapan materi <strong>${babNama}</strong> dalam mata pelajaran ${mapel}?</p>
+                            <div class="grid grid-cols-2 gap-1 mt-1 ml-2 text-slate-600">
+                                <span>A. Pernyataan Pilihan A</span>
+                                <span>B. Pernyataan Pilihan B</span>
+                                <span>C. Pernyataan Pilihan C</span>
+                                <span>D. Pernyataan Pilihan D</span>
+                            </div>
+                        </li>`;
+                    kunciPg += `<span>${i}. ${opsi[(i - 1) % 4]}</span> `;
+                }
 
-        if (resultData.error) {
-            return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Gagal AI: ${resultData.error.message}</div>`;
-        }
+                generatedHtml = `
+                    <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN (${mapel.toUpperCase()} - ${kelas.toUpperCase()})</div>
+                    <div class="mb-2 font-semibold text-slate-700 text-xs">A. PILIHAN GANDA (10 SOAL) - TOPIK: ${babNama.toUpperCase()}</div>
+                    <ol class="list-decimal pl-4 space-y-3 text-xs text-slate-700 mb-6">${pgList}</ol>
+                    
+                    <div class="mb-2 font-semibold text-slate-700 text-xs">B. ISIAN SINGKAT (5 SOAL)</div>
+                    <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700 mb-6">
+                        <li>Jelaskan secara singkat makna <strong>${babNama}</strong>!</li>
+                        <li>Sebutkan salah satu hikmah menerapkan <strong>${babNama}</strong>!</li>
+                        <li>Sikap <strong>${babNama}</strong> harus diterapkan ketika berada di...</li>
+                        <li>Tuliskan akibat jika seseorang tidak menerapkan <strong>${babNama}</strong>!</li>
+                        <li>Bagaimana cara membiasakan sikap <strong>${babNama}</strong> dalam kehidupan sehari-hari?</li>
+                    </ol>
 
-        let generatedText = resultData.candidates[0].content.parts[0].text;
-        return generatedText.replace(/```html/g, '').replace(/```/g, '');
-    } catch (err) {
-        return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Koneksi Error: Gagal terhubung ke Gemini API.</div>`;
-    }
-}
+                    <div class="mt-6 pt-4 border-t border-dashed border-slate-300">
+                        <div class="font-bold text-slate-800 text-xs mb-2">KUNCI JAWABAN</div>
+                        <div class="text-xs font-semibold text-slate-700 mb-1">A. Pilihan Ganda:</div>
+                        <div class="grid grid-cols-5 gap-1 text-xs text-slate-600 mb-3">${kunciPg}</div>
+                        <div class="text-xs font-semibold text-slate-700 mb-1">B. Isian Singkat:</div>
+                        <ol class="list-decimal pl-4 space-y-1 text-xs text-slate-600">
+                            <li>Kesesuaian antara ucapan dan perbuatan.</li>
+                            <li>Mendapatkan kepercayaan dari orang lain dan diridhai Allah SWT.</li>
+                            <li>Manapun (Rumah, Sekolah, dan Lingkungan Masyarakat).</li>
+                            <li>Dijauhi teman dan tidak dipercayai orang lain.</li>
+                            <li>Selalu jujur dari hal-hal kecil dan melatih diri berkata benar.</li>
+                        </ol>
+                    </div>
+                `;
+            } else {
+                // KELAS 7 - 12 SMP/SMA/MTs/MA: 40 PG + 10 Essay + Kunci Jawaban
+                let pgList = '';
+                let kunciPg = '';
+                const opsi = ['A', 'B', 'C', 'D'];
 
+                for (let i = 1; i <= 40; i++) {
+                    pgList += `
+                        <li class="mb-2">
+                            <p class="font-medium">Soal Pilihan Ganda ke-${i} terkait analisis materi <strong>${babNama}</strong> pada pelajaran ${mapel}:</p>
+                            <div class="grid grid-cols-2 gap-1 mt-1 ml-2 text-slate-600">
+                                <span>A. Option A</span>
+                                <span>B. Option B</span>
+                                <span>C. Option C</span>
+                                <span>D. Option D</span>
+                            </div>
+                        </li>`;
+                    kunciPg += `<div class="p-1 bg-slate-50 border border-slate-200 rounded text-center">${i}.${opsi[(i - 1) % 4]}</div>`;
+                }
+
+                let essayList = '';
+                let kunciEssay = '';
+                for (let j = 1; j <= 10; j++) {
+                    essayList += `<li>Analisis dan jelaskan secara mendalam poin penting ke-${j} mengenai penerapan <strong>${babNama}</strong> dalam konteks pembelajaran ${mapel}!</li>`;
+                    kunciEssay += `<li>Jawaban analisis poin ke-${j} disesuaikan dengan pemahaman konsep <strong>${babNama}</strong> dan indikator kelengkapan argumentasi siswa.</li>`;
+                }
+
+                generatedHtml = `
+                    <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN UTAMA (${mapel.toUpperCase()} - ${kelas.toUpperCase()})</div>
+                    <div class="mb-2 font-semibold text-slate-700 text-xs">A. PILIHAN GANDA (40 SOAL) - TOPIK: ${babNama.toUpperCase()}</div>
+                    <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700 mb-6">${pgList}</ol>
+                    
+                    <div class="mb-2 font-semibold text-slate-700 text-xs">B. ESSAY / URAIAN (10 SOAL)</div>
+                    <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700 mb-6">${essayList}</ol>
+
+                    <div class="mt-6 pt-4 border-t border-dashed border-slate-300">
+                        <div class="font-bold text-slate-800 text-xs mb-2">KUNCI JAWABAN & PEDOMAN PENSKORAN</div>
+                        <div class="text-xs font-semibold text-slate-700 mb-1">A. Kunci Pilihan Ganda (1 - 40):</div>
+                        <div class="grid grid-cols-10 gap-1 text-[10px] text-slate-700 mb-4">${kunciPg}</div>
+                        <div class="text-xs font-semibold text-slate-700 mb-1">B. Pedoman Jawaban Essay:</div>
+                        <ol class="list-decimal pl-4 space-y-1 text-xs text-slate-600">${kunciEssay}</ol>
+                    </div>
+                `;
+            }
+
+            // 3. Tampilkan ke dalam kontainer
+            document.getElementById('preview-content-modul').innerHTML = generatedHtml;
+            return
+              ;
+  
 
 // FUNGSI PEMICU MANUAL & CACHING (HEMAT KUOTA)
 async function generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey) {
