@@ -2358,46 +2358,51 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
 // GENERATE SOAL
 //..............................
   
-            // 1. Ambil nilai input dari form secara presisi
-            let kelasInput = document.getElementById('jenjangKelas')?.value || 
-                             document.getElementById('kelasFase')?.value || 
-                             document.getElementById('jenjangSelect')?.value || 
-                             document.getElementById('kelasAjar')?.value || 
-                             document.querySelector('select[name*="kelas"]')?.value || 
-                             document.querySelector('select[name*="jenjang"]')?.value || 
-                             'Kelas 1';
+           // 1. Ambil elemen select/input secara langsung dari form
+            let elemKelas = document.getElementById('jenjangKelas') || 
+                            document.getElementById('kelasFase') || 
+                            document.getElementById('jenjangSelect') || 
+                            document.getElementById('kelasAjar') || 
+                            document.querySelector('select[name*="kelas"]') || 
+                            document.querySelector('select[name*="jenjang"]');
+
+            let elemMapel = document.getElementById('mataPelajaran') || 
+                            document.getElementById('mapelNama') || 
+                            document.querySelector('select[name*="mapel"]');
+
+            let elemBab = document.getElementById('babTopik') || 
+                          document.getElementById('babNama') || 
+                          document.getElementById('topikUtama') || 
+                          document.querySelector('input[placeholder*="JUJUR"]');
+
+            // Ambil teks dari opsi yang dipilih (Selected Option Text)
+            let kelasInput = elemKelas ? (elemKelas.options ? elemKelas.options[elemKelas.selectedIndex].text : elemKelas.value) : 'IX A';
+            let mapel = elemMapel ? (elemMapel.options ? elemMapel.options[elemMapel.selectedIndex].text : elemMapel.value) : 'Ilmu Pengetahuan Sosial (IPS)';
+            babNama = elemBab ? elemBab.value : 'JUJUR';
+
+            if (!babNama.trim()) babNama = 'JUJUR';
 
             let kelasVal = kelasInput.toUpperCase().trim();
-            
-            babNama = document.getElementById('babTopik')?.value || 
-                      document.getElementById('babNama')?.value || 
-                      document.getElementById('topikUtama')?.value || 
-                      document.querySelector('input[placeholder*="JUJUR"]')?.value || 
-                      'JUJUR';
-            
-            let mapel = document.getElementById('mataPelajaran')?.value || 
-                        document.getElementById('mapelNama')?.value || 
-                        document.querySelector('select[name*="mapel"]')?.value || 
-                        'Al-Qur\'an Hadis';
 
-            // 2. Deteksi Jenjang Kelas Secara Presisi
-            // Cek Kelas 1-3 SD/MI
+            // 2. Deteksi Jenjang Kelas Secara Akurat
             let isKelas1sampai3 = /^1\b|KELAS 1\b|KELAS I\b|^2\b|KELAS 2\b|KELAS II\b|^3\b|KELAS 3\b|KELAS III\b/i.test(kelasVal) ||
                                   (kelasVal.includes('SD') && (kelasVal.includes('1') || kelasVal.includes('2') || kelasVal.includes('3'))) ||
                                   (kelasVal.includes('MI') && (kelasVal.includes('1') || kelasVal.includes('2') || kelasVal.includes('3')));
 
-            // Cek Kelas 4-6 SD/MI
             let isKelas4sampai6 = /^4\b|KELAS 4\b|KELAS IV\b|^5\b|KELAS 5\b|KELAS V\b|^6\b|KELAS 6\b|KELAS VI\b/i.test(kelasVal) ||
                                   (kelasVal.includes('SD') && (kelasVal.includes('4') || kelasVal.includes('5') || kelasVal.includes('6'))) ||
                                   (kelasVal.includes('MI') && (kelasVal.includes('4') || kelasVal.includes('5') || kelasVal.includes('6')));
+
+            // Rapikan Tampilan Label Kelas agar tidak dobel kata 'KELAS'
+            let labelKelas = kelasInput.toUpperCase().startsWith('KELAS') ? kelasInput.toUpperCase() : `KELAS ${kelasInput.toUpperCase()}`;
 
             let generatedHtml = '';
 
             // 3. Eksekusi Pembagian Soal
             if (isKelas1sampai3) {
-                // KELAS 1 - 3 SD/MI: 5 Isian Singkat + Kunci Jawaban Lengkap
+                // KELAS 1 - 3 SD/MI: 5 Isian Singkat
                 generatedHtml = `
-                    <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN (${mapel.toUpperCase()} - KELAS ${kelasInput.toUpperCase()})</div>
+                    <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN (${mapel.toUpperCase()} - ${labelKelas})</div>
                     <div class="mb-2 font-semibold text-slate-700 text-xs">A. ISIAN SINGKAT (TOPIK: ${babNama.toUpperCase()})</div>
                     <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700 mb-6">
                         <li>Arti dari sikap <strong>${babNama}</strong> adalah...</li>
@@ -2419,7 +2424,7 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
                     </div>
                 `;
             } else if (isKelas4sampai6) {
-                // KELAS 4 - 6 SD/MI: 10 PG + 5 Isian Singkat + Kunci Jawaban
+                // KELAS 4 - 6 SD/MI: 10 PG + 5 Isian Singkat
                 let pgList = '';
                 let kunciPg = '';
                 const opsi = ['A', 'B', 'C', 'D'];
@@ -2439,7 +2444,7 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
                 }
 
                 generatedHtml = `
-                    <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN (${mapel.toUpperCase()} - KELAS ${kelasInput.toUpperCase()})</div>
+                    <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN (${mapel.toUpperCase()} - ${labelKelas})</div>
                     <div class="mb-2 font-semibold text-slate-700 text-xs">A. PILIHAN GANDA (10 SOAL) - TOPIK: ${babNama.toUpperCase()}</div>
                     <ol class="list-none space-y-3 text-xs text-slate-700 mb-6">${pgList}</ol>
                     
@@ -2467,7 +2472,7 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
                     </div>
                 `;
             } else {
-                // KELAS 7 - 12 (SMP/MTs/SMA/MA): 40 PG + 10 Essay + Kunci Jawaban Pembahasan Detail
+                // KELAS 7 - 12 (SMP/MTs/SMA/MA): 40 PG + 10 Essay
                 const bankSoalPG = [
                     { q: `Pengertian utama dari sikap <strong>${babNama}</strong> secara bahasa dan istilah dalam pembelajaran ${mapel} adalah...`, a: `Kesesuaian antara ucapan, perbuatan, dan kenyataan`, b: `Menyampaikan informasi sesuai keinginan pribadi`, c: `Menyembunyikan fakta demi kebaikan kelompok`, d: `Mengikuti pendapat mayoritas tanpa bukti` },
                     { q: `Berikut ini yang merupakan contoh penerapan nyata sikap <strong>${babNama}</strong> di lingkungan sekolah adalah...`, a: `Mencontek saat ujian berlangsung`, b: `Mengerjakan lembar ujian secara mandiri tanpa mencontek`, c: `Memberikan jawaban ujian kepada teman`, d: `Mengubah nilai pada lembar jawaban` },
@@ -2530,7 +2535,7 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
                 }
 
                 generatedHtml = `
-                    <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN UTAMA (${mapel.toUpperCase()} - KELAS ${kelasInput.toUpperCase()})</div>
+                    <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN UTAMA (${mapel.toUpperCase()} - ${labelKelas})</div>
                     <div class="mb-2 font-semibold text-slate-700 text-xs">A. PILIHAN GANDA (40 SOAL) - TOPIK: ${babNama.toUpperCase()}</div>
                     <ol class="list-none space-y-2 text-xs text-slate-700 mb-6">${pgList}</ol>
                     
@@ -2555,7 +2560,7 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
             return;
 }
 
-// FUNGSI PEMICU MANUAL & CACHING (HEMAT KUOTA)
+// FUNGSI PEMICU MANUAL & CACHING
 async function generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey) {
     const box = document.getElementById('ai-content-box');
     if (box) {
@@ -2563,7 +2568,6 @@ async function generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama
     }
     const result = await fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama);
     
-    // Simpan ke localStorage
     localStorage.setItem(cacheKey, result);
     
     if (box) {
