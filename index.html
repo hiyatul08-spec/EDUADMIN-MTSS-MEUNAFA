@@ -2419,6 +2419,43 @@ async function generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama
         box.innerHTML = result;
     }
 }
+
+// ... (Kode fungsi generateAsesmenOtomatis atau generator soal di atasnya) ...
+
+    // ==========================================
+    // FUNGSI SIMPAN & MUAT API KEY PENGATURAN
+    // ==========================================
+    function simpanPengaturan() {
+        let apiKeyInput = document.getElementById('geminiApiKeyInput') || 
+                          document.querySelector('input[type="password"]') || 
+                          document.querySelector('input[placeholder*="..."]');
+
+        if (apiKeyInput) {
+            localStorage.setItem('gemini_api_key', apiKeyInput.value.trim());
+        }
+
+        alert('Pengaturan berhasil disimpan!');
+    }
+
+    function loadPengaturan() {
+        let apiKeyInput = document.getElementById('geminiApiKeyInput') || 
+                          document.querySelector('input[type="password"]') || 
+                          document.querySelector('input[placeholder*="..."]');
+
+        let savedKey = localStorage.getItem('gemini_api_key');
+
+        if (apiKeyInput && savedKey) {
+            apiKeyInput.value = savedKey;
+        }
+    }
+
+    // Jalankan pemuatan otomatis saat web dibuka/di-refresh
+    document.addEventListener('DOMContentLoaded', loadPengaturan);
+    loadPengaturan(); // Dipanggil langsung untuk memastikan data langsung terisi
+
+    </script>
+</body>
+</html>
     
     </script>
 </body>
