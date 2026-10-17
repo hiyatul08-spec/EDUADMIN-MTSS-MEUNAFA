@@ -2354,19 +2354,26 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
         `;
     }
 
+
+  
+  //.......................
+  // GENERATE SOAL //
+  //.......................
 let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
-    let headers = { 'Content-Type': 'application/json' };
+let headers = { 'Content-Type': 'application/json' };
 
-    // Ambil API key dari localStorage
-    let apiKey = localStorage.getItem('gemini_api_key') || localStorage.getItem('geminiApiKey') || '';
+// Ambil API key dari localStorage
+apiKey = localStorage.getItem('gemini_api_key') || localStorage.getItem('geminiApiKey') || '';
 
-    // Jika API Key tidak ada, langsung alihkan ke generator lokal instan tanpa panggil API
-    if (!apiKey) {
-        console.warn('API Key kosong, menggunakan generator lokal.');
-        generateAsesmenOtomatis(); 
-        return;
-    }
+// Jika API Key tidak ada, langsung alihkan ke generator lokal instan tanpa panggil API
+if (!apiKey) {
+    console.warn('API Key kosong, menggunakan generator lokal.');
+    generateAsesmenOtomatis(); 
+    return;
+}
 
+
+  
     // Jika API Key berawalan AQ (OAuth Token), gunakan Header Bearer. Jika AIza, gunakan ?key=
     if (apiKey.startsWith('AQ')) {
         headers['Authorization'] = `Bearer ${apiKey}`;
