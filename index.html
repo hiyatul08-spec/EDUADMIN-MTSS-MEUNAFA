@@ -1787,21 +1787,43 @@ function switchTabModul(tabName) {
 // ==========================================  
 } else if (tabName === 'asesmen') {
     const jenisAsesmen = document.getElementById('jenisAsesmenSelect')?.value || 'Pilihan Ganda';
-    const mapelNama = data.mapel || 'MATA PELAJARAN';
-    const babNama = data.bab || 'TOPIK / BAB';
+    const mapelNama = data.mapel || 'Al-Qur\'an Hadis';
+    const babNama = data.bab || 'AMANAH';
     const kelasNama = data.fase || 'Kelas VII';
 
     // Cek Simpanan (Cache)
     const cacheKey = 'asesmen_' + mapelNama + '_' + babNama + '_' + jenisAsesmen;
     const cachedContent = localStorage.getItem(cacheKey);
 
+    // Template Soal Otomatis Mandiri
+    const defaultSoalHtml = `
+        <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN (${mapelNama.toUpperCase()} - ${kelasNama.toUpperCase()})</div>
+        <div class="mb-2 font-semibold text-slate-700 text-xs">A. PILIHAN GANDA - TOPIK: ${babNama.toUpperCase()}</div>
+        <ol class="list-decimal pl-4 space-y-3 text-xs text-slate-700 mb-6">
+            <li>Pengertian utama dari materi <strong>${babNama}</strong> dalam mata pelajaran ${mapelNama} adalah...
+                <div class="grid grid-cols-2 gap-1 mt-1 ml-2 text-slate-600"><span>A. Menjaga dan menyampaikan pesan sesuai kebenaran</span><span>B. Mengabaikan tanggung jawab</span><span>C. Menyampaikan informasi untuk kepentingan pribadi</span><span>D. Mengikuti pendapat kelompok tanpa bukti</span></div>
+            </li>
+            <li>Berikut ini yang merupakan contoh penerapan nyata sikap <strong>${babNama}</strong> di lingkungan sekolah adalah...
+                <div class="grid grid-cols-2 gap-1 mt-1 ml-2 text-slate-600"><span>A. Mengerjakan tugas dengan jujur dan tepat waktu</span><span>B. Mencontek saat ujian berlangsung</span><span>C. Membiarkan fasilitas kelas rusak</span><span>D. Terlambat masuk kelas</span></div>
+            </li>
+            <li>Mengapa sikap <strong>${babNama}</strong> sangat penting dimiliki oleh setiap siswa?
+                <div class="grid grid-cols-2 gap-1 mt-1 ml-2 text-slate-600"><span>A. Agar mendapat kepercayaan dari guru dan teman</span><span>B. Supaya dipuji oleh orang tua</span><span>C. Untuk mendapatkan hadiah</span><span>D. Agar ditakuti oleh siswa lain</span></div>
+            </li>
+        </ol>
+        <div class="mb-2 font-semibold text-slate-700 text-xs">B. ESAY / ISIAN SINGKAT</div>
+        <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700 mb-6">
+            <li>Jelaskan secara singkat makna dari <strong>${babNama}</strong>!</li>
+            <li>Sebutkan 2 contoh perilaku <strong>${babNama}</strong> dalam kehidupan sehari-hari!</li>
+        </ol>
+    `;
+
     // Template Konten Utama
     const renderTampilan = (isiSoal) => {
-        let kontenSoal = (isiSoal && isiSoal !== 'undefined') ? isiSoal : generateAsesmenOtomatis();
+        let kontenSoal = (isiSoal && isiSoal !== 'undefined') ? isiSoal : defaultSoalHtml;
         return `
         <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
             <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR ASESMEN / EVALUASI PEMBELAJARAN</h2>
-            <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || '').toUpperCase()} | ${(data.fase || '').toUpperCase()}</p>
+            <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || 'AL-QUR\'AN HADIS').toUpperCase()} | ${(data.fase || 'KELAS VII').toUpperCase()}</p>
             <p class="text-slate-600 italic text-xs">Topik / Bab: ${babNama} | Semester: ${data.semester || 'Ganjil'} | TP: ${data.tahun || '2026/2027'}</p>
         </div>
 
@@ -1810,7 +1832,7 @@ function switchTabModul(tabName) {
                 5. INSTRUMEN ASESMEN (${jenisAsesmen.toUpperCase()})
             </div>
             <button id="btn-generate-ai" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1 rounded font-medium transition">
-                🔄 Generate Ulang Soal AI
+                🔄 Generate Ulang Soal
             </button>
         </div>
 
@@ -1839,23 +1861,9 @@ function switchTabModul(tabName) {
         `;
     };
 
-    // Jika sudah ada simpanan, tampilkan langsung
-    if (cachedContent) {
-        previewBox.innerHTML = renderTampilan(cachedContent);
-    } else {
-        // Jika belum ada, tampilkan soal otomatis
-        previewBox.innerHTML = renderTampilan(generateAsesmenOtomatis());
-    }
-
-    // Aktifkan fungsi tombol Generate saat diklik
-    setTimeout(() => {
-        const btn = document.getElementById('btn-generate-ai');
-        if (btn) {
-            btn.onclick = function() {
-                generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey);
-            };
-        }
-    }, 50);       
+    // Tampilkan Konten
+    previewBox.innerHTML = renderTampilan(cachedContent);
+}      
 
 
     
