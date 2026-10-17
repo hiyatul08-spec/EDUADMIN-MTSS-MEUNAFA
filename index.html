@@ -2337,22 +2337,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // FUNGSI GLOBAL GEMINI AI (BERDIRI SENDIRI)
 async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
-    const savedSettings = JSON.parse(localStorage.getItem('eduSettings') || '{}');
-    let apiKey = (savedSettings.apiKey || localStorage.getItem('cfgApiKey') || '').trim();
-
-    if (!apiKey) {
-        return `
-            <div class="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded text-xs mb-4">
-                💡 <strong>Petunjuk AI:</strong> Masukkan Gemini API Key di menu <strong>Pengaturan System</strong> untuk membuat soal AI otomatis real-time.
-            </div>
-            <div class="mb-4 font-bold text-slate-800">A. SOAL ${jenisAsesmen.toUpperCase()} (TEMPLATE LOKAL)</div>
-            <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700">
-                <li>Jelaskan pemahaman dasar mengenai materi <strong>${babNama}</strong> dalam mata pelajaran ${mapelNama}!</li>
-                <li>Sebutkan 3 contoh penerapan nyata dari <strong>${babNama}</strong> di kehidupan sehari-hari!</li>
-                <li>Mengapa sikap <strong>${babNama}</strong> sangat penting diterapkan dalam lingkungan sekolah?</li>
-            </ol>
-        `;
+    let box = document.getElementById('ai-content-box') || document.getElementById('preview-content-modul');
+    if (box) {
+        box.innerHTML = `<div class="text-center py-6 text-indigo-600 font-bold">Sedang memproses soal baru...</div>`;
     }
+
+    // Panggil generator soal lokal secara langsung (Instan & Tanpa Error 401)
+    setTimeout(() => {
+        generateAsesmenOtomatis();
+    }, 300);
+}
+
+async function generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey) {
+    generateAsesmenOtomat
 
 
   
