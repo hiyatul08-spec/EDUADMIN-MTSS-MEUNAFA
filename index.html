@@ -1786,84 +1786,84 @@ function switchTabModul(tabName) {
 // TAB 5: ASESMEN
 // ==========================================  
 } else if (tabName === 'asesmen') {
-    const jenisAsesmen = document.getElementById('jenisAsesmenSelect')?.value || 'Pilihan Ganda';
-    const mapelNama = data.mapel || 'Al-Qur\'an Hadis';
-    const babNama = data.bab || 'AMANAH';
-    const kelasNama = data.fase || 'Kelas VII';
+        const jenisAsesmen = document.getElementById('jenisAsesmenSelect')?.value || 'Pilihan Ganda';
+        const mapelNama = data.mapel || 'Al-Qur\'an Hadis';
+        const babNama = data.bab || 'AMANAH';
+        const kelasNama = data.fase || 'Kelas VII';
 
-    // Cek Simpanan (Cache)
-    const cacheKey = 'asesmen_' + mapelNama + '_' + babNama + '_' + jenisAsesmen;
-    const cachedContent = localStorage.getItem(cacheKey);
+        // Cek Simpanan (Cache)
+        const cacheKey = 'asesmen_' + mapelNama + '_' + babNama + '_' + jenisAsesmen;
+        const cachedContent = localStorage.getItem(cacheKey);
 
-    // Template Soal Otomatis Mandiri
-    const defaultSoalHtml = `
-        <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN (${mapelNama.toUpperCase()} - ${kelasNama.toUpperCase()})</div>
-        <div class="mb-2 font-semibold text-slate-700 text-xs">A. PILIHAN GANDA - TOPIK: ${babNama.toUpperCase()}</div>
-        <ol class="list-decimal pl-4 space-y-3 text-xs text-slate-700 mb-6">
-            <li>Pengertian utama dari materi <strong>${babNama}</strong> dalam mata pelajaran ${mapelNama} adalah...
-                <div class="grid grid-cols-2 gap-1 mt-1 ml-2 text-slate-600"><span>A. Menjaga dan menyampaikan pesan sesuai kebenaran</span><span>B. Mengabaikan tanggung jawab</span><span>C. Menyampaikan informasi untuk kepentingan pribadi</span><span>D. Mengikuti pendapat kelompok tanpa bukti</span></div>
-            </li>
-            <li>Berikut ini yang merupakan contoh penerapan nyata sikap <strong>${babNama}</strong> di lingkungan sekolah adalah...
-                <div class="grid grid-cols-2 gap-1 mt-1 ml-2 text-slate-600"><span>A. Mengerjakan tugas dengan jujur dan tepat waktu</span><span>B. Mencontek saat ujian berlangsung</span><span>C. Membiarkan fasilitas kelas rusak</span><span>D. Terlambat masuk kelas</span></div>
-            </li>
-            <li>Mengapa sikap <strong>${babNama}</strong> sangat penting dimiliki oleh setiap siswa?
-                <div class="grid grid-cols-2 gap-1 mt-1 ml-2 text-slate-600"><span>A. Agar mendapat kepercayaan dari guru dan teman</span><span>B. Supaya dipuji oleh orang tua</span><span>C. Untuk mendapatkan hadiah</span><span>D. Agar ditakuti oleh siswa lain</span></div>
-            </li>
-        </ol>
-        <div class="mb-2 font-semibold text-slate-700 text-xs">B. ESAY / ISIAN SINGKAT</div>
-        <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700 mb-6">
-            <li>Jelaskan secara singkat makna dari <strong>${babNama}</strong>!</li>
-            <li>Sebutkan 2 contoh perilaku <strong>${babNama}</strong> dalam kehidupan sehari-hari!</li>
-        </ol>
-    `;
-
-    // Template Konten Utama
-    const renderTampilan = (isiSoal) => {
-        let kontenSoal = (isiSoal && isiSoal !== 'undefined') ? isiSoal : defaultSoalHtml;
-        return `
-        <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
-            <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR ASESMEN / EVALUASI PEMBELAJARAN</h2>
-            <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || 'AL-QUR\'AN HADIS').toUpperCase()} | ${(data.fase || 'KELAS VII').toUpperCase()}</p>
-            <p class="text-slate-600 italic text-xs">Topik / Bab: ${babNama} | Semester: ${data.semester || 'Ganjil'} | TP: ${data.tahun || '2026/2027'}</p>
-        </div>
-
-        <div class="flex items-center justify-between mb-4">
-            <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit">
-                5. INSTRUMEN ASESMEN (${jenisAsesmen.toUpperCase()})
-            </div>
-            <button id="btn-generate-ai" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1 rounded font-medium transition">
-                🔄 Generate Ulang Soal
-            </button>
-        </div>
-
-        <div id="ai-content-box" class="prose max-w-none text-xs text-slate-800 space-y-3 leading-relaxed mb-6">
-            ${kontenSoal}
-        </div>
-
-        <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse; page-break-inside: avoid;">
-            <tr style="border: none;">
-                <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
-                    <p style="margin: 0;">Mengetahui,</p>
-                    <p style="margin: 0; font-weight: 600;">Kepala Sekolah / Madrasah</p>
-                    <p style="margin: 0;"><br><br><br><br></p>
-                    <p style="margin: 0; font-weight: bold; text-decoration: underline;">${namaKepala}</p>
-                    <p style="margin: 0;">NIP. ${nipKepala}</p>
-                </td>
-                <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
-                    <p style="margin: 0;">Dibuat Oleh,</p>
-                    <p style="margin: 0; font-weight: 600;">Guru Mata Pelajaran</p>
-                    <p style="margin: 0;"><br><br><br><br></p>
-                    <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.guru || '-'}</p>
-                    <p style="margin: 0;">NIP. ${nipGuru}</p>
-                </td>
-            </tr>
-        </table>
+        // Template Soal Otomatis Mandiri
+        const defaultSoalHtml = `
+            <div class="mb-3 font-bold text-slate-800 text-sm">LEMBAR ASESMEN (${mapelNama.toUpperCase()} - ${kelasNama.toUpperCase()})</div>
+            <div class="mb-2 font-semibold text-slate-700 text-xs">A. PILIHAN GANDA - TOPIK: ${babNama.toUpperCase()}</div>
+            <ol class="list-decimal pl-4 space-y-3 text-xs text-slate-700 mb-6">
+                <li>Pengertian utama dari materi <strong>${babNama}</strong> dalam mata pelajaran ${mapelNama} adalah...
+                    <div class="grid grid-cols-2 gap-1 mt-1 ml-2 text-slate-600"><span>A. Menjaga dan menyampaikan pesan sesuai kebenaran</span><span>B. Mengabaikan tanggung jawab</span><span>C. Menyampaikan informasi untuk kepentingan pribadi</span><span>D. Mengikuti pendapat kelompok tanpa bukti</span></div>
+                </li>
+                <li>Berikut ini yang merupakan contoh penerapan nyata sikap <strong>${babNama}</strong> di lingkungan sekolah adalah...
+                    <div class="grid grid-cols-2 gap-1 mt-1 ml-2 text-slate-600"><span>A. Mengerjakan tugas dengan jujur dan tepat waktu</span><span>B. Mencontek saat ujian berlangsung</span><span>C. Membiarkan fasilitas kelas rusak</span><span>D. Terlambat masuk kelas</span></div>
+                </li>
+                <li>Mengapa sikap <strong>${babNama}</strong> sangat penting dimiliki oleh setiap siswa?
+                    <div class="grid grid-cols-2 gap-1 mt-1 ml-2 text-slate-600"><span>A. Agar mendapat kepercayaan dari guru dan teman</span><span>B. Supaya dipuji oleh orang tua</span><span>C. Untuk mendapatkan hadiah</span><span>D. Agar ditakuti oleh siswa lain</span></div>
+                </li>
+            </ol>
+            <div class="mb-2 font-semibold text-slate-700 text-xs">B. ESAY / ISIAN SINGKAT</div>
+            <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700 mb-6">
+                <li>Jelaskan secara singkat makna dari <strong>${babNama}</strong>!</li>
+                <li>Sebutkan 2 contoh perilaku <strong>${babNama}</strong> dalam kehidupan sehari-hari!</li>
+            </ol>
         `;
-    };
 
-    // Tampilkan Konten
-    previewBox.innerHTML = renderTampilan(cachedContent);
-}      
+        // Template Konten Utama
+        const renderTampilan = (isiSoal) => {
+            let kontenSoal = (isiSoal && isiSoal !== 'undefined') ? isiSoal : defaultSoalHtml;
+            return `
+            <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+                <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR ASESMEN / EVALUASI PEMBELAJARAN</h2>
+                <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || 'AL-QUR\'AN HADIS').toUpperCase()} | ${(data.fase || 'KELAS VII').toUpperCase()}</p>
+                <p class="text-slate-600 italic text-xs">Topik / Bab: ${babNama} | Semester: ${data.semester || 'Ganjil'} | TP: ${data.tahun || '2026/2027'}</p>
+            </div>
+
+            <div class="flex items-center justify-between mb-4">
+                <div class="bg-indigo-600 text-white font-bold px-3 py-1.5 rounded text-xs uppercase w-fit">
+                    5. INSTRUMEN ASESMEN (${jenisAsesmen.toUpperCase()})
+                </div>
+                <button id="btn-generate-ai" class="bg-amber-500 hover:bg-amber-600 text-white text-xs px-3 py-1 rounded font-medium transition">
+                    🔄 Generate Ulang Soal
+                </button>
+            </div>
+
+            <div id="ai-content-box" class="prose max-w-none text-xs text-slate-800 space-y-3 leading-relaxed mb-6">
+                ${kontenSoal}
+            </div>
+
+            <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse; page-break-inside: avoid;">
+                <tr style="border: none;">
+                    <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
+                        <p style="margin: 0;">Mengetahui,</p>
+                        <p style="margin: 0; font-weight: 600;">Kepala Sekolah / Madrasah</p>
+                        <p style="margin: 0;"><br><br><br><br></p>
+                        <p style="margin: 0; font-weight: bold; text-decoration: underline;">${namaKepala}</p>
+                        <p style="margin: 0;">NIP. ${nipKepala}</p>
+                    </td>
+                    <td style="width: 50%; border: none; text-align: center; vertical-align: top; padding: 0; font-size: 11px;">
+                        <p style="margin: 0;">Dibuat Oleh,</p>
+                        <p style="margin: 0; font-weight: 600;">Guru Mata Pelajaran</p>
+                        <p style="margin: 0;"><br><br><br><br></p>
+                        <p style="margin: 0; font-weight: bold; text-decoration: underline;">${data.guru || '-'}</p>
+                        <p style="margin: 0;">NIP. ${nipGuru}</p>
+                    </td>
+                </tr>
+            </table>
+            `;
+        };
+
+        // Tampilkan Konten
+        previewBox.innerHTML = renderTampilan(cachedContent);
+    }     
 
 
     
