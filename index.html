@@ -2359,6 +2359,7 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
 //..............................
   
            // 1. Ambil elemen select/input secara langsung dari form
+            // 1. Ambil elemen select/input secara langsung dari form
             let elemKelas = document.getElementById('jenjangKelas') || 
                             document.getElementById('kelasFase') || 
                             document.getElementById('jenjangSelect') || 
@@ -2378,7 +2379,7 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
             // Ambil teks dari opsi yang dipilih (Selected Option Text)
             let kelasInput = elemKelas ? (elemKelas.options ? elemKelas.options[elemKelas.selectedIndex].text : elemKelas.value) : 'IX A';
             let mapel = elemMapel ? (elemMapel.options ? elemMapel.options[elemMapel.selectedIndex].text : elemMapel.value) : 'Ilmu Pengetahuan Sosial (IPS)';
-            babNama = elemBab ? elemBab.value : 'JUJUR';
+            let babNama = elemBab ? elemBab.value : 'JUJUR';
 
             if (!babNama.trim()) babNama = 'JUJUR';
 
@@ -2557,8 +2558,6 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
             if (targetContainer) {
                 targetContainer.innerHTML = generatedHtml;
             }
-            return;
-}
 
 // FUNGSI PEMICU MANUAL & CACHING
 async function generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey) {
