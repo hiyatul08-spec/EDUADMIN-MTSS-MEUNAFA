@@ -1796,8 +1796,9 @@ function switchTabModul(tabName) {
     const cachedContent = localStorage.getItem(cacheKey);
 
     // Template Konten Utama
-    const renderTampilan = (isiSoal) => `
-        <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+    const renderTampilan = (isiSoal) => {
+    let kontenSoal = (isiSoal && isiSoal !== 'undefined') ? isiSoal : generateAsesmenOtomatis();
+    return `        <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
             <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR ASESMEN / EVALUASI PEMBELAJARAN</h2>
             <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || '').toUpperCase()} | ${(data.fase || '').toUpperCase()}</p>
             <p class="text-slate-600 italic text-xs">Topik / Bab: ${babNama} | Semester: ${data.semester || 'Ganjil'} | TP: ${data.tahun || '2026/2027'}</p>
