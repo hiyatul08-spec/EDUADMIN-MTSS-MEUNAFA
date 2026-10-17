@@ -2357,19 +2357,15 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
 let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
     let headers = { 'Content-Type': 'application/json' };
 
-    apiKey = localStorage.getItem('gemini_api_key') || '';
+    apiKey = localStorage.getItem('gemini_api_key') || localStorage.getItem('geminiApiKey') || '';
 
-    if (!apiKey) {
-        alert('API Key belum diisi! Silakan masukkan API Key di menu Pengaturan terlebih dahulu.');
-        return;
+    if (apiKey) {
+        if (apiKey.startsWith('AQ')) {
+            headers['Authorization'] = `Bearer ${apiKey}`;
+        } else {
+            url += `?key=${apiKey}`;
+        }
     }
-
-    if (apiKey.startsWith('AQ')) {
-        headers['Authorization'] = `Bearer ${apiKey}`;
-    } else {
-        url += `?key=${apiKey}`;
-    }
-
   
     const promptText = `
         Kamu adalah pakar pembuat soal Kurikulum Merdeka. 
