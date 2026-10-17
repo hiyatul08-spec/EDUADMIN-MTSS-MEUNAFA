@@ -2357,16 +2357,22 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
 let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
     let headers = { 'Content-Type': 'application/json' };
 
-    apiKey = localStorage.getItem('gemini_api_key') || localStorage.getItem('geminiApiKey') || '';
+    // Ambil API key dari localStorage
+    let apiKey = localStorage.getItem('gemini_api_key') || localStorage.getItem('geminiApiKey') || '';
 
-    if (apiKey) {
-        if (apiKey.startsWith('AQ')) {
-            headers['Authorization'] = `Bearer ${apiKey}`;
-        } else {
-            url += `?key=${apiKey}`;
-        }
+    // Jika API Key tidak ada, langsung alihkan ke generator lokal instan tanpa panggil API
+    if (!apiKey) {
+        console.warn('API Key kosong, menggunakan generator lokal.');
+        generateAsesmenOtomatis(); 
+        return;
     }
-  
+
+    // Jika API Key berawalan AQ (OAuth Token), gunakan Header Bearer. Jika AIza, gunakan ?key=
+    if (apiKey.startsWith('AQ')) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
+    } else {
+        url += `?key=${apiKey}`;
+    }  
     const promptText = `
         Kamu adalah pakar pembuat soal Kurikulum Merdeka. 
         Buatkan instrumen asesmen pembelajaran untuk:
@@ -2425,34 +2431,36 @@ async function generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama
     // ==========================================
     // FUNGSI SIMPAN & MUAT API KEY PENGATURAN
     // ==========================================
-    function simpanPengaturan() {
-        let apiKeyInput = document.getElementById('geminiApiKeyInput') || 
-                          document.querySelector('input[type="password"]') || 
-                          document.querySelector('input[placeholder*="..."]');
+   function simpanPengaturan() {
+    // Ambil input berdasarkan ID asli di form Pengaturan
+    let apiKeyInput = document.getElementById('geminiApiKey') || 
+                      document.getElementById('gemini_api_key') || 
+                      document.querySelector('input[type="password"]');
 
-        if (apiKeyInput) {
-            localStorage.setItem('gemini_api_key', apiKeyInput.value.trim());
-        }
-
-        alert('Pengaturan berhasil disimpan!');
+    if (apiKeyInput) {
+        let keyVal = apiKeyInput.value.trim();
+        localStorage.setItem('gemini_api_key', keyVal);
+        localStorage.setItem('geminiApiKey', keyVal); // Simpan di kedua kunci cadangan
     }
 
-    function loadPengaturan() {
-        let apiKeyInput = document.getElementById('geminiApiKeyInput') || 
-                          document.querySelector('input[type="password"]') || 
-                          document.querySelector('input[placeholder*="..."]');
+    alert('Pengaturan berhasil disimpan!');
+}
 
-        let savedKey = localStorage.getItem('gemini_api_key');
+function loadPengaturan() {
+    let apiKeyInput = document.getElementById('geminiApiKey') || 
+                      document.getElementById('gemini_api_key') || 
+                      document.querySelector('input[type="password"]');
 
-        if (apiKeyInput && savedKey) {
-            apiKeyInput.value = savedKey;
-        }
+    let savedKey = localStorage.getItem('gemini_api_key') || localStorage.getItem('geminiApiKey');
+
+    if (apiKeyInput && savedKey) {
+        apiKeyInput.value = savedKey;
     }
+}
 
-    // Jalankan pemuatan otomatis saat web dibuka/di-refresh
-    document.addEventListener('DOMContentLoaded', loadPengaturan);
-    loadPengaturan(); // Dipanggil langsung untuk memastikan data langsung terisi
-
+// Jalankan otomatis saat web dibuka
+document.addEventListener('DOMContentLoaded', loadPengaturan);
+window.addEventListener('load', loadPengaturan);
     </script>
 </body>
 </html>
