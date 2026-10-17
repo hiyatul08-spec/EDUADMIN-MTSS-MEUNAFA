@@ -2353,27 +2353,77 @@ async function fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama) {
             </ol>
         `;
     }
+
+let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+    let headers = { 'Content-Type': 'application/json' };
+
+    apiKey = localStorage.getItem('gemini_api_key') || '';
+
+    if (!apiKey) {
+        alert('API Key belum diisi! Silakan masukkan API Key di menu Pengaturan terlebih dahulu.');
+        return;
+    }
+
+    if (apiKey.startsWith('AQ')) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
+    } else {
+        url += `?key=${apiKey}`;
+    }
+
   
-//..............................
-// GENERATE SOAL
-//..............................
-  
-        
-           // FUNGSI PEMICU MANUAL & CACHING
+    const promptText = `
+        Kamu adalah pakar pembuat soal Kurikulum Merdeka. 
+        Buatkan instrumen asesmen pembelajaran untuk:
+        - Mata Pelajaran: ${mapelNama}
+        - Kelas/Fase: ${kelasNama}
+        - Topik/Bab: ${babNama}
+        - Jenis Asesmen: ${jenisAsesmen}
+
+        Ketentuan Soal:
+        1. Jika Jenis Asesmen adalah "Pilihan Ganda", buatkan 5 soal pilihan ganda (opsi A, B, C, D) lengkap dengan Kunci Jawaban.
+        2. Jika Jenis Asesmen adalah "Essay / Uraian" atau "Isian Singkat", buatkan 5 soal HOTS lengkap dengan Kunci Jawaban.
+        3. Format output wajib HTML sederhana (Gunakan tag <h3>, <ol>, <li>, <p>, <strong>) tanpa markdown codeblock.
+    `;
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: promptText }] }]
+            })
+        });
+
+        const resultData = await response.json();
+
+        if (resultData.error) {
+            return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Gagal AI: ${resultData.error.message}</div>`;
+        }
+
+        let generatedText = resultData.candidates[0].content.parts[0].text;
+        return generatedText.replace(/```html/g, '').replace(/```/g, '');
+    } catch (err) {
+        return `<div class="p-3 bg-red-50 text-red-600 rounded text-xs">Koneksi Error: Gagal terhubung ke Gemini API.</div>`;
+    }
+}
+
+
+// FUNGSI PEMICU MANUAL & CACHING (HEMAT KUOTA)
 async function generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey) {
     const box = document.getElementById('ai-content-box');
     if (box) {
-        box.innerHTML = `<div class="text-center py-6 text-indigo-600 font-bold">Sedang memproses soal baru...</div>`;
+        box.innerHTML = `<div class="text-center py-6 text-indigo-600 font-bold">Sedang memproses soal baru via Gemini AI...</div>`;
     }
+    const result = await fetchGeminiAsesmen(jenisAsesmen, mapelNama, babNama, kelasNama);
     
-    // Jalankan generator lokal secara langsung
-    generateAsesmenOtomatis();
+    // Simpan ke localStorage agar tidak panggil API berulang kali
+    localStorage.setItem(cacheKey, result);
     
-    const targetContainer = document.getElementById('preview-content-modul') || document.getElementById('ai-content-box');
-    if (targetContainer && cacheKey) {
-        localStorage.setItem(cacheKey, targetContainer.innerHTML);
+    if (box) {
+        box.innerHTML = result;
     }
 }
+    
     </script>
 </body>
 </html>
