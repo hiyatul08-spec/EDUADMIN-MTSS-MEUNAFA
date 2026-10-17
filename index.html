@@ -1797,8 +1797,9 @@ function switchTabModul(tabName) {
 
     // Template Konten Utama
     const renderTampilan = (isiSoal) => {
-    let kontenSoal = (isiSoal && isiSoal !== 'undefined') ? isiSoal : generateAsesmenOtomatis();
-    return `        <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
+        let kontenSoal = (isiSoal && isiSoal !== 'undefined') ? isiSoal : generateAsesmenOtomatis();
+        return `
+        <div class="text-center border-b-2 border-slate-800 pb-3 mb-4">
             <h2 class="text-base font-bold uppercase text-slate-900 tracking-wide">LEMBAR ASESMEN / EVALUASI PEMBELAJARAN</h2>
             <p class="font-bold text-indigo-700 uppercase mt-1">MATA PELAJARAN: ${(data.mapel || '').toUpperCase()} | ${(data.fase || '').toUpperCase()}</p>
             <p class="text-slate-600 italic text-xs">Topik / Bab: ${babNama} | Semester: ${data.semester || 'Ganjil'} | TP: ${data.tahun || '2026/2027'}</p>
@@ -1814,7 +1815,7 @@ function switchTabModul(tabName) {
         </div>
 
         <div id="ai-content-box" class="prose max-w-none text-xs text-slate-800 space-y-3 leading-relaxed mb-6">
-            ${isiSoal}
+            ${kontenSoal}
         </div>
 
         <table style="width: 100%; border: none; margin-top: 24px; border-collapse: collapse; page-break-inside: avoid;">
@@ -1835,24 +1836,15 @@ function switchTabModul(tabName) {
                 </td>
             </tr>
         </table>
-    `;
+        `;
+    };
 
     // Jika sudah ada simpanan, tampilkan langsung
     if (cachedContent) {
         previewBox.innerHTML = renderTampilan(cachedContent);
     } else {
-        // Jika belum ada, tampilkan template lokal gratisan dulu
-        previewBox.innerHTML = renderTampilan(`
-            <div class="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded text-xs mb-4">
-                💡 Klik tombol <strong>"Generate Ulang Soal AI"</strong> di atas jika ingin meracik soal otomatis via Gemini AI.
-            </div>
-            <div class="mb-4 font-bold text-slate-800">A. SOAL ${jenisAsesmen.toUpperCase()} (TEMPLATE LOKAL)</div>
-            <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700">
-                <li>Jelaskan pemahaman dasar mengenai materi <strong>${babNama}</strong> dalam mata pelajaran ${mapelNama}!</li>
-                <li>Sebutkan 3 contoh penerapan nyata dari <strong>${babNama}</strong> di kehidupan sehari-hari!</li>
-                <li>Mengapa sikap <strong>${babNama}</strong> sangat penting diterapkan dalam lingkungan sekolah?</li>
-            </ol>
-        `);
+        // Jika belum ada, tampilkan soal otomatis
+        previewBox.innerHTML = renderTampilan(generateAsesmenOtomatis());
     }
 
     // Aktifkan fungsi tombol Generate saat diklik
@@ -1863,7 +1855,7 @@ function switchTabModul(tabName) {
                 generateSoalAIMAanual(jenisAsesmen, mapelNama, babNama, kelasNama, cacheKey);
             };
         }
-    }, 50);        
+    }, 50);       
 
 
     
