@@ -2704,32 +2704,92 @@ setInterval(loadPengaturan, 1000);
 
 
 // ==========================================
-// FUNGSI UNTUK GENERATE SOAL AI (TAMBAHAN AI)
+// FUNGSI UTAMA GENERATE SOAL AI (GEMINI) - BERVARIASI
 // ==========================================
 async function generateSoalAIMAanual(jenis, mapel, bab, kelas, cacheKey) {
     const aiBox = document.getElementById('ai-content-box') || document.getElementById('preview-content-modul');
     if (!aiBox) return;
 
+    // 1. Tampilkan status Loading
     aiBox.innerHTML = `
         <div class="text-center p-6 border border-indigo-200 bg-indigo-50 rounded">
-            <p class="text-indigo-600 font-bold animate-pulse">⏳ Sedang memproses soal via AI...</p>
+            <p class="text-indigo-600 font-bold animate-pulse">⏳ Sedang meracik soal via Gemini AI...</p>
+            <p class="text-xs text-indigo-400 mt-2">Permintaan untuk 40 soal mungkin memakan waktu hingga 15-30 detik. Mohon tunggu.</p>
         </div>
     `;
 
-    setTimeout(() => {
-        let soalHTML = `
-            <div class="bg-green-50 border border-green-200 text-green-800 p-3 rounded text-xs mb-4">
-                ✅ Berhasil memuat instrumen soal.
-            </div>
-            <div class="mb-4 font-bold text-slate-800">A. SOAL ${jenis.toUpperCase()}</div>
-            <ol class="list-decimal pl-4 space-y-2 text-xs text-slate-700">
-                <li>Jelaskan secara rinci tentang materi <strong>${bab}</strong> pada pelajaran ${mapel} di ${kelas}!</li>
-                <li>Bagaimana penerapan nyata dari materi tersebut? Berikan 2 contoh.</li>
-            </ol>
-        `;
-        aiBox.innerHTML = soalHTML;
-        if (cacheKey) localStorage.setItem(cacheKey, soalHTML);
-    }, 1500);
+    let apiKey = localStorage.getItem('gemini_api_key') || localStorage.getItem('geminiApiKey');
+    if (!apiKey) {
+        aiBox.innerHTML = `<div class="p-3 bg-amber-50 text-amber-700 rounded text-xs">⚠️ Kunci API Gemini belum diisi.</div>`;
+        return; 
+    }
+
+    // 2. Tentukan Aturan Format Soal Berdasarkan Kelas
+    let kelasVal = kelas.toUpperCase().trim();
+    let formatInstruksi = "";
+
+    let isKelas1sampai3 = /^1\b|KELAS 1\b|KELAS I\b|^2\b|KELAS 2\b|KELAS II\b|^3\b|KELAS 3\b|KELAS III\b/i.test(kelasVal) || (kelasVal.includes('SD') && (kelasVal.includes('1') || kelasVal.includes('2') || kelasVal.includes('3'))) || (kelasVal.includes('MI') && (kelasVal.includes('1') || kelasVal.includes('2') || kelasVal.includes('3')));
+    let isKelas4sampai6 = /^4\b|KELAS 4\b|KELAS IV\b|^5\b|KELAS 5\b|KELAS V\b|^6\b|KELAS 6\b|KELAS VI\b/i.test(kelasVal) || (kelasVal.includes('SD') && (kelasVal.includes('4') || kelasVal.includes('5') || kelasVal.includes('6'))) || (kelasVal.includes('MI') && (kelasVal.includes('4') || kelasVal.includes('5') || kelasVal.includes('6')));
+
+    if (isKelas1sampai3) {
+        formatInstruksi = "Buatkan HANYA 5 soal ISIAN SINGKAT beserta Kunci Jawabannya.";
+    } else if (isKelas4sampai6) {
+        formatInstruksi = "Buatkan 10 soal PILIHAN GANDA (opsi A, B, C, D) DAN 5 soal ISIAN SINGKAT beserta Kunci Jawabannya.";
+    } else {
+        // Untuk kelas 7-12 (SMP/MTs dan SMA/MA)
+        formatInstruksi = "Buatkan 40 soal PILIHAN GANDA (opsi A, B, C, D) DAN 10 soal ESSAY/URAIAN beserta Kunci Jawabannya.";
+    }
+
+    // 3. Konfigurasi API Gemini
+    let url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+    let headers = { 'Content-Type': 'application/json' };
+
+    if (apiKey.startsWith('AQ')) {
+        headers['Authorization'] = `Bearer ${apiKey}`;
+    } else {
+        url += `?key=${apiKey}`;
+    }  
+
+    // 4. Kirim Prompt Rahasia ke AI
+    const promptText = `Kamu adalah pembuat instrumen asesmen Kurikulum Merdeka yang ahli. 
+    Tugasmu membuat lembar ujian untuk:
+    - Mata Pelajaran: ${mapel}
+    - Kelas/Fase: ${kelas}
+    - Topik/Bab: ${bab}
+
+    INSTRUKSI SUPER KETAT:
+    1. ${formatInstruksi}
+    2. Pisahkan bagian "SOAL" dan "KUNCI JAWABAN" dengan jelas.
+    3. Format output wajib menggunakan HTML (gunakan tag <h3>, <ol>, <li>, <strong>, <p>).
+    4. JANGAN gunakan pembungkus markdown (\`\`\`html), cukup langsung kode HTML-nya.`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({ contents: [{ parts: [{ text: promptText }] }] })
+        });
+
+        const resultData = await response.json();
+
+        if (resultData.error) {
+            aiBox.innerHTML = `<div class="p-3 bg-red-50 text-red-600 rounded text-xs border border-red-200">❌ Gagal AI: ${resultData.error.message}</div>`;
+            return;
+        }
+
+        // 5. Tampilkan Hasil AI ke Layar
+        let generatedText = resultData.candidates[0].content.parts[0].text;
+        let finalHtml = generatedText.replace(/```html/g, '').replace(/```/g, '').trim();
+        
+        aiBox.innerHTML = finalHtml;
+        
+        // Simpan agar saat ganti tab, soal tidak hilang
+        if (cacheKey) localStorage.setItem(cacheKey, finalHtml);
+
+    } catch (err) {
+        console.error(err);
+        aiBox.innerHTML = `<div class="p-3 bg-amber-50 text-amber-700 rounded text-xs border border-amber-200">⚠️ Koneksi terputus ke Gemini AI. Pastikan internet stabil.</div>`;
+    }
 }
     
     
